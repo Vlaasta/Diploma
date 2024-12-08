@@ -1,0 +1,14 @@
+E:\4 KURS\Диплом\diplom\diplom\obj\Debug\diplom.csproj.AssemblyReference.cache
+E:\4 KURS\Диплом\diplom\diplom\obj\Debug\diplom.csproj.SuggestedBindingRedirects.cache
+E:\4 KURS\Диплом\diplom\diplom\obj\Debug\diplom.Form1.resources
+E:\4 KURS\Диплом\diplom\diplom\obj\Debug\diplom.Properties.Resources.resources
+E:\4 KURS\Диплом\diplom\diplom\obj\Debug\diplom.csproj.GenerateResource.cache
+E:\4 KURS\Диплом\diplom\diplom\obj\Debug\diplom.csproj.CoreCompileInputs.cache
+E:\4 KURS\Диплом\diplom\diplom\bin\Debug\diplom.exe.config
+E:\4 KURS\Диплом\diplom\diplom\bin\Debug\diplom.exe
+E:\4 KURS\Диплом\diplom\diplom\bin\Debug\diplom.pdb
+E:\4 KURS\Диплом\diplom\diplom\obj\Debug\diplom.exe
+E:\4 KURS\Диплом\diplom\diplom\obj\Debug\diplom.pdb
+E:\4 KURS\Диплом\diplom\diplom\bin\Debug\Newtonsoft.Json.dll
+E:\4 KURS\Диплом\diplom\diplom\bin\Debug\Newtonsoft.Json.xml
+E:\4 KURS\Диплом\diplom\diplom\obj\Debug\diplom.csproj.CopyComplete

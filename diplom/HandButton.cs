@@ -1,0 +1,71 @@
+﻿using System;
+using System.Timers;
+
+namespace diplom
+{
+    public class HandButton
+    {
+        private Timer timer;           // Таймер для відліку часу
+        private DateTime startTime;    // Час початку
+        private TimeSpan totalTime;    // Загальний час, що пройшов
+        private bool isRunning;        // Статус таймера (запущено чи ні)
+
+        public HandButton()
+        {
+            timer = new Timer(1000);   // Таймер, що спрацьовує кожну секунду
+            timer.Elapsed += Timer_Elapsed;
+            totalTime = TimeSpan.Zero; // Початкове значення
+            isRunning = false;         // Таймер ще не запущений
+        }
+
+        // Метод для запуску таймера
+        public void Start()
+        {
+            if (!isRunning)
+            {
+                startTime = DateTime.Now; // Фіксуємо час початку
+                timer.Start();             // Запускаємо таймер
+                isRunning = true;
+            }
+        }
+
+        // Публічна властивість для перевірки статусу таймера
+        public bool IsRunning
+        {
+            get { return isRunning; }
+        }
+
+        // Метод для призупинення таймера
+        public void Pause()
+        {
+            if (isRunning)
+            {
+                timer.Stop();            // Зупиняємо таймер
+                totalTime += DateTime.Now - startTime;  // Додаємо час, що пройшов
+                isRunning = false;
+            }
+        }
+
+        // Обробник події Elapsed (кожну секунду)
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            // Виводимо оновлений час на екран
+            TimeSpan elapsed = totalTime + (DateTime.Now - startTime);
+            OnTimeUpdated?.Invoke(elapsed);  // Викликаємо подію, щоб оновити час
+        }
+
+        // Подія для оновлення часу
+        public event Action<TimeSpan> OnTimeUpdated;
+
+        // Метод для отримання поточного часу
+        public string GetCurrentTime()
+        {
+            return (totalTime + (isRunning ? (DateTime.Now - startTime) : TimeSpan.Zero)).ToString(@"hh\:mm\:ss");
+        }
+
+        public TimeSpan GetAccumulatedTime()
+        {
+            return totalTime + (isRunning ? (DateTime.Now - startTime) : TimeSpan.Zero);
+        }
+    }
+}

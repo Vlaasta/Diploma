@@ -14,7 +14,6 @@ namespace diplom
 
         public Form1()
         {
-            // Component initialization.
             InitializeComponent();
 
             // Ініціалізуємо клас HandButton

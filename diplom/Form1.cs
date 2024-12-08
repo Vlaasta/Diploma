@@ -28,6 +28,19 @@ namespace diplom
             // Викликаємо метод для зробити кнопку овальною
            // design.MakeButtonOval(button1); // Тут button1 - це кнопка на вашій формі
             design.Design();
+
+            /*Button roundButton = new Button
+            {
+                Text = "Round Button",
+                Size = new System.Drawing.Size(150, 50),
+                Location = new System.Drawing.Point(50, 50),
+                BackColor = Color.MediumSlateBlue,
+                ForeColor = Color.White,
+                Radius = 20
+            };
+
+            // Додаємо її на форму
+            this.Controls.Add(roundButton);*/
         }
 
         // Метод для обробки події та оновлення label1

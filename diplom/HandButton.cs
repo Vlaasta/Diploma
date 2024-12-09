@@ -67,5 +67,17 @@ namespace diplom
         {
             return totalTime + (isRunning ? (DateTime.Now - startTime) : TimeSpan.Zero);
         }
+
+        // Метод для запуску таймера з заданим часом
+        public void StartWithTime(TimeSpan time)
+        {
+            if (!isRunning)
+            {
+                totalTime = time;  // Встановлюємо переданий час як початковий
+                startTime = DateTime.Now; // Фіксуємо час початку
+                timer.Start();             // Запускаємо таймер
+                isRunning = true;
+            }
+        }
     }
 }

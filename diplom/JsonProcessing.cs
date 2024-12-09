@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms; // Для OpenFileDialog
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace diplom
 {
     public static class JsonProcessing
     {
-        private static string filePath = @"E:\4 KURS\Диплом\diplom\data\timerAmounts.json"; // Шлях до JSON-файлу з статистикою
-        private static string fileSecondPath = @"E:\4 KURS\Диплом\diplom\data\projects.json"; // Шлях до JSON-файлу з проектами
+        private static string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json"; // Шлях до JSON-файлу з статистикою
+        private static string fileSecondPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\projects.json"; // Шлях до JSON-файлу з проектами
 
         // Зчитування проектів з файлу
         public static List<Project> LoadProjects()
@@ -62,6 +63,29 @@ namespace diplom
                 }
             }
         }
+
+
+        public static bool IsProjectOpen(string projectPath)
+        {
+            string projectName = Path.GetFileNameWithoutExtension(projectPath); // Отримуємо назву проекту без розширення
+
+            var processes = Process.GetProcesses();
+
+            foreach (var process in processes)
+            {
+                if (process.ProcessName.Contains("devenv")) // Перевіряємо, чи це процес Visual Studio
+                {
+                    if (process.MainWindowTitle.Contains(projectName)) // Шукаємо назву проекту в заголовку вікна
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+
 
         // Зчитування даних з файлу
         public static List<TimerData> LoadData()

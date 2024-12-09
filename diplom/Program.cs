@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System;
 using System.Windows.Forms;
 
 namespace diplom
@@ -16,7 +16,19 @@ namespace diplom
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            // Створення екземпляра HandButton (якщо потрібно)
+           // HandButton handButton = new HandButton();
+
+            // Створення екземпляра ProjectProcessor
+            /*ProjectProcessor projectProcessor = new ProjectProcessor(handButton);
+
+            // Запуск роботи класу ProjectProcessor
+            projectProcessor.StartTimerForOpenedProjects();*/
+
+            // Запускаємо основну форму
             Application.Run(new Form1());
         }
     }
 }
+

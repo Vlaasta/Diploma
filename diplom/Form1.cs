@@ -9,7 +9,7 @@ namespace diplom
     {
         private HandButton handButton;
         private System.Threading.Timer _timer; // Таймер перевірки стану проекту
-        private string _projectPath = @"E:\Drafts\Draft\Draft.sln"; // Шлях до проекту
+       // private string _projectPath = @"E:\Drafts\Draft\Draft.sln"; // Шлях до проекту
 
         public Form1()
         {
@@ -18,7 +18,7 @@ namespace diplom
             LoadProjectsToDataGridView();
 
             // Ініціалізація таймера для перевірки проекту
-            _timer = new System.Threading.Timer(CheckIfProjectOpen, null, 0, 5000); // Перевірка кожні 5 секунд
+           // _timer = new System.Threading.Timer(CheckIfProjectsOpen, null, 0, 5000); // Перевірка кожні 5 секунд
 
             // Ініціалізація HandButton
             handButton = new HandButton();
@@ -28,42 +28,46 @@ namespace diplom
         }
 
         // Метод для перевірки, чи відкритий проект
-        private void CheckIfProjectOpen(object state)
+       /* private void CheckIfProjectsOpen(object state)
         {
-            bool isOpen = IsProjectOpen(_projectPath);
+            var projects = JsonProcessing.LoadProjects(); // Завантажуємо проекти з JSON
 
-            if (!isOpen)
+            foreach (var project in projects)
             {
-                // Логування або повідомлення про те, що проект не відкрито (за бажанням)
-                MessageBox.Show("ти лох просто");
-            }
-            else
-            {
-                MessageBox.Show("єбать да ти шо");
-            }
+                bool isOpen = IsProjectOpen(project.Path); // Перевіряємо шлях
 
-        }
+                if (!isOpen)
+                {
+                    MessageBox.Show("Я сліпа мразь блаблабла");
+                    // Додайте дію, якщо проект закритий
+
+                }
+                else
+                {
+                    MessageBox.Show("Боже я поняла зачем треба гітхаб я боше так не буду");
+                }
+            }
+        }*/
+
+
 
 
         // Перевірка, чи відкритий проект
-        public static bool IsProjectOpen(string projectPath)
+      /*  public static bool IsProjectOpen(string projectPath)
         {
-            string projectName = Path.GetFileNameWithoutExtension(projectPath); // Отримуємо назву проекту без розширення
+            string projectName = Path.GetFileNameWithoutExtension(projectPath);
 
-            var processes = Process.GetProcesses();
-
-            foreach (var process in processes)
+            foreach (var process in Process.GetProcesses())
             {
-                if (process.ProcessName.Contains("devenv")) // Перевіряємо, чи це процес Visual Studio
+                if (process.ProcessName.Contains("devenv") && process.MainWindowTitle.Contains(projectName))
                 {
-                    if (process.MainWindowTitle.Contains(projectName)) // Шукаємо назву проекту в заголовку вікна
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
+
             return false;
         }
+      */
 
 
         // Метод для обробки події та оновлення label1
@@ -182,7 +186,7 @@ namespace diplom
 
         private void button3_Click(object sender, EventArgs e)
         {
-            string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\projects.json"; // Задайте шлях до вашого файлу
+           /* string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\projects.json"; // Задайте шлях до вашого файлу
             bool isOpen = JsonProcessing.IsProjectOpen(filePath);
 
             if (isOpen)
@@ -192,7 +196,7 @@ namespace diplom
             else
             {
                 MessageBox.Show("Проект не відкритий в системі.", "Інформація", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            }*/
         }
     }
 }

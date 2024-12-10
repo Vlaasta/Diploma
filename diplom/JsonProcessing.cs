@@ -11,18 +11,17 @@ namespace diplom
     {
         private static string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json"; // Шлях до JSON-файлу з статистикою
         private static string fileSecondPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\projects.json"; // Шлях до JSON-файлу з проектами
+        private static readonly string ProjectsFilePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\projects.json";
 
-        // Зчитування проектів з файлу
         public static List<Project> LoadProjects()
         {
-            if (!File.Exists(fileSecondPath))
-            {
-                return new List<Project>();
-            }
+            if (!File.Exists(ProjectsFilePath))
+                throw new FileNotFoundException($"Файл {ProjectsFilePath} не знайдено.");
 
-            var json = File.ReadAllText(fileSecondPath);
-            return JsonConvert.DeserializeObject<List<Project>>(json) ?? new List<Project>();
+            string jsonContent = File.ReadAllText(ProjectsFilePath);
+            return JsonConvert.DeserializeObject<List<Project>>(jsonContent);
         }
+       
 
         // Запис проектів у файл
         public static void SaveProjects(List<Project> projects)
@@ -65,7 +64,7 @@ namespace diplom
         }
 
 
-        public static bool IsProjectOpen(string projectPath)
+      /*  public static bool IsProjectOpen(string projectPath)
         {
             string projectName = Path.GetFileNameWithoutExtension(projectPath); // Отримуємо назву проекту без розширення
 
@@ -83,7 +82,8 @@ namespace diplom
             }
 
             return false;
-        }
+        }*/
+
 
 
 

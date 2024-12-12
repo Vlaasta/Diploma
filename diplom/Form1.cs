@@ -152,6 +152,7 @@ namespace diplom
                 openFileDialog.Filter = "All Files (*.*)|*.*";
                 openFileDialog.Title = "Виберіть проект для додавання";
                 openFileDialog.CheckFileExists = true;
+                openFileDialog.CheckPathExists = true;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {

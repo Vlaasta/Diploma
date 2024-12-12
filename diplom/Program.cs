@@ -189,11 +189,6 @@ namespace diplom
                 Console.WriteLine("Активне вікно не відповідає жодному з проєктів.");
             }
         }
-
-
-
-
-
         [STAThread]
         static void Main()
         {
@@ -204,6 +199,7 @@ namespace diplom
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new Form1());
             });
+            formThread.SetApartmentState(ApartmentState.STA); // Встановлюємо режим STA для окремого потоку
             formThread.IsBackground = true; // Потік закриється разом із головним
             formThread.Start();
 

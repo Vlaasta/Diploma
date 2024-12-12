@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Diagnostics;
 using System.IO;
-using Newtonsoft.Json;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace diplom
 {
@@ -12,23 +15,38 @@ namespace diplom
     {
         private static readonly string ProjectsFilePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\projects.json";
 
-        // Перевірка чи файл відкритий іншим процесом
+        private static TimeSpan lastElapsedTime = TimeSpan.Zero;
+        public static bool ShouldSaveTimeToJson = true;  // Наприклад, збереження часу в JSON
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+        private static HandButton timer = new HandButton();
+        private static string currentActiveProject;
+
+        public static Func<string> GetLabel1TextDelegate { get; set; }
+
+        // Змінна для збереження часу
+        private static TimeSpan ElapsedTime;
+
         public static bool IsFileLocked(string filePath)
         {
             try
             {
                 using (var stream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
                 {
-                    return false; // Файл не заблокований
+                    return false;
                 }
             }
             catch
             {
-                return true; // Файл заблокований
+                return true;
             }
         }
 
-        // Завантаження проектів із JSON
         public static List<Project> LoadProjects()
         {
             if (!File.Exists(ProjectsFilePath))
@@ -49,7 +67,6 @@ namespace diplom
             }
         }
 
-        // Порівняння файлів із відкритими процесами
         public static void CompareProjectsWithOpenProcesses(List<Project> projects)
         {
             var openFiles = new List<string>();
@@ -62,44 +79,166 @@ namespace diplom
 
                     if (!string.IsNullOrEmpty(windowTitle))
                     {
-                        // Зберігаємо відкриті файли, які є в заголовках вікон
                         openFiles.Add(windowTitle);
                     }
                 }
                 catch
                 {
-                    // Ігноруємо процеси, які недоступні
+                    // Игноруємо помилки доступу
                 }
             }
 
             foreach (var project in projects)
             {
-                // Перевірка, чи відкритий файл
                 bool isFileOpen = openFiles.Any(title =>
                     title.IndexOf(Path.GetFileNameWithoutExtension(project.Path), StringComparison.OrdinalIgnoreCase) >= 0);
 
-                // Альтернатива: спроба відкрити файл
-                isFileOpen = isFileOpen || IsFileLocked(project.Path);
+                bool isFileLocked = IsFileLocked(project.Path);
 
-                Console.WriteLine(isFileOpen
+                bool isOpen = isFileOpen || isFileLocked;
+
+                Console.WriteLine(isOpen
                     ? $"Файл відкритий: {project.Name}"
                     : $"Файл закритий: {project.Name}");
             }
         }
 
-        static void Main()
+        public static string GetActiveWindowTitle()
         {
-            var projects = LoadProjects();
-            if (projects.Count == 0)
+            const int nChars = 256;
+            StringBuilder buff = new StringBuilder(nChars);
+            IntPtr handle = GetForegroundWindow();
+
+            if (GetWindowText(handle, buff, nChars) > 0)
             {
-                Console.WriteLine("Немає проектів для перевірки.");
-                return;
+                return buff.ToString();
             }
 
-            CompareProjectsWithOpenProcesses(projects);
+            return "Без назви";
+        }
+
+        // Метод для встановлення часу
+        public static void SetElapsedTime(TimeSpan elapsedTime)
+        {
+            ElapsedTime = elapsedTime;
+        }
+
+        public static void CheckActiveWindow(List<Project> projects, Action<TimeSpan> onTimeUpdated)
+        {
+            string activeWindowTitle = GetActiveWindowTitle();
+
+            var activeProject = projects.FirstOrDefault(project =>
+                activeWindowTitle.IndexOf(Path.GetFileNameWithoutExtension(project.Path), StringComparison.OrdinalIgnoreCase) >= 0);
+
+            if (activeProject != null)
+            {
+                if (currentActiveProject != activeProject.Name)
+                {
+                    if (timer.IsRunning)
+                    {
+                        lastElapsedTime = timer.GetAccumulatedTime(); // Зберігаємо накопичений час перед зупинкою
+                        Console.WriteLine($"Зупинка таймера для попереднього проєкту: {currentActiveProject}, збережено час: {lastElapsedTime}");
+                        timer.Pause();
+                    }
+
+                    if (!timer.IsRunning)
+                    {
+                        // Логіка для передачі часу з label1.Text
+                        if (GetLabel1TextDelegate != null)
+                        {
+                            string label1Text = GetLabel1TextDelegate.Invoke(); // Отримуємо текст з label1
+                            if (TimeSpan.TryParseExact(label1Text, @"hh\:mm\:ss", null, out TimeSpan lastElapsed))
+                            {
+                                timer.SetElapsedTime(lastElapsed); // Використовуємо отриманий час
+                            }
+                            else
+                            {
+                                timer.SetElapsedTime(TimeSpan.Zero); // Якщо текст некоректний, починаємо з 0
+                            }
+                        }
+                        else
+                        {
+                            timer.SetElapsedTime(TimeSpan.Zero); // Якщо делегат не налаштований, починаємо з 0
+                        }
+
+                        Console.WriteLine($"Запуск таймера для проєкту: {activeProject.Name}, продовження з часу: {lastElapsedTime}");
+                        timer.Start();
+                        currentActiveProject = activeProject.Name;
+
+                        timer.OnTimeUpdated += (elapsed) =>
+                        {
+                            onTimeUpdated(elapsed);
+
+                            if (ShouldSaveTimeToJson)
+                            {
+                                JsonProcessing.SaveCurrentDayTime(elapsed);
+                            }
+                        };
+                    }
+                }
+            }
+            else
+            {
+                if (timer.IsRunning)
+                {
+                    lastElapsedTime = timer.GetAccumulatedTime(); // Зберігаємо перед зупинкою
+                    Console.WriteLine($"Зупинка таймера для проєкту: {currentActiveProject}, збережено час: {lastElapsedTime}");
+                    timer.Pause();
+                    currentActiveProject = null;
+                }
+                Console.WriteLine("Активне вікно не відповідає жодному з проєктів.");
+            }
+        }
+
+
+
+
+
+        [STAThread]
+        static void Main()
+        {
+            // Запуск форми в окремому потоці
+            Thread formThread = new Thread(() =>
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new Form1());
+            });
+            formThread.IsBackground = true; // Потік закриється разом із головним
+            formThread.Start();
+
+            // Головний цикл перевірок
+            while (true)
+            {
+                var projects = LoadProjects();
+                if (projects.Count == 0)
+                {
+                    Console.WriteLine("Немає проектів для перевірки.");
+                }
+                else
+                {
+                    CompareProjectsWithOpenProcesses(projects);
+                    // Відправляємо Action для оновлення часу в Form1
+                    CheckActiveWindow(projects, elapsed =>
+                    {
+                        // Потрібно викликати метод HandButton_OnTimeUpdated
+                        Form1.Instance?.HandButton_OnTimeUpdated(elapsed);
+                    });
+                }
+
+                Thread.Sleep(1000); // Чекаємо 1 секунду
+            }
         }
     }
 }
+
+
+
+
+
+
+
+
 
 
 

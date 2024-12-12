@@ -21,7 +21,7 @@ namespace diplom
             string jsonContent = File.ReadAllText(ProjectsFilePath);
             return JsonConvert.DeserializeObject<List<Project>>(jsonContent);
         }
-       
+
 
         // Запис проектів у файл
         public static void SaveProjects(List<Project> projects)
@@ -64,25 +64,25 @@ namespace diplom
         }
 
 
-      /*  public static bool IsProjectOpen(string projectPath)
-        {
-            string projectName = Path.GetFileNameWithoutExtension(projectPath); // Отримуємо назву проекту без розширення
+        /*  public static bool IsProjectOpen(string projectPath)
+          {
+              string projectName = Path.GetFileNameWithoutExtension(projectPath); // Отримуємо назву проекту без розширення
 
-            var processes = Process.GetProcesses();
+              var processes = Process.GetProcesses();
 
-            foreach (var process in processes)
-            {
-                if (process.ProcessName.Contains("devenv")) // Перевіряємо, чи це процес Visual Studio
-                {
-                    if (process.MainWindowTitle.Contains(projectName)) // Шукаємо назву проекту в заголовку вікна
-                    {
-                        return true;
-                    }
-                }
-            }
+              foreach (var process in processes)
+              {
+                  if (process.ProcessName.Contains("devenv")) // Перевіряємо, чи це процес Visual Studio
+                  {
+                      if (process.MainWindowTitle.Contains(projectName)) // Шукаємо назву проекту в заголовку вікна
+                      {
+                          return true;
+                      }
+                  }
+              }
 
-            return false;
-        }*/
+              return false;
+          }*/
 
 
 

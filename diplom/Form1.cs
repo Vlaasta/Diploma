@@ -22,6 +22,8 @@ namespace diplom
         public Form1()
         {
             InitializeComponent();
+            this.MaximumSize = this.Size;  // Фіксувати максимальний розмір форми
+            this.MinimumSize = this.Size;  // Фіксувати мінімальний розмір форми
 
             // Завантажуємо час з файлу при запуску програми
             TimeSpan lastElapsedTime = LoadLastElapsedTimeFromFile();
@@ -39,6 +41,7 @@ namespace diplom
             handButton.OnTimeUpdated += HandButton_OnTimeUpdated;
 
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
+
         }
 
         public static TimeSpan LoadLastElapsedTimeFromFile()
@@ -229,6 +232,12 @@ namespace diplom
                 projects.Remove(projectToRemove);
                 JsonProcessing.SaveProjects(projects);
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Form Form2 = new Form2();
+            Form2.ShowDialog();
         }
     }
 }

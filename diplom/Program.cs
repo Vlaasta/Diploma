@@ -8,11 +8,22 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace diplom
 {
     internal static class Program
     {
+        // Декларація Windows API для роботи з хуками
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hmod, int dwThreadId);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern IntPtr GetModuleHandle(string lpModuleName);
+
+        // Оголошення хуків
+        public delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
+
         private static readonly string ProjectsFilePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\projects.json";
 
         private static TimeSpan lastElapsedTime = TimeSpan.Zero;
@@ -31,6 +42,30 @@ namespace diplom
 
         // Змінна для збереження часу
         private static TimeSpan ElapsedTime;
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool UnhookWindowsHookEx(IntPtr hhk);
+
+        [StructLayout(LayoutKind.Sequential)]
+        struct LASTINPUTINFO
+        {
+            public uint cbSize;
+            public uint dwTime;
+        }
+
+        [DllImport("user32.dll")]
+        static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
+
+        public static uint GetIdleTime()
+        {
+            LASTINPUTINFO info = new LASTINPUTINFO();
+            info.cbSize = (uint)Marshal.SizeOf(info);
+            if (GetLastInputInfo(ref info))
+            {
+                return ((uint)Environment.TickCount - info.dwTime) / 1000; // Час простою у секундах
+            }
+            return 0;
+        }
 
         public static bool IsFileLocked(string filePath)
         {
@@ -75,7 +110,7 @@ namespace diplom
             {
                 try
                 {
-                    string windowTitle = process.MainWindowTitle;
+                    string windowTitle = process?.MainWindowTitle;
 
                     if (!string.IsNullOrEmpty(windowTitle))
                     {
@@ -123,7 +158,7 @@ namespace diplom
             ElapsedTime = elapsedTime;
         }
 
-        public static void CheckActiveWindow(List<Project> projects, Action<TimeSpan> onTimeUpdated)
+        private static void CheckActiveWindow(List<Project> projects, Action<TimeSpan> onTimeUpdated)
         {
             string activeWindowTitle = GetActiveWindowTitle();
 
@@ -164,6 +199,7 @@ namespace diplom
                         Console.WriteLine($"Запуск таймера для проєкту: {activeProject.Name}, продовження з часу: {lastElapsedTime}");
                         timer.Start();
                         currentActiveProject = activeProject.Name;
+                       // IfUserActive();
 
                         timer.OnTimeUpdated += (elapsed) =>
                         {
@@ -189,8 +225,22 @@ namespace diplom
                 Console.WriteLine("Активне вікно не відповідає жодному з проєктів.");
             }
         }
+
+        private static void IfUserActive()
+        {
+            uint idleTime = GetIdleTime();
+            if (idleTime < 3) // 5 секунд - поріг активності
+            {
+                Console.WriteLine("Користувач активний");
+            }
+            else
+            {
+                Console.WriteLine("Користувач неактивний більше 5 секунд");
+            }
+        }
+
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             // Запуск форми в окремому потоці
             Thread formThread = new Thread(() =>
@@ -203,24 +253,44 @@ namespace diplom
             formThread.IsBackground = true; // Потік закриється разом із головним
             formThread.Start();
 
+
             // Головний цикл перевірок
             while (true)
             {
+                var stLP = new Stopwatch();
+                stLP.Start();
                 var projects = LoadProjects();
+                stLP.Stop();
+                Console.WriteLine($"stlp {stLP.Elapsed.TotalSeconds}");
+
+
                 if (projects.Count == 0)
                 {
                     Console.WriteLine("Немає проектів для перевірки.");
                 }
                 else
                 {
+                    var stLP2 = new Stopwatch();
+                    stLP2.Start();
+
                     CompareProjectsWithOpenProcesses(projects);
+
+                    stLP2.Stop();
+                    Console.WriteLine($"stlp2 {stLP2.Elapsed.TotalSeconds}");
+
+
                     // Відправляємо Action для оновлення часу в Form1
                     CheckActiveWindow(projects, elapsed =>
                     {
                         // Потрібно викликати метод HandButton_OnTimeUpdated
                         Form1.Instance?.HandButton_OnTimeUpdated(elapsed);
                     });
+
+                    IfUserActive();
                 }
+
+                Console.WriteLine($"єбать. {DateTime.Now}");
+
 
                 Thread.Sleep(1000); // Чекаємо 1 секунду
             }

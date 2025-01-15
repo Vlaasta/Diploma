@@ -27,13 +27,13 @@ namespace diplom
 
             // Завантажуємо час з файлу при запуску програми
             TimeSpan lastElapsedTime = LoadLastElapsedTimeFromFile();
-            label1.Text = lastElapsedTime.ToString(@"hh\:mm\:ss");
+            label2.Text = lastElapsedTime.ToString(@"hh\:mm\:ss");
 
             InitializeDataGridView();
             LoadProjectsToDataGridView();
             Instance = this;
 
-            GetLabel1Text = () => label1.Text;
+            GetLabel1Text = () => label2.Text;
             Program.GetLabel1TextDelegate = this.GetLabel1Text;
 
             // Ініціалізація HandButton
@@ -42,6 +42,10 @@ namespace diplom
 
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
 
+            var notification = new Notifications();
+            notification.ShowNotification(); // Викликає метод
+
+            loadValues();
         }
 
         public static TimeSpan LoadLastElapsedTimeFromFile()
@@ -92,13 +96,13 @@ namespace diplom
                 lock (lockObject)
                 {
                     // Оновлюємо UI елемент
-                    if (label1.InvokeRequired)
+                    if (label2.InvokeRequired)
                     {
-                        label1.Invoke(new Action(() => label1.Text = currentTime));
+                        label2.Invoke(new Action(() => label2.Text = currentTime));
                     }
                     else
                     {
-                        label1.Text = currentTime;
+                        label2.Text = currentTime;
                     }
 
                     try
@@ -119,7 +123,7 @@ namespace diplom
         {
             if (!handButton.IsRunning)
             {
-                if (TimeSpan.TryParseExact(label1.Text, @"hh\:mm\:ss", null, out TimeSpan lastElapsed))
+                if (TimeSpan.TryParseExact(label2.Text, @"hh\:mm\:ss", null, out TimeSpan lastElapsed))
                 {
                     handButton.StartWithTime(lastElapsed); // Виклик правильного методу
                 }
@@ -238,6 +242,66 @@ namespace diplom
         {
             Form Form2 = new Form2();
             Form2.ShowDialog();
+        }
+
+        private void loadValues()
+        {
+            // Завантажуємо проєкти через існуючий метод
+            var projects = JsonProcessing.LoadProjects();
+
+            // Список ваших Label (вказуєте всі необхідні)
+            var projectsNames = new List<Label> { label3, label4, label5};
+            var projectsPath = new List<Label> { label6, label7, label8 };
+
+            // Прив'язка значень Name до Label
+            for (int i = 0; i < projectsNames.Count && i < projects.Count; i++)
+            {
+                projectsNames[i].Text = projects[i].Name;
+            }
+
+            // Прив'язка значень Name до Label
+            for (int i = 0; i < projectsPath.Count && i < projects.Count; i++)
+            {
+                projectsPath[i].Text = projects[i].Path;
+            }
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string projectName = label3.Text;
+            var result = MessageBox.Show($"Ви дійсно хочете видалити проєкт \"{projectName}\"?", "Підтвердження", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                DeleteProject(projectName);
+                loadValues();
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            string projectName = label4.Text;
+            var result = MessageBox.Show($"Ви дійсно хочете видалити проєкт \"{projectName}\"?", "Підтвердження", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                DeleteProject(projectName);
+                loadValues();
+
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            string projectName = label5.Text;
+            var result = MessageBox.Show($"Ви дійсно хочете видалити проєкт \"{projectName}\"?", "Підтвердження", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                DeleteProject(projectName);
+                loadValues();
+            }
         }
     }
 }

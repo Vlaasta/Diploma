@@ -1,10 +1,5 @@
 [
   {
-    "Name": "РейВінтер.psd",
-    "Path": "E:\\Art\\РейВінтер.psd",
-    "Type": ".psd"
-  },
-  {
     "Name": "План.docx",
     "Path": "E:\\4 KURS\\Диплом\\План.docx",
     "Type": ".docx"
@@ -28,5 +23,15 @@
     "Name": "База відпочинку.mpp",
     "Path": "E:\\4 KURS\\УІТ(Толістікова)\\База відпочинку.mpp",
     "Type": ".mpp"
+  },
+  {
+    "Name": "бубу.docx",
+    "Path": "E:\\4 KURS\\УІТ(Толістікова)\\бубу.docx",
+    "Type": ".docx"
+  },
+  {
+    "Name": "чат.docx",
+    "Path": "E:\\4 KURS\\Диплом\\чат.docx",
+    "Type": ".docx"
   }
 ]

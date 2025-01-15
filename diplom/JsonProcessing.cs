@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Forms; // Для OpenFileDialog
+using System.Windows.Forms; 
 using Newtonsoft.Json;
-using System.Diagnostics;
 
 namespace diplom
 {
@@ -11,14 +10,13 @@ namespace diplom
     {
         private static string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json"; // Шлях до JSON-файлу з статистикою
         private static string fileSecondPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\projects.json"; // Шлях до JSON-файлу з проектами
-        private static readonly string ProjectsFilePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\projects.json";
 
         public static List<Project> LoadProjects()
         {
-            if (!File.Exists(ProjectsFilePath))
-                throw new FileNotFoundException($"Файл {ProjectsFilePath} не знайдено.");
+            if (!File.Exists(fileSecondPath))
+                throw new FileNotFoundException($"Файл {fileSecondPath} не знайдено.");
 
-            string jsonContent = File.ReadAllText(ProjectsFilePath);
+            string jsonContent = File.ReadAllText(fileSecondPath);
             return JsonConvert.DeserializeObject<List<Project>>(jsonContent);
         }
 
@@ -62,30 +60,6 @@ namespace diplom
                 }
             }
         }
-
-
-        /*  public static bool IsProjectOpen(string projectPath)
-          {
-              string projectName = Path.GetFileNameWithoutExtension(projectPath); // Отримуємо назву проекту без розширення
-
-              var processes = Process.GetProcesses();
-
-              foreach (var process in processes)
-              {
-                  if (process.ProcessName.Contains("devenv")) // Перевіряємо, чи це процес Visual Studio
-                  {
-                      if (process.MainWindowTitle.Contains(projectName)) // Шукаємо назву проекту в заголовку вікна
-                      {
-                          return true;
-                      }
-                  }
-              }
-
-              return false;
-          }*/
-
-
-
 
         // Зчитування даних з файлу
         public static List<TimerData> LoadData()

@@ -64,3 +64,7 @@ E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\OxyPlot.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\OxyPlot.WindowsForms.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\OxyPlot.Wpf.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\OxyPlot.Wpf.Shared.xml
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\diplom.exe.manifest
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\diplom.application
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\obj\Debug\diplom.exe.manifest
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\obj\Debug\diplom.application

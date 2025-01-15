@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
 
 namespace diplom
 {
@@ -290,7 +289,6 @@ namespace diplom
                 }
 
                 Console.WriteLine($"єбать. {DateTime.Now}");
-
 
                 Thread.Sleep(1000); // Чекаємо 1 секунду
             }

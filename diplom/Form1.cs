@@ -14,10 +14,8 @@ namespace diplom
         public static Form1 Instance { get; private set; }
         public Func<string> GetLabel1Text { get; set; }
 
-
         private DateTime lastUpdated = DateTime.MinValue;
         private readonly object lockObject = new object();
-
 
         public Form1()
         {
@@ -29,8 +27,6 @@ namespace diplom
             TimeSpan lastElapsedTime = LoadLastElapsedTimeFromFile();
             label2.Text = lastElapsedTime.ToString(@"hh\:mm\:ss");
 
-            InitializeDataGridView();
-            LoadProjectsToDataGridView();
             Instance = this;
 
             GetLabel1Text = () => label2.Text;
@@ -39,8 +35,6 @@ namespace diplom
             // Ініціалізація HandButton
             handButton = new HandButton();
             handButton.OnTimeUpdated += HandButton_OnTimeUpdated;
-
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
 
             var notification = new Notifications();
             notification.ShowNotification(); // Викликає метод
@@ -119,6 +113,111 @@ namespace diplom
             }
         }
 
+        private void DeleteProject(string projectName)
+        {
+            var projects = JsonProcessing.LoadProjects();
+            var projectToRemove = projects.Find(p => p.Name == projectName);
+
+            if (projectToRemove != null)
+            {
+                projects.Remove(projectToRemove);
+                JsonProcessing.SaveProjects(projects);
+            }
+        }
+
+        private void loadValues()
+        {
+            // Завантажуємо проєкти через існуючий метод
+            var projects = JsonProcessing.LoadProjects();
+
+            // Список ваших Label (вказуєте всі необхідні)
+            var projectsNames = new List<Label> { label3, label4, label5};
+            var projectsPath = new List<Label> { label6, label7, label8 };
+
+            // Прив'язка значень Name до Label
+            for (int i = 0; i < projectsNames.Count && i < projects.Count; i++)
+            {
+                projectsNames[i].Text = projects[i].Name;
+            }
+
+            // Прив'язка значень Name до Label
+            for (int i = 0; i < projectsPath.Count && i < projects.Count; i++)
+            {
+                projectsPath[i].Text = projects[i].Path;
+            }
+
+        }
+
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Form Form2 = new Form2();
+            Form2.ShowDialog();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            string projectName = label5.Text;
+            var result = MessageBox.Show($"Ви дійсно хочете видалити проєкт \"{projectName}\"?", "Підтвердження", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                DeleteProject(projectName);
+                loadValues();
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            string projectName = label4.Text;
+            var result = MessageBox.Show($"Ви дійсно хочете видалити проєкт \"{projectName}\"?", "Підтвердження", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                DeleteProject(projectName);
+                loadValues();
+
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string projectName = label3.Text;
+            var result = MessageBox.Show($"Ви дійсно хочете видалити проєкт \"{projectName}\"?", "Підтвердження", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                DeleteProject(projectName);
+                loadValues();
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "All Files (*.*)|*.*";
+                openFileDialog.Title = "Виберіть проект для додавання";
+                openFileDialog.CheckFileExists = true;
+                openFileDialog.CheckPathExists = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string selectedFilePath = openFileDialog.FileName;
+
+                    try
+                    {
+                        JsonProcessing.AddProject(selectedFilePath);
+                        MessageBox.Show($"Файл успішно додано: {selectedFilePath}", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Помилка: {ex.Message}", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             if (!handButton.IsRunning)
@@ -149,158 +248,6 @@ namespace diplom
                 }
 
                 button2.Text = "Запустити таймер";
-            }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Filter = "All Files (*.*)|*.*";
-                openFileDialog.Title = "Виберіть проект для додавання";
-                openFileDialog.CheckFileExists = true;
-                openFileDialog.CheckPathExists = true;
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string selectedFilePath = openFileDialog.FileName;
-
-                    try
-                    {
-                        JsonProcessing.AddProject(selectedFilePath);
-                        MessageBox.Show($"Файл успішно додано: {selectedFilePath}", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadProjectsToDataGridView();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Помилка: {ex.Message}", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-        }
-
-        private void InitializeDataGridView()
-        {
-            dataGridView1.Columns.Add("Name", "Name");
-            dataGridView1.Columns.Add("Path", "Path");
-            dataGridView1.Columns.Add("Type", "Type");
-
-            DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn
-            {
-                Name = "Delete",
-                HeaderText = "Delete",
-                Text = "Видалити",
-                UseColumnTextForButtonValue = true
-            };
-
-            dataGridView1.Columns.Add(deleteButtonColumn);
-
-            dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.RowHeadersVisible = false;
-        }
-
-        private void LoadProjectsToDataGridView()
-        {
-            var projects = JsonProcessing.LoadProjects();
-
-            dataGridView1.Rows.Clear();
-
-            foreach (var project in projects)
-            {
-                dataGridView1.Rows.Add(project.Name, project.Path, project.Type);
-            }
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.ColumnIndex == dataGridView1.Columns["Delete"].Index && e.RowIndex >= 0)
-            {
-                string projectName = dataGridView1.Rows[e.RowIndex].Cells["Name"].Value.ToString();
-                var result = MessageBox.Show($"Ви дійсно хочете видалити проєкт \"{projectName}\"?", "Підтвердження", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (result == DialogResult.Yes)
-                {
-                    DeleteProject(projectName);
-                    LoadProjectsToDataGridView();
-                }
-            }
-        }
-
-        private void DeleteProject(string projectName)
-        {
-            var projects = JsonProcessing.LoadProjects();
-            var projectToRemove = projects.Find(p => p.Name == projectName);
-
-            if (projectToRemove != null)
-            {
-                projects.Remove(projectToRemove);
-                JsonProcessing.SaveProjects(projects);
-            }
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            Form Form2 = new Form2();
-            Form2.ShowDialog();
-        }
-
-        private void loadValues()
-        {
-            // Завантажуємо проєкти через існуючий метод
-            var projects = JsonProcessing.LoadProjects();
-
-            // Список ваших Label (вказуєте всі необхідні)
-            var projectsNames = new List<Label> { label3, label4, label5};
-            var projectsPath = new List<Label> { label6, label7, label8 };
-
-            // Прив'язка значень Name до Label
-            for (int i = 0; i < projectsNames.Count && i < projects.Count; i++)
-            {
-                projectsNames[i].Text = projects[i].Name;
-            }
-
-            // Прив'язка значень Name до Label
-            for (int i = 0; i < projectsPath.Count && i < projects.Count; i++)
-            {
-                projectsPath[i].Text = projects[i].Path;
-            }
-
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            string projectName = label3.Text;
-            var result = MessageBox.Show($"Ви дійсно хочете видалити проєкт \"{projectName}\"?", "Підтвердження", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-            if (result == DialogResult.Yes)
-            {
-                DeleteProject(projectName);
-                loadValues();
-            }
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            string projectName = label4.Text;
-            var result = MessageBox.Show($"Ви дійсно хочете видалити проєкт \"{projectName}\"?", "Підтвердження", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-            if (result == DialogResult.Yes)
-            {
-                DeleteProject(projectName);
-                loadValues();
-
-            }
-        }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            string projectName = label5.Text;
-            var result = MessageBox.Show($"Ви дійсно хочете видалити проєкт \"{projectName}\"?", "Підтвердження", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-            if (result == DialogResult.Yes)
-            {
-                DeleteProject(projectName);
-                loadValues();
             }
         }
     }

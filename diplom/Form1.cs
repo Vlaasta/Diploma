@@ -20,6 +20,7 @@ namespace diplom
         public Form1()
         {
             InitializeComponentMainMenu();
+            this.button3.Visible = false;
             this.MaximumSize = this.Size;  // Фіксувати максимальний розмір форми
             this.MinimumSize = this.Size;  // Фіксувати мінімальний розмір форми
 
@@ -145,7 +146,6 @@ namespace diplom
             {
                 projectsPath[i].Text = projects[i].Path;
             }
-
         }
 
 
@@ -256,19 +256,124 @@ namespace diplom
         {
             this.Controls.Clear();
             InitializeComponentMainMenu();
+            this.button3.Visible = false;
         }
 
-       /* private void InitializeComponent()
+        private void button3_Click(object sender, EventArgs e)
         {
-            this.SuspendLayout();
-            // 
-            // Form1
-            // 
-            this.ClientSize = new System.Drawing.Size(848, 708);
-            this.Name = "Form1";
-            this.ResumeLayout(false);
+            // Завантажуємо проєкти
+            var projects = JsonProcessing.LoadProjects();
+            this.button10.Visible = true;
 
-        }*/
+            string firstProjectName = GetFirstProjectName();
+            //MessageBox.Show($"Перше значення Name: {firstProjectName}");
+
+            // Поточні значення Label
+            string currentLabel3 = label3.Text;
+            string currentLabel4 = label4.Text;
+            string currentLabel5 = label5.Text;
+
+            // Знаходимо індекс для label3 у списку проектів
+            int currentIndexForLabel3 = projects.FindIndex(p => p.Name == currentLabel3);
+
+            // Отримуємо попереднє значення для label3
+            string previousLabel3 = currentIndexForLabel3 > 0
+                ? projects[currentIndexForLabel3 - 1].Name // Попереднє значення
+                : projects.LastOrDefault()?.Name ?? "Немає даних"; // Повертаємося на останній елемент, якщо це перший елемент
+
+            // Оновлюємо значення Label
+            label3.Text = previousLabel3;  // label3 отримує попереднє значення
+            label4.Text = currentLabel3;   // label4 отримує значення label3
+            label5.Text = currentLabel4;   // label5 отримує значення label4
+
+            // Якщо label5 набуває значення останнього елемента
+            if (label3.Text == firstProjectName)
+            {
+                this.button3.Visible = false; // Приховуємо кнопку
+                this.button10.Visible = true;
+            }
+
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            // Завантажуємо проєкти
+            var projects = JsonProcessing.LoadProjects();
+            string lastProjectName = GetLastProjectName();
+            button3.Visible = true;
+
+            // Поточні значення Label
+            string currentLabel3 = label3.Text;
+            string currentLabel4 = label4.Text;
+            string currentLabel5 = label5.Text;
+
+            // Знаходимо індекс для label5 у списку проектів
+            int currentIndex = projects.FindIndex(p => p.Name == currentLabel5);
+
+            // Отримуємо наступне значення для label5
+            string nextLabel5 = currentIndex != -1 && currentIndex + 1 < projects.Count
+                ? projects[currentIndex + 1].Name // Наступне значення
+                : projects.FirstOrDefault()?.Name ?? "Немає даних"; // Повертаємося на початок, якщо це останній елемент
+
+            // Оновлюємо значення Label
+            label3.Text = currentLabel4; // label3 отримує значення label4
+            label4.Text = currentLabel5; // label4 отримує значення label5
+            label5.Text = nextLabel5;    // label5 отримує наступне значення
+
+            // Якщо label5 набуває значення останнього елемента
+            if (label5.Text == lastProjectName)
+            {
+                this.button10.Visible = false; // Приховуємо кнопку
+                this.button3.Visible = true;
+            }
+            //MessageBox.Show($"Привіт");
+        }
+
+        private string GetLastProjectName()
+        {
+            // Завантажуємо проєкти з JSON
+            var projects = JsonProcessing.LoadProjects();
+
+            // Перевіряємо, чи список не порожній
+            if (projects.Count > 0)
+            {
+                // Повертаємо Name останнього елемента
+                return projects.Last().Name;
+            }
+
+            // Якщо список порожній, повертаємо повідомлення або порожній рядок
+            return "Немає даних";
+        }
+
+        private string GetFirstProjectName()
+        {
+            // Завантажуємо проєкти з JSON
+            var projects = JsonProcessing.LoadProjects();
+
+            // Перевіряємо, чи список не порожній
+            if (projects.Count > 0)
+            {
+                // Повертаємо Name останнього елемента
+                return projects.First().Name;
+            }
+
+            // Якщо список порожній, повертаємо повідомлення або порожній рядок
+            return "Немає даних";
+
+            
+        }
+
+        /* private void InitializeComponent()
+         {
+             this.SuspendLayout();
+             // 
+             // Form1
+             // 
+             this.ClientSize = new System.Drawing.Size(848, 708);
+             this.Name = "Form1";
+             this.ResumeLayout(false);
+
+         }*/
     }
 }
 

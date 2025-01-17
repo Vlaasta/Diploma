@@ -49,7 +49,7 @@ namespace diplom
             this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
             this.panel1.Controls.Add(this.panel4);
             this.panel1.Controls.Add(this.panel3);
-            this.panel1.Controls.Add(this.panel2);
+           // this.panel1.Controls.Add(this.panel2);
             this.panel1.BackColor = Color.FromArgb(4, 26, 44);
             this.panel1.Location = new System.Drawing.Point(0, 1);
             this.panel1.Name = "panel1";
@@ -109,7 +109,6 @@ namespace diplom
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "Form1";
             this.panel1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -119,9 +118,10 @@ namespace diplom
         private void InitializeComponentMainMenu()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
+            InitializeComponentMain();
+           // this.panel2 = new System.Windows.Forms.Panel();
             this.button3 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -143,13 +143,8 @@ namespace diplom
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.button7 = new System.Windows.Forms.Button();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.button8 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
+           // this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -158,24 +153,7 @@ namespace diplom
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
-            this.panel3.SuspendLayout();
-            this.panel4.SuspendLayout();
-            this.panel5.SuspendLayout();
             this.SuspendLayout();
-
-            this.BackColor = Color.FromArgb(2, 14, 25);
-            // 
-            // panel1
-            // 
-            this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
-            this.panel1.Controls.Add(this.panel4);
-            this.panel1.Controls.Add(this.panel3);
-            this.panel1.Controls.Add(this.panel2);
-            this.panel1.BackColor = Color.FromArgb(4, 26, 44);
-            this.panel1.Location = new System.Drawing.Point(0, 1);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(214, 733);
-            this.panel1.TabIndex = 0;
             // 
             // panel2
             // 
@@ -183,25 +161,41 @@ namespace diplom
             this.panel2.Location = new System.Drawing.Point(0, 251);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(225, 46);
-            this.panel2.TabIndex = 22;
+            this.panel2.TabIndex = 22;*/
             // 
             // button3
             // 
-            this.button3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button3.BackgroundImage")));
+           // this.button3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button3.BackgroundImage")));
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.FlatAppearance.BorderSize = 0;
             this.button3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button3.Location = new System.Drawing.Point(0, -14);
+            this.button3.Location = new System.Drawing.Point(282, 394);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(222, 69);
-            this.button3.TabIndex = 21;
-            this.button3.Text = "Статистика";
+            this.button3.Size = new System.Drawing.Size(50, 41);
+           // this.button3.TabIndex = 21;
+            this.button3.Text = "Вверх";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
-            this.button3.BackColor = Color.FromArgb(6, 40, 68);*/
+            this.button3.BackColor = Color.FromArgb(6, 40, 68);
+            //
+            //
+            //
+            //
+            this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button10.FlatAppearance.BorderSize = 0;
+            this.button10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button10.Location = new System.Drawing.Point(282, 535);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(50, 41);
+            // this.button3.TabIndex = 21;
+            this.button10.Text = "Вниз";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            this.button10.BackColor = Color.FromArgb(6, 40, 68);
             // 
             // pictureBox1
             // 
-           // this.pictureBox1.Image = System.Drawing.Image.FromFile("E:\\4 KURS\\DiplomaRepo\\Диплом\\Diploma\\Design\\Clock.png");
+            // this.pictureBox1.Image = System.Drawing.Image.FromFile("E:\\4 KURS\\DiplomaRepo\\Диплом\\Diploma\\Design\\Clock.png");
             //this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("Clock")));
             this.pictureBox1.Image = Properties.Resources.Clock;
             this.pictureBox1.Location = new System.Drawing.Point(552, 62);
@@ -450,56 +444,13 @@ namespace diplom
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button6.FlatAppearance.BorderSize = 0;
             // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.button7);
-            this.panel3.Location = new System.Drawing.Point(0, 251);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(225, 46);
-            this.panel3.TabIndex = 23;
-            // 
-            // button7
-            // 
-            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button7.Location = new System.Drawing.Point(-8, 0);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(235, 55);
-            this.button7.TabIndex = 21;
-            this.button7.Text = "Статистика";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
-            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button7.FlatAppearance.BorderSize = 0;
-            // 
-            // panel4
-            // 
-             this.panel4.Controls.Add(this.button8);
-             this.panel4.Location = new System.Drawing.Point(0, 200);
-             this.panel4.Name = "panel4";
-             this.panel4.Size = new System.Drawing.Size(225, 46);
-             this.panel4.TabIndex = 24;
-            // 
-            // button8
-            // 
-            this.button8.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button8.BackgroundImage")));
-            this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button8.Location = new System.Drawing.Point(-8, 0);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(235, 55);
-            this.button8.TabIndex = 22;
-            this.button8.Text = "Головне меню";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button8.FlatAppearance.BorderSize = 0;
-            // 
             // Form1
             // 
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1044, 734);
             this.Controls.Add(this.button2);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button10);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -520,12 +471,9 @@ namespace diplom
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.panel5);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "Form1";
-            this.panel1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
+           // this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
@@ -534,9 +482,6 @@ namespace diplom
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
-            this.panel3.ResumeLayout(false);
-            this.panel4.ResumeLayout(false);
-            this.panel5.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
         }
@@ -566,12 +511,13 @@ namespace diplom
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Panel panel2;
+       // private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Button button10;
     }
 }
 

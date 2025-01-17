@@ -18,5 +18,15 @@
     "Name": "чат.docx",
     "Path": "E:\\4 KURS\\Диплом\\чат.docx",
     "Type": ".docx"
+  },
+  {
+    "Name": "Курс.pdf",
+    "Path": "E:\\Курс.pdf",
+    "Type": ".pdf"
+  },
+  {
+    "Name": "Training.sln",
+    "Path": "E:\\Tetriis\\Training\\Training.sln",
+    "Type": ".sln"
   }
 ]

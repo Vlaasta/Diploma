@@ -19,7 +19,7 @@ namespace diplom
 
         public Form1()
         {
-            InitializeComponent();
+            InitializeComponentMainMenu();
             this.MaximumSize = this.Size;  // Фіксувати максимальний розмір форми
             this.MinimumSize = this.Size;  // Фіксувати мінімальний розмір форми
 
@@ -149,10 +149,11 @@ namespace diplom
         }
 
 
-        private void button3_Click(object sender, EventArgs e)
+        private void button7_Click(object sender, EventArgs e)
         {
-            Form Form2 = new Form2();
-            Form2.ShowDialog();
+            // Очищення всіх елементів управління з форми
+            this.Controls.Clear();
+            InitializeComponentMain();
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -250,6 +251,24 @@ namespace diplom
                 button2.Text = "Запустити таймер";
             }
         }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMainMenu();
+        }
+
+       /* private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // Form1
+            // 
+            this.ClientSize = new System.Drawing.Size(848, 708);
+            this.Name = "Form1";
+            this.ResumeLayout(false);
+
+        }*/
     }
 }
 

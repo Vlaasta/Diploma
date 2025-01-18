@@ -154,6 +154,22 @@ namespace diplom
             // Очищення всіх елементів управління з форми
             this.Controls.Clear();
             InitializeComponentMain();
+
+            Statistic statistic = new Statistic();
+
+            // Фільтрація даних для попереднього тижня
+            var filteredData = statistic.FilterDataForPreviousWeek(statistic.timerData);
+
+            // Заповнення пропущених днів (якщо потрібно)
+            var (startOfWeek, endOfWeek) = statistic.GetPreviousWeekRange();
+            var filledData = statistic.FillMissingDays(filteredData, startOfWeek, endOfWeek);
+
+            // Отримання точок X і Y
+            var xPoints = statistic.GetXPoints(filledData);
+            var yPoints = statistic.GetYPoints(filledData);
+
+            // Побудова графіка
+            buildChart(xPoints, yPoints);
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -362,18 +378,6 @@ namespace diplom
 
             
         }
-
-        /* private void InitializeComponent()
-         {
-             this.SuspendLayout();
-             // 
-             // Form1
-             // 
-             this.ClientSize = new System.Drawing.Size(848, 708);
-             this.Name = "Form1";
-             this.ResumeLayout(false);
-
-         }*/
     }
 }
 

@@ -1,4 +1,14 @@
 ﻿using System.Drawing; // Простір імен для Color
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+using System.Windows.Forms;
+using OxyPlot;
+using OxyPlot.Series;
+using OxyPlot.WindowsForms;
+using System.Globalization;
+using OxyPlot.Axes;
 
 namespace diplom
 {
@@ -486,9 +496,165 @@ namespace diplom
             this.PerformLayout();
         }
 
-        #endregion
+        private void buildChart(List<DateTime> xPoints, List<int> yPoints)
+        {
+            var plotView = new PlotView
+            {
+                Dock = DockStyle.None,
+                Size = new Size(600, 400),
+                Location = new Point(300, 60)
+            };
 
-        private System.Windows.Forms.Panel panel1;
+            var plotModel = new PlotModel
+            {
+                Title = "Статистика за останній тиждень",
+                TitleColor = OxyColor.FromRgb(169, 169, 169),
+                PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25)
+            };
+
+            var lineSeries = new LineSeries
+            {
+                Title = "Час (секунди)",
+                MarkerType = MarkerType.Circle,
+                Color = OxyColor.FromRgb(169, 169, 169)
+            };
+
+            for (int i = 0; i < xPoints.Count; i++)
+            {
+                lineSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(xPoints[i]), yPoints[i]));
+            }
+
+            plotModel.Series.Add(lineSeries);
+
+            var axisX = new DateTimeAxis
+            {
+                Position = AxisPosition.Bottom,
+                Title = "Дата",
+                TitleColor = OxyColor.FromRgb(169, 169, 169),
+                TextColor = OxyColor.FromRgb(169, 169, 169),
+                StringFormat = "dd.MM.yyyy",
+                MajorGridlineColor = OxyColor.FromRgb(169, 169, 169),
+                MinorGridlineColor = OxyColor.FromRgb(169, 169, 169),
+                IsZoomEnabled = false,
+                AxislineColor = OxyColor.FromArgb(0, 0, 0, 0),
+                TicklineColor = OxyColor.FromArgb(0, 0, 0, 0),
+                IsAxisVisible = false
+            };
+
+            var axisY = new LinearAxis
+            {
+                Title = "Секунди",
+                TitleColor = OxyColor.FromRgb(169, 169, 169),
+                TextColor = OxyColor.FromRgb(169, 169, 169),
+                MajorGridlineColor = OxyColor.FromRgb(169, 169, 169),
+                MinorGridlineColor = OxyColor.FromRgb(169, 169, 169),
+                IsZoomEnabled = false,
+                AxislineColor = OxyColor.FromArgb(0, 0, 0, 0),
+                TicklineColor = OxyColor.FromArgb(0, 0, 0, 0),
+                IsAxisVisible = false
+            };
+
+            plotModel.Axes.Add(axisX);
+            plotModel.Axes.Add(axisY);
+
+            plotView.Model = plotModel;
+
+            this.Controls.Add(plotView);
+        }
+
+      /*  private void StatisticsMainMenu()
+        {
+            // Зчитуємо дані з JSON файлу
+            string jsonContent = File.ReadAllText(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json");
+            List<TimerData> timerData = JsonSerializer.Deserialize<List<TimerData>>(jsonContent);
+
+            // Створення PlotView для відображення графіка
+            var plotView = new PlotView
+            {
+                Dock = DockStyle.None, // Вимикаємо автоматичне заповнення форми
+                Size = new Size(600, 400), // Встановлюємо розміри графіка (ширина - 600, висота - 400)
+                Location = new Point(300, 60) // Встановлюємо місце розташування (відстань від лівого верхнього кута форми)
+               
+            };
+
+            // Створення моделі графіка
+            var plotModel = new PlotModel
+            {
+                Title = "Статистика за останній тиждень",
+                TitleColor = OxyColor.FromRgb(169, 169, 169), // Колір заголовку графіка
+                PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25) // Колір межі (білий або інший, щоб вона була непомітною)
+            };
+
+            // Створення серії для лінійного графіка
+            var lineSeries = new LineSeries
+            {
+                Title = "Час (секунди)",
+                MarkerType = MarkerType.Circle,
+                Color = OxyColor.FromRgb(169, 169, 169) // Колір лінії (сірий)
+            };
+
+            // Додаємо точки на графік
+            var labels = new List<string>();
+            foreach (var data in timerData)
+            {
+                DateTime date = DateTime.ParseExact(data.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                TimeSpan timeSpan = TimeSpan.Parse(data.Time);
+                int totalSeconds = (int)timeSpan.TotalSeconds;
+
+                lineSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(date), totalSeconds));
+                labels.Add(date.ToString("dd.MM.yyyy"));
+            }
+
+            // Додаємо серію до моделі
+            plotModel.Series.Add(lineSeries);
+
+            // Налаштовуємо осі
+            var axisX = new DateTimeAxis
+            {
+                Position = AxisPosition.Bottom,
+                Title = "Дата",
+                TitleColor = OxyColor.FromRgb(169, 169, 169),
+                TextColor = OxyColor.FromRgb(169, 169, 169),
+                StringFormat = "dd.MM.yyyy",  // Формат дати
+                MajorGridlineColor = OxyColor.FromRgb(169, 169, 169),  // Колір сітки
+                MinorGridlineColor = OxyColor.FromRgb(169, 169, 169),
+                IsZoomEnabled = false,  // Вимкнути масштабування по осі X
+                        AxislineColor = OxyColor.FromArgb(0, 0, 0, 0),  // Приховуємо лінію осі X
+                TicklineColor = OxyColor.FromArgb(0, 0, 0, 0),  // Приховуємо позначки на осі X
+                IsAxisVisible = false // Приховуємо саму вісь X
+            };
+
+            var axisY = new LinearAxis
+            {
+                Title = "Секунди",
+                TitleColor = OxyColor.FromRgb(169, 169, 169),
+                TextColor = OxyColor.FromRgb(169, 169, 169),
+                MajorGridlineColor = OxyColor.FromRgb(169, 169, 169),
+                MinorGridlineColor = OxyColor.FromRgb(169, 169, 169),
+                IsZoomEnabled = false,  // Вимкнути масштабування по осі X
+                        AxislineColor = OxyColor.FromArgb(0, 0, 0, 0),  // Приховуємо лінію осі X
+                TicklineColor = OxyColor.FromArgb(0, 0, 0, 0),  // Приховуємо позначки на осі X
+                IsAxisVisible = false // Приховуємо саму вісь X
+            };
+
+            // Додаємо осі до графіка
+            plotModel.Axes.Add(axisX);
+            plotModel.Axes.Add(axisY);
+
+            // Призначаємо модель графіку компоненту PlotView
+            plotView.Model = plotModel;
+
+            // Додаємо PlotView на форму
+            this.Controls.Add(plotView);
+
+        }
+      */
+
+    #endregion
+
+
+
+    private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button button1;
@@ -518,6 +684,12 @@ namespace diplom
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Button button10;
+        // private System.Windows.Forms.PictureBox pictureBox9;
+       // private OxyPlot.WindowsForms.PlotView plotView1;
+
+       // private ZedGraphControl zedGraphControl;
+
+
     }
 }
 

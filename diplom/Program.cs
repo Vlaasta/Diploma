@@ -288,7 +288,7 @@ namespace diplom
                     IfUserActive();
                 }
 
-                Console.WriteLine($"єбать. {DateTime.Now}");
+               // Console.WriteLine($"єбать. {DateTime.Now}");
 
                 Thread.Sleep(1000); // Чекаємо 1 секунду
             }

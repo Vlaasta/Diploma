@@ -1,10 +1,5 @@
 [
   {
-    "Name": "бубу.docx",
-    "Path": "E:\\4 KURS\\УІТ(Толістікова)\\бубу.docx",
-    "Type": ".docx"
-  },
-  {
     "Name": "чат.docx",
     "Path": "E:\\4 KURS\\Диплом\\чат.docx",
     "Type": ".docx"
@@ -18,5 +13,10 @@
     "Name": "Training.sln",
     "Path": "E:\\Tetriis\\Training\\Training.sln",
     "Type": ".sln"
+  },
+  {
+    "Name": "lab2.slx",
+    "Path": "E:\\MatLab\\bin\\lab2.slx",
+    "Type": ".slx"
   }
 ]

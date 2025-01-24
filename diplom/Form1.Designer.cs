@@ -1,13 +1,10 @@
 ﻿using System.Drawing; // Простір імен для Color
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
 using System.Windows.Forms;
 using OxyPlot;
 using OxyPlot.Series;
 using OxyPlot.WindowsForms;
-using System.Globalization;
 using OxyPlot.Axes;
 
 namespace diplom
@@ -43,11 +40,15 @@ namespace diplom
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.button7 = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.button8 = new System.Windows.Forms.Button();
+            this.button27 = new System.Windows.Forms.Button();
+
             this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.SuspendLayout();
@@ -59,7 +60,8 @@ namespace diplom
             this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
             this.panel1.Controls.Add(this.panel4);
             this.panel1.Controls.Add(this.panel3);
-           // this.panel1.Controls.Add(this.panel2);
+            this.panel1.Controls.Add(this.panel2);
+            // this.panel1.Controls.Add(this.panel2);
             this.panel1.BackColor = Color.FromArgb(4, 26, 44);
             this.panel1.Location = new System.Drawing.Point(0, 1);
             this.panel1.Name = "panel1";
@@ -80,13 +82,41 @@ namespace diplom
             this.button7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.button7.Location = new System.Drawing.Point(-8, 0);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(235, 55);
+            this.button7.Size = new System.Drawing.Size(235, 45);
             this.button7.TabIndex = 21;
             this.button7.Text = "Статистика";
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button7.FlatAppearance.BorderSize = 0;
+            //
+            //
+            //
+             this.panel2.Controls.Add(this.button27);
+             this.panel2.Location = new System.Drawing.Point(0, 150);
+             this.panel2.Name = "panel2";
+             this.panel2.Size = new System.Drawing.Size(225, 46);
+            // this.panel2.TabIndex = 31;
+
+            /*this.panel6.Controls.Add(this.button27);
+            this.panel6.Location = new System.Drawing.Point(0, 350);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(225, 46);*/
+            //this.panel6.TabIndex = 31;
+            //
+            //
+            //
+            this.button27.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button27.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button27.Location = new System.Drawing.Point(-8, 0);
+            this.button27.Name = "button27";
+            this.button27.Size = new System.Drawing.Size(235, 45);
+            // this.button27.TabIndex = 21;
+            this.button27.Text = "Налаштування";
+            this.button27.UseVisualStyleBackColor = true;
+            this.button27.Click += new System.EventHandler(this.button27_Click);
+            this.button27.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button27.FlatAppearance.BorderSize = 0;
             // 
             // panel4
             // 
@@ -103,24 +133,49 @@ namespace diplom
             this.button8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.button8.Location = new System.Drawing.Point(-8, 0);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(235, 55);
+            this.button8.Size = new System.Drawing.Size(235, 45);
             this.button8.TabIndex = 22;
             this.button8.Text = "Головне меню";
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button8.FlatAppearance.BorderSize = 0;
+
+
+            if (CheckBox2Active == true)
+            {
+                this.BackColor = Color.FromArgb(212, 220, 225);
+                this.panel1.BackColor = Color.FromArgb(171, 176, 180);
+                this.button7.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button8.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button27.ForeColor = Color.FromArgb(82, 82, 82);
+
+            }
+
+            if (CheckBox1Active == true)
+            {
+                this.BackColor = Color.FromArgb(2, 14, 25);
+
+                this.panel1.BackColor = Color.FromArgb(4, 26, 44);
+
+                this.button7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button27.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            }
             // 
             // Form1
             // 
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1044, 734);
             this.Controls.Add(this.panel1);
+          //  this.Controls.Add(this.panel6);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "Form1";
             this.panel1.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
+           // this.Controls.Add(this.panel6);
             this.ResumeLayout(false);
             this.PerformLayout();
         }
@@ -154,7 +209,8 @@ namespace diplom
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
-           // this.panel2.SuspendLayout();
+            
+            // this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -164,14 +220,6 @@ namespace diplom
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
             this.SuspendLayout();
-            // 
-            // panel2
-            // 
-          /*  this.panel2.Controls.Add(this.button3);
-            this.panel2.Location = new System.Drawing.Point(0, 251);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(225, 46);
-            this.panel2.TabIndex = 22;*/
             // 
             // button3
             // 
@@ -453,33 +501,132 @@ namespace diplom
             this.button6.Click += new System.EventHandler(this.button6_Click);
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button6.FlatAppearance.BorderSize = 0;
-            // 
-            // Form1
-            // 
+
+            if (CheckBox2Active == true)
+            {
+                this.button1.BackColor = Color.FromArgb(182, 192, 196);
+                this.button3.BackColor = Color.FromArgb(182, 192, 196);
+                this.button10.BackColor = Color.FromArgb(182, 192, 196);
+
+                this.button3.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button10.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button1.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button2.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button4.ForeColor = Color.FromArgb(82, 82, 82);
+
+                this.button2.BackColor = Color.FromArgb(182, 192, 196);
+                this.button4.BackColor = Color.FromArgb(182, 192, 196);
+
+                this.pictureBox2.BackColor = Color.FromArgb(182, 192, 196);
+                this.pictureBox3.BackColor = Color.FromArgb(182, 192, 196);
+                this.pictureBox4.BackColor = Color.FromArgb(182, 192, 196);
+                this.pictureBox5.BackColor = Color.FromArgb(182, 192, 196);
+                this.pictureBox6.BackColor = Color.FromArgb(182, 192, 196);
+                this.pictureBox7.BackColor = Color.FromArgb(182, 192, 196);
+                this.pictureBox8.BackColor = Color.FromArgb(182, 192, 196);
+
+                this.label2.BackColor = Color.FromArgb(182, 192, 196);
+                this.label1.ForeColor = Color.FromArgb(82, 82, 82);
+                this.label1.BackColor = Color.FromArgb(182, 192, 196);
+                this.label3.ForeColor = Color.FromArgb(82, 82, 82);
+                this.label3.BackColor = Color.FromArgb(182, 192, 196);
+                this.label4.ForeColor = Color.FromArgb(82, 82, 82);
+                this.label4.BackColor = Color.FromArgb(182, 192, 196);
+                this.label5.ForeColor = Color.FromArgb(82, 82, 82);
+
+                this.label5.BackColor = Color.FromArgb(182, 192, 196);
+                this.label6.ForeColor = Color.FromArgb(82, 82, 82);
+                this.label6.BackColor = Color.FromArgb(182, 192, 196);
+                this.label7.ForeColor = Color.FromArgb(82, 82, 82);
+                this.label7.BackColor = Color.FromArgb(182, 192, 196);
+                this.label8.ForeColor = Color.FromArgb(82, 82, 82);
+                this.label8.BackColor = Color.FromArgb(182, 192, 196);
+
+                this.button5.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button5.BackColor = Color.FromArgb(182, 192, 196);
+
+                this.button6.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button6.BackColor = Color.FromArgb(182, 192, 196);
+            }
+
+            if (CheckBox1Active == true)
+            {
+
+                this.button3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button3.BackColor = Color.FromArgb(6, 40, 68);
+
+                this.button10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button10.BackColor = Color.FromArgb(6, 40, 68);
+
+                this.button1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button1.BackColor = Color.FromArgb(6, 40, 68);
+
+                this.pictureBox2.BackColor = Color.FromArgb(6, 40, 68);
+                this.pictureBox3.BackColor = Color.FromArgb(6, 40, 68);
+                this.pictureBox4.BackColor = Color.FromArgb(6, 40, 68);
+                this.pictureBox5.BackColor = Color.FromArgb(6, 40, 68);
+                this.label2.BackColor = Color.FromArgb(186, 192, 196);
+                this.pictureBox6.BackColor = Color.FromArgb(6, 40, 68);
+                this.pictureBox7.BackColor = Color.FromArgb(6, 40, 68);
+                this.pictureBox8.BackColor = Color.FromArgb(6, 40, 68);
+                this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.label1.BackColor = Color.FromArgb(6, 40, 68);
+
+                this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.label3.BackColor = Color.FromArgb(6, 40, 68);
+                this.label4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.label4.BackColor = Color.FromArgb(6, 40, 68);
+
+                this.label5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.label5.BackColor = Color.FromArgb(6, 40, 68);
+
+                this.label6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.label6.BackColor = Color.FromArgb(6, 40, 68);
+                this.label7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.label7.BackColor = Color.FromArgb(6, 40, 68);
+
+                this.label8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.label8.BackColor = Color.FromArgb(6, 40, 68);
+
+                this.button2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button2.BackColor = Color.FromArgb(6, 40, 68);
+
+                this.button4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button4.BackColor = Color.FromArgb(6, 40, 68);
+
+                this.button5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button5.BackColor = Color.FromArgb(6, 40, 68);
+
+                this.button6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button6.BackColor = Color.FromArgb(6, 40, 68);
+            }
+                // 
+                // Form1
+                // 
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1044, 734);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.button10);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
+            this.Controls.Add(this.button5);
+            this.Controls.Add(this.button6);
+            this.Controls.Add(this.button10);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox6);
             this.Controls.Add(this.pictureBox7);
             this.Controls.Add(this.pictureBox8);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.pictureBox5);
             this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "Form1";
@@ -502,13 +649,14 @@ namespace diplom
             {
                 Dock = DockStyle.None,
                 Size = new Size(600, 400),
-                Location = new Point(300, 60)
+                Location = new Point(315, 100)
             };
 
             var plotModel = new PlotModel
             {
-                Title = "Статистика за останній тиждень",
-                TitleColor = OxyColor.FromRgb(169, 169, 169),
+                //Title = "Статистика за останній тиждень",
+                //TitleColor = OxyColor.FromRgb(169, 169, 169),
+
                 PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25)
             };
 
@@ -560,135 +708,870 @@ namespace diplom
             plotView.Model = plotModel;
 
             this.Controls.Add(plotView);
-        }
 
-      /*  private void StatisticsMainMenu()
-        {
-            // Зчитуємо дані з JSON файлу
-            string jsonContent = File.ReadAllText(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json");
-            List<TimerData> timerData = JsonSerializer.Deserialize<List<TimerData>>(jsonContent);
+            this.label9 = new System.Windows.Forms.Label();
+            this.label9.AutoSize = true;
+            this.label9.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label9.Location = new System.Drawing.Point(370, 540);
+            this.label9.Name = "label9";
+            this.label9.Font = new Font("Arial", 16, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.label9.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.label9.BackColor = Color.FromArgb(2, 14, 25);
+            this.label9.Text = "label9";
+            this.Controls.Add(this.label9);
 
-            // Створення PlotView для відображення графіка
-            var plotView = new PlotView
+            if (CheckBox1Active == true)
             {
-                Dock = DockStyle.None, // Вимикаємо автоматичне заповнення форми
-                Size = new Size(600, 400), // Встановлюємо розміри графіка (ширина - 600, висота - 400)
-                Location = new Point(300, 60) // Встановлюємо місце розташування (відстань від лівого верхнього кута форми)
-               
-            };
+                this.label9.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.label9.BackColor = Color.FromArgb(2, 14, 25);
+                plotModel.PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25);
+                lineSeries.Color = OxyColor.FromRgb(169, 169, 169);
 
-            // Створення моделі графіка
-            var plotModel = new PlotModel
-            {
-                Title = "Статистика за останній тиждень",
-                TitleColor = OxyColor.FromRgb(169, 169, 169), // Колір заголовку графіка
-                PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25) // Колір межі (білий або інший, щоб вона була непомітною)
-            };
+                axisX.TitleColor = OxyColor.FromRgb(169, 169, 169);
+                axisX.TextColor = OxyColor.FromRgb(169, 169, 169);
+                axisX.MajorGridlineColor = OxyColor.FromRgb(169, 169, 169);
+                axisX.MinorGridlineColor = OxyColor.FromRgb(169, 169, 169);
+                axisX.AxislineColor = OxyColor.FromArgb(0, 0, 0, 0);
+                axisX.TicklineColor = OxyColor.FromArgb(0, 0, 0, 0);
 
-            // Створення серії для лінійного графіка
-            var lineSeries = new LineSeries
-            {
-                Title = "Час (секунди)",
-                MarkerType = MarkerType.Circle,
-                Color = OxyColor.FromRgb(169, 169, 169) // Колір лінії (сірий)
-            };
-
-            // Додаємо точки на графік
-            var labels = new List<string>();
-            foreach (var data in timerData)
-            {
-                DateTime date = DateTime.ParseExact(data.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
-                TimeSpan timeSpan = TimeSpan.Parse(data.Time);
-                int totalSeconds = (int)timeSpan.TotalSeconds;
-
-                lineSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(date), totalSeconds));
-                labels.Add(date.ToString("dd.MM.yyyy"));
+                axisY.TitleColor = OxyColor.FromRgb(169, 169, 169);
+                axisY.TextColor = OxyColor.FromRgb(169, 169, 169);
+                axisY.MajorGridlineColor = OxyColor.FromRgb(169, 169, 169);
+                axisY.MinorGridlineColor = OxyColor.FromRgb(169, 169, 169);
+                axisY.AxislineColor = OxyColor.FromArgb(0, 0, 0, 0);
+                axisY.TicklineColor = OxyColor.FromArgb(0, 0, 0, 0);
             }
 
-            // Додаємо серію до моделі
-            plotModel.Series.Add(lineSeries);
-
-            // Налаштовуємо осі
-            var axisX = new DateTimeAxis
+            if (CheckBox2Active == true)
             {
-                Position = AxisPosition.Bottom,
-                Title = "Дата",
-                TitleColor = OxyColor.FromRgb(169, 169, 169),
-                TextColor = OxyColor.FromRgb(169, 169, 169),
-                StringFormat = "dd.MM.yyyy",  // Формат дати
-                MajorGridlineColor = OxyColor.FromRgb(169, 169, 169),  // Колір сітки
-                MinorGridlineColor = OxyColor.FromRgb(169, 169, 169),
-                IsZoomEnabled = false,  // Вимкнути масштабування по осі X
-                        AxislineColor = OxyColor.FromArgb(0, 0, 0, 0),  // Приховуємо лінію осі X
-                TicklineColor = OxyColor.FromArgb(0, 0, 0, 0),  // Приховуємо позначки на осі X
-                IsAxisVisible = false // Приховуємо саму вісь X
+                this.label9.ForeColor = Color.FromArgb(82, 82, 82);
+                this.label9.BackColor = Color.FromArgb(212, 220, 225);
+
+                plotModel.PlotAreaBorderColor = OxyColor.FromRgb(212, 220, 225);
+                lineSeries.Color = OxyColor.FromRgb(82, 82, 82);
+
+                axisX.TitleColor = OxyColor.FromRgb(82, 82, 82);
+                axisX.TextColor = OxyColor.FromRgb(82, 82, 82);
+                axisX.MajorGridlineColor = OxyColor.FromRgb(82, 82, 82);
+                axisX.MinorGridlineColor = OxyColor.FromRgb(82, 82, 82);
+                axisX.AxislineColor = OxyColor.FromRgb(212, 220, 225);
+                axisX.TicklineColor = OxyColor.FromRgb(212, 220, 225);
+
+                axisY.TitleColor = OxyColor.FromRgb(82, 82, 82);
+                axisY.TextColor = OxyColor.FromRgb(82, 82, 82);
+                axisY.MajorGridlineColor = OxyColor.FromRgb(82, 82, 82);
+                axisY.MinorGridlineColor = OxyColor.FromRgb(82, 82, 82);
+                axisY.AxislineColor = OxyColor.FromRgb(212, 220, 225);
+                axisY.TicklineColor = OxyColor.FromRgb(212, 220, 225);
+
+            }
+        }
+
+        private void StatisticsMainMenu()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+           
+            
+            this.button11 = new System.Windows.Forms.Button();
+            this.button11.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button11.Location = new System.Drawing.Point(240, 620);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(240, 41);
+           // this.button11.TabIndex = 24;
+            this.button11.Text = "Статистика за попередній тиждень";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.BackColor = Color.FromArgb(6, 40, 68);
+            this.button11.Click += new System.EventHandler(this.button11_Click);
+            this.button11.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button11.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button11);
+
+
+            this.button12 = new System.Windows.Forms.Button();
+            this.button12.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button12.Location = new System.Drawing.Point(505, 620); 
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(240, 41);
+           // this.button12.TabIndex = 24;
+            this.button12.Text = "Статистика за останній місяць";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.BackColor = Color.FromArgb(6, 40, 68);
+            this.button12.Click += new System.EventHandler(this.button12_Click);
+            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button12.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button12);
+
+
+            this.button13 = new System.Windows.Forms.Button();
+            this.button13.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button13.Location = new System.Drawing.Point(770, 620);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(240, 41);
+            // this.button12.TabIndex = 24;
+            this.button13.Text = "Статистика за останній рік";
+            this.button13.UseVisualStyleBackColor = true;
+            this.button13.BackColor = Color.FromArgb(6, 40, 68);
+            this.button13.Click += new System.EventHandler(this.button13_Click);
+            this.button13.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button13.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button13);
+
+            this.label10 = new System.Windows.Forms.Label();
+            this.label10.AutoSize = true;
+            this.label10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label10.Location = new System.Drawing.Point(452, 50);
+            this.label10.Name = "label10";
+            this.label10.Font = new Font("Arial", 16, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.label10.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.label10.BackColor = Color.FromArgb(2, 14, 25);
+            this.label10.Text = "label10";
+            this.Controls.Add(this.label10);
+
+
+            if (CheckBox2Active == true)
+            {
+                this.button11.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button11.BackColor = Color.FromArgb(171, 176, 180);
+
+                this.button12.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button12.BackColor = Color.FromArgb(171, 176, 180);
+
+                this.button13.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button13.BackColor = Color.FromArgb(171, 176, 180);
+
+                this.label10.ForeColor = Color.FromArgb(82, 82, 82);
+                this.label10.BackColor = Color.FromArgb(212, 220, 225);
+            }
+
+
+            if (CheckBox1Active == true)
+            {
+                this.button11.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button11.BackColor = Color.FromArgb(6, 40, 68);
+
+                this.button12.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button12.BackColor = Color.FromArgb(6, 40, 68);
+
+                this.button13.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button13.BackColor = Color.FromArgb(6, 40, 68);
+
+                this.label10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.label10.BackColor = Color.FromArgb(2, 14, 25);
+            }
+
+
+            this.ResumeLayout(false);
+            this.PerformLayout();
+        }
+      
+        private void AnnualStatistics()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+
+
+            this.button14 = new System.Windows.Forms.Button();
+            this.button14.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button14.Location = new System.Drawing.Point(240, 500);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(240, 41);
+            // this.buttn11.TabIndex = 24;
+            this.button14.Text = "Статистика за Жовтень";
+            this.button14.UseVisualStyleBackColor = true;
+            this.button14.BackColor = Color.FromArgb(6, 40, 68);
+            this.button14.Click += new System.EventHandler(this.button14_Click);
+            this.button14.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button14.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button14);
+
+
+            this.button15 = new System.Windows.Forms.Button();
+            this.button15.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button15.Location = new System.Drawing.Point(505, 500);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(240, 41);
+            // this.button12.TabIndex = 24;
+            this.button15.Text = "Статистика за Листопад";
+            this.button15.UseVisualStyleBackColor = true;
+            this.button15.BackColor = Color.FromArgb(6, 40, 68);
+            this.button15.Click += new System.EventHandler(this.button15_Click);
+            this.button15.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button15.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button15);
+
+
+            this.button16 = new System.Windows.Forms.Button();
+            this.button16.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button16.Location = new System.Drawing.Point(770, 500);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(240, 41);
+            // this.button12.TabIndex = 24;
+            this.button16.Text = "Статистика за Грудень";
+            this.button16.UseVisualStyleBackColor = true;
+            this.button16.BackColor = Color.FromArgb(6, 40, 68);
+            this.button16.Click += new System.EventHandler(this.button16_Click);
+            this.button16.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button16.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button16);
+
+
+            this.button17 = new System.Windows.Forms.Button();
+            this.button17.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button17.Location = new System.Drawing.Point(240, 400);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(240, 41);
+            // this.buttn11.TabIndex = 24;
+            this.button17.Text = "Статистика за Липень";
+            this.button17.UseVisualStyleBackColor = true;
+            this.button17.BackColor = Color.FromArgb(6, 40, 68);
+            this.button17.Click += new System.EventHandler(this.button17_Click);
+            this.button17.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button17.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button17);
+
+
+            this.button18 = new System.Windows.Forms.Button();
+            this.button18.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button18.Location = new System.Drawing.Point(505, 400);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(240, 41);
+            // this.button12.TabIndex = 24;
+            this.button18.Text = "Статистика за Серпень";
+            this.button18.UseVisualStyleBackColor = true;
+            this.button18.BackColor = Color.FromArgb(6, 40, 68);
+            this.button18.Click += new System.EventHandler(this.button18_Click);
+            this.button18.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button18.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button18);
+
+
+            this.button19 = new System.Windows.Forms.Button();
+            this.button19.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button19.Location = new System.Drawing.Point(770, 400);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(240, 41);
+            // this.button12.TabIndex = 24;
+            this.button19.Text = "Статистика за Вересень";
+            this.button19.UseVisualStyleBackColor = true;
+            this.button19.BackColor = Color.FromArgb(6, 40, 68);
+            this.button19.Click += new System.EventHandler(this.button19_Click);
+            this.button19.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button19.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button19);
+
+
+
+            this.button20 = new System.Windows.Forms.Button();
+            this.button20.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button20.Location = new System.Drawing.Point(240, 300);
+            this.button20.Name = "button20";
+            this.button20.Size = new System.Drawing.Size(240, 41);
+            // this.buttn11.TabIndex = 24;
+            this.button20.Text = "Статистика за Квітень";
+            this.button20.UseVisualStyleBackColor = true;
+            this.button20.BackColor = Color.FromArgb(6, 40, 68);
+            this.button20.Click += new System.EventHandler(this.button20_Click);
+            this.button20.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button20.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button20);
+
+
+            this.button21 = new System.Windows.Forms.Button();
+            this.button21.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button21.Location = new System.Drawing.Point(505, 300);
+            this.button21.Name = "button21";
+            this.button21.Size = new System.Drawing.Size(240, 41);
+            // this.button12.TabIndex = 24;
+            this.button21.Text = "Статистика за Травень";
+            this.button21.UseVisualStyleBackColor = true;
+            this.button21.BackColor = Color.FromArgb(6, 40, 68);
+            this.button21.Click += new System.EventHandler(this.button21_Click);
+            this.button21.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button21.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button21);
+
+
+            this.button22 = new System.Windows.Forms.Button();
+            this.button22.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button22.Location = new System.Drawing.Point(770, 300);
+            this.button22.Name = "button22";
+            this.button22.Size = new System.Drawing.Size(240, 41);
+            // this.button12.TabIndex = 24;
+            this.button22.Text = "Статистика за Червень";
+            this.button22.UseVisualStyleBackColor = true;
+            this.button22.BackColor = Color.FromArgb(6, 40, 68);
+            this.button22.Click += new System.EventHandler(this.button22_Click);
+            this.button22.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button22.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button22);
+
+
+            this.button23 = new System.Windows.Forms.Button();
+            this.button23.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button23.Location = new System.Drawing.Point(240, 200);
+            this.button23.Name = "button23";
+            this.button23.Size = new System.Drawing.Size(240, 41);
+            // this.buttn11.TabIndex = 24;
+            this.button23.Text = "Статистика за Січень";
+            this.button23.UseVisualStyleBackColor = true;
+            this.button23.BackColor = Color.FromArgb(6, 40, 68);
+            this.button23.Click += new System.EventHandler(this.button23_Click);
+            this.button23.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button23.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button23);
+
+
+            this.button24 = new System.Windows.Forms.Button();
+            this.button24.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button24.Location = new System.Drawing.Point(505, 200);
+            this.button24.Name = "button24";
+            this.button24.Size = new System.Drawing.Size(240, 41);
+            // this.button12.TabIndex = 24;
+            this.button24.Text = "Статистика за Лютий";
+            this.button24.UseVisualStyleBackColor = true;
+            this.button24.BackColor = Color.FromArgb(6, 40, 68);
+            this.button24.Click += new System.EventHandler(this.button24_Click);
+            this.button24.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button24.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button24);
+
+
+            this.button25 = new System.Windows.Forms.Button();
+            this.button25.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button25.Location = new System.Drawing.Point(770, 200);
+            this.button25.Name = "button25";
+            this.button25.Size = new System.Drawing.Size(240, 41);
+            // this.button12.TabIndex = 24;
+            this.button25.Text = "Статистика за Березень";
+            this.button25.UseVisualStyleBackColor = true;
+            this.button25.BackColor = Color.FromArgb(6, 40, 68);
+            this.button25.Click += new System.EventHandler(this.button25_Click);
+            this.button25.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button25.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button25);
+
+            if(CheckBox1Active == true)
+            {
+                this.button14.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button15.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button16.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button17.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button18.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button19.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button20.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button21.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button22.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button23.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button24.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button25.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+
+                this.button14.BackColor = Color.FromArgb(6, 40, 68);
+                this.button15.BackColor = Color.FromArgb(6, 40, 68);
+                this.button16.BackColor = Color.FromArgb(6, 40, 68);
+                this.button17.BackColor = Color.FromArgb(6, 40, 68);
+                this.button18.BackColor = Color.FromArgb(6, 40, 68);
+                this.button19.BackColor = Color.FromArgb(6, 40, 68);
+                this.button20.BackColor = Color.FromArgb(6, 40, 68);
+                this.button21.BackColor = Color.FromArgb(6, 40, 68);
+                this.button22.BackColor = Color.FromArgb(6, 40, 68);
+                this.button23.BackColor = Color.FromArgb(6, 40, 68);
+                this.button24.BackColor = Color.FromArgb(6, 40, 68);
+                this.button25.BackColor = Color.FromArgb(6, 40, 68);
+            }
+
+            if (CheckBox2Active == true)
+            {
+                this.button14.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button15.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button16.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button17.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button18.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button19.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button20.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button21.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button22.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button23.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button24.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button25.ForeColor = Color.FromArgb(82, 82, 82);
+
+
+                this.button14.BackColor = Color.FromArgb(171, 176, 180);
+                this.button15.BackColor = Color.FromArgb(171, 176, 180);
+                this.button16.BackColor = Color.FromArgb(171, 176, 180);
+                this.button17.BackColor = Color.FromArgb(171, 176, 180);
+                this.button18.BackColor = Color.FromArgb(171, 176, 180);
+                this.button19.BackColor = Color.FromArgb(171, 176, 180);
+                this.button20.BackColor = Color.FromArgb(171, 176, 180);
+                this.button21.BackColor = Color.FromArgb(171, 176, 180);
+                this.button22.BackColor = Color.FromArgb(171, 176, 180);
+                this.button23.BackColor = Color.FromArgb(171, 176, 180);
+                this.button24.BackColor = Color.FromArgb(171, 176, 180);
+                this.button25.BackColor = Color.FromArgb(171, 176, 180);
+            }
+
+            this.ResumeLayout(false);
+            this.PerformLayout();
+        }
+
+        private void ExitButton()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            this.button26 = new System.Windows.Forms.Button();
+            this.button26.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button26.Location = new System.Drawing.Point(505, 650);
+            this.button26.Name = "button26";
+            this.button26.Size = new System.Drawing.Size(240, 41);
+            // this.button12.TabIndex = 24;
+            this.button26.Text = "Повернутися назад";
+            this.button26.UseVisualStyleBackColor = true;
+            this.button26.BackColor = Color.FromArgb(6, 40, 68);
+            this.button26.Click += new System.EventHandler(this.button26_Click);
+            this.button26.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button26.FlatAppearance.BorderSize = 0;
+            this.Controls.Add(this.button26);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+            if (CheckBox1Active == true)
+            {
+                this.button26.BackColor = Color.FromArgb(6, 40, 68);
+                this.button26.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            }
+
+            if (CheckBox2Active == true)
+            {
+                this.button26.BackColor = Color.FromArgb(171, 176, 180);
+                this.button26.ForeColor = Color.FromArgb(82, 82, 82);
+            }
+        }
+
+        #endregion
+
+        private void SettingsMenu()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            this.label11 = new System.Windows.Forms.Label();
+            this.label11.AutoSize = true;
+            this.label11.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label11.Location = new System.Drawing.Point(300, 150);
+            this.label11.Name = "label11";
+            this.label11.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.label11.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.label11.BackColor = Color.FromArgb(2, 14, 25);
+            this.label11.Text = "Колір теми:";
+            this.Controls.Add(this.label11);
+
+            this.label12 = new System.Windows.Forms.Label();
+            this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label12.Location = new System.Drawing.Point(300, 350);
+            this.label12.Name = "label12";
+            this.label12.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.label12.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.label12.BackColor = Color.FromArgb(2, 14, 25);
+            this.label12.Text = "Автоматично вимикати таймер після ... хв неактивності";
+            this.Controls.Add(this.label12);
+
+            this.label13 = new System.Windows.Forms.Label();
+            this.label13.AutoSize = true;
+            this.label13.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label13.Location = new System.Drawing.Point(300, 450);
+            this.label13.Name = "label13";
+            this.label13.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.label13.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.label13.BackColor = Color.FromArgb(2, 14, 25);
+            this.label13.Text = "Якщо вас не задовільнило жодне значення, введіть власне значення в наступне поле:";
+            this.Controls.Add(this.label13);
+
+            this.label14 = new System.Windows.Forms.Label();
+            this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label14.Location = new System.Drawing.Point(400, 50);
+            this.label14.Name = "label14";
+            this.label14.Font = new Font("Arial", 20, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.label14.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            //this.label14.BackColor = Color.FromArgb(2, 14, 25);
+            this.label14.Text = "Налаштування роботи програми";
+            this.Controls.Add(this.label14);
+
+
+
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.checkBox1.Location = new System.Drawing.Point(300, 200);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.checkBox1.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.checkBox1.BackColor = Color.Transparent;
+            this.checkBox1.Text = "Темна тема";
+            this.Controls.Add(this.checkBox1);
+
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.checkBox2.Location = new System.Drawing.Point(600, 200);
+            this.checkBox2.Name = "label13";
+            this.checkBox2.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.checkBox2.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.checkBox2.BackColor = Color.FromArgb(2, 14, 25);
+            this.checkBox2.Text = "Світла тема";
+            this.Controls.Add(this.checkBox2);
+
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.checkBox3.Location = new System.Drawing.Point(300, 250);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.checkBox3.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.checkBox3.BackColor = Color.FromArgb(2, 14, 25);
+            this.checkBox3.Text = "Автозапуск програми";
+            this.Controls.Add(this.checkBox3);
+
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.checkBox4.Location = new System.Drawing.Point(300, 300);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.checkBox4.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.checkBox4.BackColor = Color.FromArgb(2, 14, 25);
+            this.checkBox4.Text = "Дозволити програмі надсилати сповіщення";
+            this.Controls.Add(this.checkBox4);
+
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.checkBox5.Location = new System.Drawing.Point(300, 400);
+            this.checkBox5.Name = "CheckBox5";
+            this.checkBox5.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.checkBox5.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.checkBox5.BackColor = Color.FromArgb(2, 14, 25);
+            this.checkBox5.Text = "5 хв";
+            this.Controls.Add(this.checkBox5);
+
+            this.checkBox6 = new System.Windows.Forms.CheckBox();
+            this.checkBox6.AutoSize = true;
+            this.checkBox6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.checkBox6.Location = new System.Drawing.Point(600, 400);
+            this.checkBox6.Name = "CheckBox6";
+            this.checkBox6.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.checkBox6.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.checkBox6.BackColor = Color.FromArgb(2, 14, 25);
+            this.checkBox6.Text = "10 хв";
+            this.Controls.Add(this.checkBox6);
+
+            this.checkBox7 = new System.Windows.Forms.CheckBox();
+            this.checkBox7.AutoSize = true;
+            this.checkBox7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.checkBox7.Location = new System.Drawing.Point(900, 400);
+            this.checkBox7.Name = "CheckBox7";
+            this.checkBox7.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.checkBox7.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.checkBox7.BackColor = Color.FromArgb(2, 14, 25);
+            this.checkBox7.Text = "15 хв";
+            this.Controls.Add(this.checkBox7);
+
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox1.Location = new Point(300, 500); // Розташування на формі
+            this.textBox1.AutoSize = false;
+            this.textBox1.Size = new Size(250, 20);
+            this.textBox1.BackColor = Color.FromArgb(6, 40, 68);// Розмір поля
+            this.textBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.textBox1.Font = new Font("Arial", 9, FontStyle.Regular);
+            this.textBox1.Text = "Введіть лише число за допомогою цифр";
+            this.textBox1.BorderStyle = BorderStyle.None;
+            this.Controls.Add(textBox1);
+
+
+            // Подія для ручного зняття вибору
+            checkBox7.CheckedChanged += (sender, e) =>
+            {
+                if (checkBox7.Checked)
+                {
+                    checkBox5.Checked = false;
+                    checkBox6.Checked = false;
+                    CheckBox7Active = true;
+                }
             };
 
-            var axisY = new LinearAxis
+            if (CheckBox7Active == true)
             {
-                Title = "Секунди",
-                TitleColor = OxyColor.FromRgb(169, 169, 169),
-                TextColor = OxyColor.FromRgb(169, 169, 169),
-                MajorGridlineColor = OxyColor.FromRgb(169, 169, 169),
-                MinorGridlineColor = OxyColor.FromRgb(169, 169, 169),
-                IsZoomEnabled = false,  // Вимкнути масштабування по осі X
-                        AxislineColor = OxyColor.FromArgb(0, 0, 0, 0),  // Приховуємо лінію осі X
-                TicklineColor = OxyColor.FromArgb(0, 0, 0, 0),  // Приховуємо позначки на осі X
-                IsAxisVisible = false // Приховуємо саму вісь X
+                checkBox7.Checked = true;
+            }
+
+            // Подія для ручного зняття вибору
+            checkBox6.CheckedChanged += (sender, e) =>
+            {
+                if (checkBox6.Checked)
+                {
+                    checkBox5.Checked = false;
+                    checkBox7.Checked = false;
+                    CheckBox6Active = true;
+                }
             };
 
-            // Додаємо осі до графіка
-            plotModel.Axes.Add(axisX);
-            plotModel.Axes.Add(axisY);
+            if (CheckBox6Active == true)
+            {
+                checkBox6.Checked = true;
+            }
 
-            // Призначаємо модель графіку компоненту PlotView
-            plotView.Model = plotModel;
+            // Подія для ручного зняття вибору
+            checkBox5.CheckedChanged += (sender, e) =>
+            {
+                if (checkBox5.Checked)
+                {
+                    checkBox6.Checked = false;
+                    checkBox7.Checked = false;
+                    CheckBox5Active = true;
+                }
+            };
 
-            // Додаємо PlotView на форму
-            this.Controls.Add(plotView);
+            if (CheckBox5Active == true)
+            {
+                checkBox5.Checked = true;
+            }
+
+            checkBox1.CheckedChanged += (sender, e) =>
+            {
+                if (checkBox1.Checked)
+                {
+                    checkBox2.Checked = false;
+
+                    CheckBox1Active = true;
+                    CheckBox2Active = false;
+
+                    ProperColorTheme();
+                }
+            };
+
+                checkBox2.CheckedChanged += (sender, e) =>
+            {
+                if (checkBox2.Checked)
+                {
+                    checkBox1.Checked = false;
+
+                    CheckBox2Active = true;
+                    CheckBox1Active = false;
+
+                    ProperColorTheme();
+                }
+            };
+
+            ProperColorTheme();
+
+            checkBox3.CheckedChanged += (sender, e) =>
+            {
+                if (checkBox3.Checked)
+                {
+                    CheckBox3Active = true;
+                }
+            };
+
+            if (CheckBox3Active == true)
+            {
+                checkBox3.Checked = true;
+            }
+
+            checkBox4.CheckedChanged += (sender, e) =>
+            {
+                if (checkBox4.Checked)
+                {
+                    CheckBox4Active = true;
+                    NotificationsOn();
+                }
+            };
+
+            if (CheckBox4Active == true)
+            {
+                checkBox4.Checked = true;
+
+            }
+
+            this.ResumeLayout(false);
+            this.PerformLayout();
+        }
+
+        
+        private void ProperColorTheme()
+        {
+            if (CheckBox1Active == true)
+            {
+                checkBox1.Checked = true;
+
+                this.BackColor = Color.FromArgb(2, 14, 25);
+                this.panel1.BackColor = Color.FromArgb(4, 26, 44);
+                this.button7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button27.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+
+                this.checkBox1.BackColor = Color.FromArgb(2, 14, 25);
+                this.checkBox2.BackColor = Color.FromArgb(2, 14, 25);
+                this.checkBox3.BackColor = Color.FromArgb(2, 14, 25);
+                this.checkBox4.BackColor = Color.FromArgb(2, 14, 25);
+                this.checkBox5.BackColor = Color.FromArgb(2, 14, 25);
+                this.checkBox6.BackColor = Color.FromArgb(2, 14, 25);
+                this.checkBox7.BackColor = Color.FromArgb(2, 14, 25);
+
+                this.checkBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.checkBox2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.checkBox3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.checkBox4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.checkBox5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.checkBox6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.checkBox7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+
+                this.label11.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.label12.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.label13.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.label14.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+
+                this.label11.BackColor = Color.FromArgb(2, 14, 25);
+                this.label12.BackColor = Color.FromArgb(2, 14, 25);
+                this.label13.BackColor = Color.FromArgb(2, 14, 25);
+                this.label14.BackColor = Color.FromArgb(2, 14, 25);
+
+                this.textBox1.BackColor = Color.FromArgb(6, 40, 68);// Розмір поля
+                this.textBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+
+                this.button3.BackColor = Color.FromArgb(2, 14, 25);
+                this.pictureBox2.BackColor = Color.FromArgb(2, 14, 25);
+            }
+
+            if (CheckBox2Active == true)
+            {
+                checkBox2.Checked = true;
+
+                this.BackColor = Color.FromArgb(212, 220, 225);
+                this.panel1.BackColor = Color.FromArgb(171, 176, 180);
+                this.button7.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button8.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button27.ForeColor = Color.FromArgb(82, 82, 82);
+
+                this.checkBox1.ForeColor = Color.FromArgb(82, 82, 82);
+                this.checkBox2.ForeColor = Color.FromArgb(82, 82, 82);
+                this.checkBox3.ForeColor = Color.FromArgb(82, 82, 82);
+                this.checkBox4.ForeColor = Color.FromArgb(82, 82, 82);
+                this.checkBox5.ForeColor = Color.FromArgb(82, 82, 82);
+                this.checkBox6.ForeColor = Color.FromArgb(82, 82, 82);
+                this.checkBox7.ForeColor = Color.FromArgb(82, 82, 82);
+
+                this.checkBox1.BackColor = Color.FromArgb(212, 220, 225);
+                this.checkBox2.BackColor = Color.FromArgb(212, 220, 225);
+                this.checkBox3.BackColor = Color.FromArgb(212, 220, 225);
+                this.checkBox4.BackColor = Color.FromArgb(212, 220, 225);
+                this.checkBox5.BackColor = Color.FromArgb(212, 220, 225);
+                this.checkBox6.BackColor = Color.FromArgb(212, 220, 225);
+                this.checkBox7.BackColor = Color.FromArgb(212, 220, 225);
+
+                this.label11.BackColor = Color.FromArgb(212, 220, 225);
+                this.label12.BackColor = Color.FromArgb(212, 220, 225);
+                this.label13.BackColor = Color.FromArgb(212, 220, 225);
+                this.label14.BackColor = Color.FromArgb(212, 220, 225);
+
+                this.label11.ForeColor = Color.FromArgb(82, 82, 82);
+                this.label12.ForeColor = Color.FromArgb(82, 82, 82);
+                this.label13.ForeColor = Color.FromArgb(82, 82, 82);
+                this.label14.ForeColor = Color.FromArgb(82, 82, 82);
+
+                this.textBox1.BackColor = Color.FromArgb(171, 176, 180); // Розмір поля
+                this.textBox1.ForeColor = Color.FromArgb(82, 82, 82);
+            }
 
         }
-      */
 
-    #endregion
-
-
-
-    private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.PictureBox pictureBox5;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.PictureBox pictureBox6;
         private System.Windows.Forms.PictureBox pictureBox7;
         private System.Windows.Forms.PictureBox pictureBox8;
+
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+
+        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
-       // private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button10;
-        // private System.Windows.Forms.PictureBox pictureBox9;
-       // private OxyPlot.WindowsForms.PlotView plotView1;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button button26;
+        private System.Windows.Forms.Button button27;
 
-       // private ZedGraphControl zedGraphControl;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel panel5;
+       // private System.Windows.Forms.Panel panel6;
 
+
+        //Для річної статистики
+        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.Button button16;
+        private System.Windows.Forms.Button button17;
+        private System.Windows.Forms.Button button18;
+        private System.Windows.Forms.Button button19;
+        private System.Windows.Forms.Button button20;
+        private System.Windows.Forms.Button button21;
+        private System.Windows.Forms.Button button22;
+        private System.Windows.Forms.Button button23;
+        private System.Windows.Forms.Button button24;
+        private System.Windows.Forms.Button button25;
+
+        //налаштування програми
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+       /* private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label20;*/
+
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.CheckBox checkBox5;
+        private System.Windows.Forms.CheckBox checkBox6;
+        private System.Windows.Forms.CheckBox checkBox7;
+
+
+        private System.Windows.Forms.TextBox textBox1;
 
     }
 }

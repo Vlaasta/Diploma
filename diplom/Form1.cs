@@ -17,6 +17,18 @@ namespace diplom
         private DateTime lastUpdated = DateTime.MinValue;
         private readonly object lockObject = new object();
 
+        private Statistic statistic = new Statistic();
+        private bool isPreviousWeek = true;
+
+        public bool CheckBox1Active;
+        public bool CheckBox2Active;
+        public bool CheckBox3Active;
+        public bool CheckBox4Active;
+        public bool CheckBox5Active;
+        public bool CheckBox6Active;
+        public bool CheckBox7Active;
+
+
         public Form1()
         {
             InitializeComponentMainMenu();
@@ -37,10 +49,20 @@ namespace diplom
             handButton = new HandButton();
             handButton.OnTimeUpdated += HandButton_OnTimeUpdated;
 
-            var notification = new Notifications();
-            notification.ShowNotification(); // Викликає метод
+
+           // var notification = new Notifications();
+            //notification.ShowNotification(); // Викликає метод
 
             loadValues();
+
+            CheckBox1Active = true;
+            CheckBox2Active = false;
+            CheckBox3Active = false;
+            CheckBox4Active = false;
+            CheckBox5Active = false;
+            CheckBox6Active = false;
+            CheckBox7Active = false;
+
         }
 
         public static TimeSpan LoadLastElapsedTimeFromFile()
@@ -79,7 +101,6 @@ namespace diplom
             // Якщо не вдалося, повертаємо 0
             return TimeSpan.Zero;
         }
-
 
 
         public void HandButton_OnTimeUpdated(TimeSpan elapsed)
@@ -132,7 +153,7 @@ namespace diplom
             var projects = JsonProcessing.LoadProjects();
 
             // Список ваших Label (вказуєте всі необхідні)
-            var projectsNames = new List<Label> { label3, label4, label5};
+            var projectsNames = new List<Label> { label3, label4, label5 };
             var projectsPath = new List<Label> { label6, label7, label8 };
 
             // Прив'язка значень Name до Label
@@ -149,19 +170,18 @@ namespace diplom
         }
 
 
-        private void button7_Click(object sender, EventArgs e)
+        private void button7_Click(object sender, EventArgs e) //графік поточного тижня
         {
             // Очищення всіх елементів управління з форми
             this.Controls.Clear();
             InitializeComponentMain();
+            StatisticsMainMenu();
 
-            Statistic statistic = new Statistic();
-
-            // Фільтрація даних для попереднього тижня
-            var filteredData = statistic.FilterDataForPreviousWeek(statistic.timerData);
+            // Фільтрація даних для поточного тижня
+            var filteredData = statistic.FilterDataForCurrentWeek(statistic.timerData);
 
             // Заповнення пропущених днів (якщо потрібно)
-            var (startOfWeek, endOfWeek) = statistic.GetPreviousWeekRange();
+            var (startOfWeek, endOfWeek) = statistic.GetCurrentWeekRange();
             var filledData = statistic.FillMissingDays(filteredData, startOfWeek, endOfWeek);
 
             // Отримання точок X і Y
@@ -170,7 +190,109 @@ namespace diplom
 
             // Побудова графіка
             buildChart(xPoints, yPoints);
+
+            // Обчислення загального часу
+            string totalTime = statistic.CalculateTotalTime(filledData);
+
+            // Виведення у Label9
+            label9.Text = "Усього витрачено на роботу:  " + totalTime;
+            label10.Text = "Статистика за останній тиждень";
         }
+
+        /* public void fuck()
+         {
+             // Фільтрація даних для поточного тижня
+             var filteredData = statistic.FilterDataForCurrentWeek(statistic.timerData);
+
+             // Заповнення пропущених днів (якщо потрібно)
+             var (startOfWeek, endOfWeek) = statistic.GetCurrentWeekRange();
+             var filledData = statistic.FillMissingDays(filteredData, startOfWeek, endOfWeek);
+
+             // Отримання точок X і Y
+             var xPoints = statistic.GetXPoints(filledData);
+             var yPoints = statistic.GetYPoints(filledData);
+
+             // Побудова графіка
+             buildChart(xPoints, yPoints);
+
+             // Обчислення загального часу
+             string totalTime = statistic.CalculateTotalTime(filledData);
+
+             // Виведення у Label9
+             label9.Text = "Усього витрачено на роботу:  " + totalTime;
+             label10.Text = "Статистика за останній тиждень";
+         }*/
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            // Зберігаємо поточний стан перед очищенням
+            bool currentState = isPreviousWeek;
+
+            this.Controls.Clear();
+            InitializeComponentMain();
+            StatisticsMainMenu();
+
+            // Фільтрація даних залежно від стану
+            var filteredData = currentState
+                ? statistic.FilterDataForPreviousWeek(statistic.timerData)
+                : statistic.FilterDataForCurrentWeek(statistic.timerData);
+
+            var (startOfWeek, endOfWeek) = currentState
+                ? statistic.GetPreviousWeekRange()
+                : statistic.GetCurrentWeekRange();
+
+            var filledData = statistic.FillMissingDays(filteredData, startOfWeek, endOfWeek);
+
+            // Побудова графіка
+            var xPoints = statistic.GetXPoints(filledData);
+            var yPoints = statistic.GetYPoints(filledData);
+            buildChart(xPoints, yPoints);
+
+            // Обчислення загального часу
+            string totalTime = statistic.CalculateTotalTime(filledData);
+
+            // Виведення в Label
+            label9.Text = "Усього витрачено на роботу: " + totalTime;
+            label10.Text = currentState
+                ? "Статистика за попередній тиждень"
+                : "Статистика за останній тиждень";
+
+            // Оновлення тексту кнопки
+            button11.Text = currentState
+                ? "Статистика за останній тиждень"
+                : "Статистика за попередній тиждень";
+
+            // Змінюємо стан для наступного натискання
+            isPreviousWeek = !currentState;
+        } //кнопка попередній тиждень останній тиждень
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+            StatisticsMainMenu();
+
+            // Фільтрація даних для попереднього тижня
+            var filteredData = statistic.FilterDataForLastMonth(statistic.timerData);
+
+            // Заповнення пропущених днів (якщо потрібно)
+            var (startOfLastMonth, endOfLastMonth) = statistic.GetLastMonthRange();
+            var filledData = statistic.FillMissingDays(filteredData, startOfLastMonth, endOfLastMonth);
+
+            // Отримання точок X і Y
+            var xPoints = statistic.GetXPoints(filledData);
+            var yPoints = statistic.GetYPoints(filledData);
+
+            // Побудова графіка
+            buildChart(xPoints, yPoints);
+
+            string totalTime = statistic.CalculateTotalTime(filledData);
+
+            // Виведення у Label9
+            label9.Text = "Усього витрачено на роботу:  " + totalTime;
+            label10.Text = "Статистика за останній місяць";
+
+        } //графік для попереднього тижня
 
         private void button6_Click(object sender, EventArgs e)
         {
@@ -182,7 +304,7 @@ namespace diplom
                 DeleteProject(projectName);
                 loadValues();
             }
-        }
+        } //видалити проект
 
         private void button5_Click(object sender, EventArgs e)
         {
@@ -195,7 +317,7 @@ namespace diplom
                 loadValues();
 
             }
-        }
+        } //видалити проект
 
         private void button4_Click(object sender, EventArgs e)
         {
@@ -207,7 +329,7 @@ namespace diplom
                 DeleteProject(projectName);
                 loadValues();
             }
-        }
+        } //видалити проект
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -233,7 +355,7 @@ namespace diplom
                     }
                 }
             }
-        }
+        } //вибрати проект
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -266,13 +388,14 @@ namespace diplom
 
                 button2.Text = "Запустити таймер";
             }
-        }
+        } //запустити таймер
 
-        private void button8_Click(object sender, EventArgs e)
+        private void button8_Click(object sender, EventArgs e) //головне меню на панелі
         {
             this.Controls.Clear();
             InitializeComponentMainMenu();
             this.button3.Visible = false;
+            loadValues();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -301,6 +424,24 @@ namespace diplom
             label3.Text = previousLabel3;  // label3 отримує попереднє значення
             label4.Text = currentLabel3;   // label4 отримує значення label3
             label5.Text = currentLabel4;   // label5 отримує значення label4
+
+            // Поточні значення Label
+            string currentLabel6 = label6.Text;
+            string currentLabel7 = label7.Text;
+            string currentLabel8 = label8.Text;
+
+            // Знаходимо індекс для label3 у списку проектів
+            int currentIndexForLabel6 = projects.FindIndex(p => p.Path == currentLabel6);
+
+            // Отримуємо попереднє значення для label3
+            string previousLabel6 = currentIndexForLabel6 > 0
+                ? projects[currentIndexForLabel6 - 1].Path // Попереднє значення
+                : projects.LastOrDefault()?.Path ?? "Немає даних"; // Повертаємося на останній елемент, якщо це перший елемент
+
+            // Оновлюємо значення Label
+            label6.Text = previousLabel6;  // label3 отримує попереднє значення
+            label7.Text = currentLabel6;   // label4 отримує значення label3
+            label8.Text = currentLabel7;   // label5 отримує значення label4
 
             // Якщо label5 набуває значення останнього елемента
             if (label3.Text == firstProjectName)
@@ -342,6 +483,24 @@ namespace diplom
                 this.button10.Visible = false; // Приховуємо кнопку
                 this.button3.Visible = true;
             }
+
+            // Поточні значення Label
+            string currentLabel6 = label6.Text;
+            string currentLabel7 = label7.Text;
+            string currentLabel8 = label8.Text;
+
+            // Знаходимо індекс для label3 у списку проектів
+            int currentIndex2 = projects.FindIndex(p => p.Path == currentLabel8);
+
+            // Отримуємо попереднє значення для label3
+            string nextLabel8 = currentIndex2 != -1 && currentIndex2 + 1 < projects.Count
+                ? projects[currentIndex2 + 1].Path // Попереднє значення
+                : projects.FirstOrDefault()?.Path ?? "Немає даних"; // Повертаємося на останній елемент, якщо це перший елемент
+
+            // Оновлюємо значення Label
+            label6.Text = currentLabel7;  // label3 отримує попереднє значення
+            label7.Text = currentLabel8;   // label4 отримує значення label3
+            label8.Text = nextLabel8;   // label5 отримує значення label4
             //MessageBox.Show($"Привіт");
         }
 
@@ -376,8 +535,161 @@ namespace diplom
             // Якщо список порожній, повертаємо повідомлення або порожній рядок
             return "Немає даних";
 
-            
+
         }
-    }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+            AnnualStatistics();
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+
+            BuildMonthlyChart(2024, 10);
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+
+            BuildMonthlyChart(2024, 11);
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+
+            BuildMonthlyChart(2024, 12);
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+
+            BuildMonthlyChart(2024, 7);
+        }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+
+            BuildMonthlyChart(2024, 8);
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+
+            BuildMonthlyChart(2024, 9);
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+
+            BuildMonthlyChart(2024, 4);
+        }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+
+            BuildMonthlyChart(2024, 5);
+        }
+
+        private void button22_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+
+            BuildMonthlyChart(2024, 6);
+        }
+
+        private void button23_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+
+            BuildMonthlyChart(2024, 1);
+        }
+
+        private void button24_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+
+            BuildMonthlyChart(2024, 2);
+        }
+
+        private void button25_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+
+            BuildMonthlyChart(2024, 3);
+            ExitButton();
+        }
+
+        public void BuildMonthlyChart(int year, int month)
+        {
+            // Фільтрація даних за конкретний місяць
+            var filteredData = statistic.GetDataForSpecificMonth(statistic.timerData, year, month);
+
+            // Визначення початку і кінця місяця
+            var startOfMonth = new DateTime(year, month, 1);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+
+            // Заповнення пропущених днів
+            var filledData = statistic.FillMissingDays(filteredData, startOfMonth, endOfMonth);
+
+            // Отримання точок X і Y для графіка
+            var xPoints = statistic.GetXPoints(filledData);
+            var yPoints = statistic.GetYPoints(filledData);
+
+            // Побудова графіка
+            buildChart(xPoints, yPoints);
+
+            // Обчислення загального часу
+            string totalTime = statistic.CalculateTotalTime(filledData);
+
+            // Виведення тексту в Label
+            label9.Text = $"Усього витрачено на роботу: {totalTime}";
+            ExitButton();
+        }
+
+        private void button26_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+            AnnualStatistics();
+        }
+
+        private void button27_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+            SettingsMenu();
+        }
+
+        private void NotificationsOn()
+        {
+             var notification = new Notifications();
+             //notification.ShowNotification(); // Викликає метод
+
+          //  MessageBox.Show("Fllf");
+        }
+    }   
 }
 

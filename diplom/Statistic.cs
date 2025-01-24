@@ -1,14 +1,9 @@
-﻿using System.Drawing; // Простір імен для Color
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Windows.Forms;
-using OxyPlot;
-using OxyPlot.Series;
-using OxyPlot.WindowsForms;
 using System.Globalization;
-using OxyPlot.Axes;
 using System.Linq;
 
 namespace diplom
@@ -19,91 +14,6 @@ namespace diplom
        // string jsonContent = File.ReadAllText(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json");
        public List<TimerData> timerData = JsonSerializer.Deserialize<List<TimerData>>(File.ReadAllText(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json"));
 
-        public void test()
-        {
-            string jsonContent = File.ReadAllText(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json");
-            List<TimerData> timerData = JsonSerializer.Deserialize<List<TimerData>>(jsonContent);
-
-            // Створення PlotView для відображення графіка
-            var plotView = new PlotView
-            {
-                Dock = DockStyle.None, // Вимикаємо автоматичне заповнення форми
-                Size = new Size(600, 400), // Встановлюємо розміри графіка (ширина - 600, висота - 400)
-                Location = new Point(300, 60) // Встановлюємо місце розташування (відстань від лівого верхнього кута форми)
-
-            };
-
-            // Створення моделі графіка
-            var plotModel = new PlotModel
-            {
-                Title = "Статистика за останній тиждень",
-                TitleColor = OxyColor.FromRgb(169, 169, 169), // Колір заголовку графіка
-                PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25) // Колір межі (білий або інший, щоб вона була непомітною)
-            };
-
-            // Створення серії для лінійного графіка
-            var lineSeries = new LineSeries
-            {
-                Title = "Час (секунди)",
-                MarkerType = MarkerType.Circle,
-                Color = OxyColor.FromRgb(169, 169, 169) // Колір лінії (сірий)
-            };
-
-            // Додаємо точки на графік
-            var labels = new List<string>();
-            foreach (var data in timerData)
-            {
-                DateTime date = DateTime.ParseExact(data.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
-                TimeSpan timeSpan = TimeSpan.Parse(data.Time);
-                int totalSeconds = (int)timeSpan.TotalSeconds;
-
-                lineSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(date), totalSeconds));
-                labels.Add(date.ToString("dd.MM.yyyy"));
-            }
-
-            // Додаємо серію до моделі
-            plotModel.Series.Add(lineSeries);
-
-            // Налаштовуємо осі
-            var axisX = new DateTimeAxis
-            {
-                Position = AxisPosition.Bottom,
-                Title = "Дата",
-                TitleColor = OxyColor.FromRgb(169, 169, 169),
-                TextColor = OxyColor.FromRgb(169, 169, 169),
-                StringFormat = "dd.MM.yyyy",  // Формат дати
-                MajorGridlineColor = OxyColor.FromRgb(169, 169, 169),  // Колір сітки
-                MinorGridlineColor = OxyColor.FromRgb(169, 169, 169),
-                IsZoomEnabled = false,  // Вимкнути масштабування по осі X
-                AxislineColor = OxyColor.FromArgb(0, 0, 0, 0),  // Приховуємо лінію осі X
-                TicklineColor = OxyColor.FromArgb(0, 0, 0, 0),  // Приховуємо позначки на осі X
-                IsAxisVisible = false // Приховуємо саму вісь X
-            };
-
-            var axisY = new LinearAxis
-            {
-                Title = "Секунди",
-                TitleColor = OxyColor.FromRgb(169, 169, 169),
-                TextColor = OxyColor.FromRgb(169, 169, 169),
-                MajorGridlineColor = OxyColor.FromRgb(169, 169, 169),
-                MinorGridlineColor = OxyColor.FromRgb(169, 169, 169),
-                IsZoomEnabled = false,  // Вимкнути масштабування по осі X
-                AxislineColor = OxyColor.FromArgb(0, 0, 0, 0),  // Приховуємо лінію осі X
-                TicklineColor = OxyColor.FromArgb(0, 0, 0, 0),  // Приховуємо позначки на осі X
-                IsAxisVisible = false // Приховуємо саму вісь X
-            };
-
-            // Додаємо осі до графіка
-            plotModel.Axes.Add(axisX);
-            plotModel.Axes.Add(axisY);
-
-            // Призначаємо модель графіку компоненту PlotView
-            plotView.Model = plotModel;
-
-            // Додаємо PlotView на форму
-            this.Controls.Add(plotView);
-            MessageBox.Show("Биба на месте");
-        }
         // Метод для визначення діапазону попереднього тижня
         public (DateTime startOfWeek, DateTime endOfWeek) GetPreviousWeekRange()
         {
@@ -112,6 +22,27 @@ namespace diplom
             DateTime lastMonday = today.AddDays(-daysSinceMonday - 7); // Минулого понеділка
             DateTime lastSunday = lastMonday.AddDays(6); // Минулої неділі
             return (lastMonday, lastSunday);
+        }
+
+        // Метод для визначення діапазону поточного тижня
+        public (DateTime startOfWeek, DateTime endOfWeek) GetCurrentWeekRange()
+        {
+            DateTime today = DateTime.Today;
+            int daysSinceMonday = ((int)today.DayOfWeek + 6) % 7; // Визначаємо відстань від поточного дня до понеділка
+            DateTime currentMonday = today.AddDays(-daysSinceMonday); // Поточний понеділок
+            DateTime currentSunday = currentMonday.AddDays(6); // Поточна неділя
+            return (currentMonday, currentSunday);
+        }
+
+        // Метод для фільтрації даних для поточного тижня
+        public List<TimerData> FilterDataForCurrentWeek(List<TimerData> timerData)
+        {
+            var (startOfWeek, endOfWeek) = GetCurrentWeekRange();
+            return timerData.Where(data =>
+            {
+                DateTime date = DateTime.ParseExact(data.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                return date >= startOfWeek && date <= endOfWeek;
+            }).ToList();
         }
 
         // Метод для фільтрації даних для попереднього тижня
@@ -166,6 +97,107 @@ namespace diplom
                 yPoints.Add(totalSeconds);
             }
             return yPoints;
+        }
+
+        public (DateTime startOfLastMonth, DateTime endOfLastMonth) GetLastMonthRange()
+        {
+            DateTime today = DateTime.Today;
+            DateTime firstDayOfCurrentMonth = new DateTime(today.Year, today.Month, 1);
+            DateTime lastDayOfLastMonth = firstDayOfCurrentMonth.AddDays(-1);
+            DateTime firstDayOfLastMonth = new DateTime(lastDayOfLastMonth.Year, lastDayOfLastMonth.Month, 1);
+            return (firstDayOfLastMonth, lastDayOfLastMonth);
+        }
+
+        public List<TimerData> FilterDataForLastMonth(List<TimerData> timerData)
+        {
+            var (startOfLastMonth, endOfLastMonth) = GetLastMonthRange();
+            return timerData.Where(data =>
+            {
+                DateTime date = DateTime.ParseExact(data.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                return date >= startOfLastMonth && date <= endOfLastMonth;
+            }).ToList();
+        }
+
+        public List<TimerData> FillMissingDaysForLastMonth(List<TimerData> timerData)
+        {
+            var (startOfLastMonth, endOfLastMonth) = GetLastMonthRange();
+            return FillMissingDays(timerData, startOfLastMonth, endOfLastMonth);
+        }
+
+        // Метод для обчислення загального часу
+        public string CalculateTotalTime(List<TimerData> timerData)
+        {
+            // Підрахунок загальної кількості секунд
+            int totalSeconds = timerData.Sum(data =>
+            {
+                TimeSpan timeSpan = TimeSpan.Parse(data.Time);
+                return (int)timeSpan.TotalSeconds;
+            });
+
+            // Перетворення секунд у години, хвилини, секунди
+            int hours = totalSeconds / 3600;
+            int minutes = (totalSeconds % 3600) / 60;
+            int seconds = totalSeconds % 60;
+
+            // Форматований рядок
+            return $"{hours} год. {minutes} хв. {seconds} сек.";
+        }
+
+        // Метод для групування даних за місяцями
+        public Dictionary<int, List<TimerData>> GetDataByMonths(List<TimerData> timerData, int year)
+        {
+            var groupedData = timerData
+                .Where(data =>
+                {
+                    DateTime date = DateTime.ParseExact(data.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    return date.Year == year; // Фільтруємо лише дані за вказаний рік
+        })
+                .GroupBy(data =>
+                {
+                    DateTime date = DateTime.ParseExact(data.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    return date.Month; // Групуємо за місяцем
+        })
+                .ToDictionary(group => group.Key, group => group.ToList());
+
+            // Перевірка на відсутні місяці та їх заповнення
+            for (int month = 1; month <= 12; month++)
+            {
+                if (!groupedData.ContainsKey(month))
+                {
+                    groupedData[month] = new List<TimerData>();
+                }
+            }
+
+            return groupedData;
+        }
+
+        // Метод для заповнення пропущених днів у всіх місяцях року
+        public Dictionary<int, List<TimerData>> FillMissingDaysForYear(List<TimerData> timerData, int year)
+        {
+            var dataByMonths = GetDataByMonths(timerData, year);
+
+            for (int month = 1; month <= 12; month++)
+            {
+                DateTime startOfMonth = new DateTime(year, month, 1);
+                DateTime endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+
+                dataByMonths[month] = FillMissingDays(dataByMonths[month], startOfMonth, endOfMonth);
+            }
+
+            return dataByMonths;
+        }
+
+        // Метод для отримання даних за конкретний місяць і рік
+        public List<TimerData> GetDataForSpecificMonth(List<TimerData> timerData, int year, int month)
+        {
+            return timerData.Where(data =>
+            {
+                // Конвертація дати зі строки у формат DateTime
+                DateTime date = DateTime.ParseExact(data.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+
+                // Перевірка на відповідність року та місяцю
+                return date.Year == year && date.Month == month;
+            }).ToList();
         }
     }
 }

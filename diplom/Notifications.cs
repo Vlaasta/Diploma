@@ -7,6 +7,7 @@ namespace diplom
     internal class Notifications : Form
     {
         private NotifyIcon notifyIcon;
+
         public Notifications()
         {
             InitializeNotification();
@@ -16,20 +17,20 @@ namespace diplom
         {
             notifyIcon = new NotifyIcon
             {
-                Icon = new Icon(SystemIcons.Information, 40, 40), // Іконка сповіщення
-                Visible = true,
+                Icon = SystemIcons.Information,
                 BalloonTipTitle = "Нове сповіщення",
                 BalloonTipText = "Дякую що запустив мене, сонечко!",
-                BalloonTipIcon = ToolTipIcon.Info
+                BalloonTipIcon = ToolTipIcon.Info,
+                Visible = true // Поставити видимість в кінці
             };
 
-            // Показати сповіщення
-            notifyIcon.ShowBalloonTip(3000); // Тривалість у мс (3 секунди)
+            notifyIcon.ShowBalloonTip(3000); // Тривалість
         }
 
         public void ShowNotification()
         {
             InitializeNotification(); // Виклик приватного методу
+
         }
     }
 }

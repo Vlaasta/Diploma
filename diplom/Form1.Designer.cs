@@ -6,6 +6,8 @@ using OxyPlot;
 using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using OxyPlot.Axes;
+using System.Linq;
+using OxyPlot.Annotations;
 
 namespace diplom
 {
@@ -42,15 +44,18 @@ namespace diplom
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
             this.button7 = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.button8 = new System.Windows.Forms.Button();
             this.button27 = new System.Windows.Forms.Button();
+            this.button28 = new System.Windows.Forms.Button();
 
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
+            this.panel6.SuspendLayout();
             this.SuspendLayout();
 
             this.BackColor = Color.FromArgb(2, 14, 25);
@@ -61,6 +66,7 @@ namespace diplom
             this.panel1.Controls.Add(this.panel4);
             this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.panel2);
+            this.panel1.Controls.Add(this.panel6);
             // this.panel1.Controls.Add(this.panel2);
             this.panel1.BackColor = Color.FromArgb(4, 26, 44);
             this.panel1.Location = new System.Drawing.Point(0, 1);
@@ -97,12 +103,6 @@ namespace diplom
              this.panel2.Name = "panel2";
              this.panel2.Size = new System.Drawing.Size(225, 46);
             // this.panel2.TabIndex = 31;
-
-            /*this.panel6.Controls.Add(this.button27);
-            this.panel6.Location = new System.Drawing.Point(0, 350);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(225, 46);*/
-            //this.panel6.TabIndex = 31;
             //
             //
             //
@@ -117,6 +117,25 @@ namespace diplom
             this.button27.Click += new System.EventHandler(this.button27_Click);
             this.button27.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button27.FlatAppearance.BorderSize = 0;
+
+            this.panel6.Controls.Add(this.button28);
+            this.panel6.Location = new System.Drawing.Point(0, 100);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(225, 46);
+            //this.panel6.TabIndex = 31;
+
+
+            this.button28.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button28.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button28.Location = new System.Drawing.Point(-8, 0);
+            this.button28.Name = "button28";
+            this.button28.Size = new System.Drawing.Size(235, 45);
+            // this.button27.TabIndex = 21;
+            this.button28.Text = "Про програму";
+            this.button28.UseVisualStyleBackColor = true;
+            this.button28.Click += new System.EventHandler(this.button27_Click);
+            this.button28.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button28.FlatAppearance.BorderSize = 0;
             // 
             // panel4
             // 
@@ -140,7 +159,6 @@ namespace diplom
             this.button8.Click += new System.EventHandler(this.button8_Click);
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button8.FlatAppearance.BorderSize = 0;
-
 
             if (CheckBox2Active == true)
             {
@@ -168,14 +186,15 @@ namespace diplom
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1044, 734);
             this.Controls.Add(this.panel1);
-          //  this.Controls.Add(this.panel6);
+        
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "Form1";
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
-           // this.Controls.Add(this.panel6);
+            this.panel6.ResumeLayout(false);
+
             this.ResumeLayout(false);
             this.PerformLayout();
         }
@@ -209,7 +228,7 @@ namespace diplom
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
-            
+
             // this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -255,7 +274,7 @@ namespace diplom
             // 
             // this.pictureBox1.Image = System.Drawing.Image.FromFile("E:\\4 KURS\\DiplomaRepo\\Диплом\\Diploma\\Design\\Clock.png");
             //this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("Clock")));
-            this.pictureBox1.Image = Properties.Resources.Clock;
+            this.pictureBox1.Image = Properties.Resources.ClockForDarkTheme;
             this.pictureBox1.Location = new System.Drawing.Point(552, 62);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(194, 193);
@@ -290,13 +309,7 @@ namespace diplom
             // 
             // pictureBox3
             // 
-            this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
-            this.pictureBox3.Location = new System.Drawing.Point(338, 441);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(255, 41);
-            this.pictureBox3.TabIndex = 5;
-            this.pictureBox3.TabStop = false;
-            this.pictureBox3.BackColor = Color.FromArgb(6, 40, 68);
+
             // 
             // pictureBox4
             // 
@@ -348,16 +361,21 @@ namespace diplom
             this.pictureBox7.TabIndex = 11;
             this.pictureBox7.TabStop = false;
             this.pictureBox7.BackColor = Color.FromArgb(6, 40, 68);
-            // 
-            // pictureBox8
-            // 
-            //this.pictureBox8.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox8.BackgroundImage")));
-            this.pictureBox8.Location = new System.Drawing.Point(598, 535);
-            this.pictureBox8.Name = "pictureBox8";
-            this.pictureBox8.Size = new System.Drawing.Size(255, 41);
-            this.pictureBox8.TabIndex = 10;
-            this.pictureBox8.TabStop = false;
-            this.pictureBox8.BackColor = Color.FromArgb(6, 40, 68);
+
+            this.label7.AutoSize = false;
+            this.label7.BackColor = System.Drawing.SystemColors.Control;
+            this.label7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+           // this.label7.Image = ((System.Drawing.Image)(resources.GetObject("label3.Image")));
+            this.label7.Location = new System.Drawing.Point(598, 488);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(44, 16);
+            this.label7.TabIndex = 14;
+            this.label7.BackColor = Color.FromArgb(6, 40, 68);
+            this.label7.Text = "label7";
+            this.label7.Size = new System.Drawing.Size(this.pictureBox7.Width, this.pictureBox7.Height);
+            this.label7.AutoEllipsis = true; // Додає "..." якщо текст не влізе
+            this.label7.TextAlign = ContentAlignment.MiddleLeft;
+
             // 
             // label1
             // 
@@ -370,79 +388,102 @@ namespace diplom
             this.label1.TabIndex = 13;
             this.label1.BackColor = Color.FromArgb(6, 40, 68);
             this.label1.Text = "Щоб додати новий проект, натисніть на  \"+\"";
+
+            this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
+            this.pictureBox3.Location = new System.Drawing.Point(338, 441);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(255, 41);
+            this.pictureBox3.TabIndex = 5;
+            this.pictureBox3.TabStop = false;
+            this.pictureBox3.BackColor = Color.FromArgb(6, 40, 68);
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
+            this.label3.AutoSize = false;
             this.label3.BackColor = System.Drawing.SystemColors.Control;
             this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.label3.Image = ((System.Drawing.Image)(resources.GetObject("label3.Image")));
-            this.label3.Location = new System.Drawing.Point(355, 453);
+            this.label3.Location = new System.Drawing.Point(338, 441);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(44, 16);
+            this.label3.Size = new System.Drawing.Size(this.pictureBox3.Width, this.pictureBox3.Height);
             this.label3.TabIndex = 14;
             this.label3.BackColor = Color.FromArgb(6, 40, 68);
             this.label3.Text = "label3";
+            this.label3.AutoEllipsis = true; // Додає "..." якщо текст не влізе
+            this.label3.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
+            this.label4.AutoSize = false;
             this.label4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.label4.Image = ((System.Drawing.Image)(resources.GetObject("label4.Image")));
-            this.label4.Location = new System.Drawing.Point(355, 502);
+            this.label4.Location = new System.Drawing.Point(338, 488);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(44, 16);
+            this.label4.Size = new System.Drawing.Size(this.pictureBox4.Width, this.pictureBox4.Height);
             this.label4.TabIndex = 15;
             this.label4.BackColor = Color.FromArgb(6, 40, 68);
             this.label4.Text = "label4";
+            this.label4.AutoEllipsis = true; // Додає "..." якщо текст не влізе
+            this.label4.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
+            this.label5.AutoSize = false;
             this.label5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.label5.Image = ((System.Drawing.Image)(resources.GetObject("label5.Image")));
-            this.label5.Location = new System.Drawing.Point(355, 549);
+            this.label5.Location = new System.Drawing.Point(338, 535);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(44, 16);
+            this.label5.Size = new System.Drawing.Size(this.pictureBox5.Width, this.pictureBox5.Height);
             this.label5.TabIndex = 16;
             this.label5.BackColor = Color.FromArgb(6, 40, 68);
             this.label5.Text = "label5";
+            this.label5.AutoEllipsis = true; // Додає "..." якщо текст не влізе
+            this.label5.TextAlign = ContentAlignment.MiddleLeft;
+
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
+            this.label6.AutoSize = false;
             this.label6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.label6.Image = ((System.Drawing.Image)(resources.GetObject("label6.Image")));
-            this.label6.Location = new System.Drawing.Point(611, 453);
+            this.label6.Location = new System.Drawing.Point(598, 441);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(44, 16);
+            this.label6.Size = new System.Drawing.Size(this.pictureBox6.Width, this.pictureBox6.Height);
             this.label6.TabIndex = 17;
             this.label6.BackColor = Color.FromArgb(6, 40, 68);
             this.label6.Text = "label6";
+            this.label6.AutoEllipsis = true; // Додає "..." якщо текст не влізе
+            this.label6.TextAlign = ContentAlignment.MiddleLeft;
+
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label7.Image = ((System.Drawing.Image)(resources.GetObject("label7.Image")));
-            this.label7.Location = new System.Drawing.Point(611, 502);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(44, 16);
-            this.label7.TabIndex = 18;
-            this.label7.BackColor = Color.FromArgb(6, 40, 68);
-            this.label7.Text = "label7";
+
+            // 
+            // pictureBox8
+            // 
+            //this.pictureBox8.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox8.BackgroundImage")));
+            this.pictureBox8.Location = new System.Drawing.Point(598, 535);
+            this.pictureBox8.Name = "pictureBox8";
+            this.pictureBox8.Size = new System.Drawing.Size(255, 41);
+            this.pictureBox8.TabIndex = 10;
+            this.pictureBox8.TabStop = false;
+            this.pictureBox8.BackColor = Color.FromArgb(6, 40, 68);
+
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
+            this.label8.AutoSize = false;
             this.label8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.label8.Image = ((System.Drawing.Image)(resources.GetObject("label8.Image")));
-            this.label8.Location = new System.Drawing.Point(611, 549);
+            this.label8.Location = new System.Drawing.Point(598, 535);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(44, 16);
+            this.label8.Size = new System.Drawing.Size(this.pictureBox8.Width, this.pictureBox8.Height);
             this.label8.TabIndex = 19;
             this.label8.BackColor = Color.FromArgb(6, 40, 68);
             this.label8.Text = "label8";
+            this.label8.AutoEllipsis = true; // Додає "..." якщо текст не влізе
+            this.label8.TextAlign = ContentAlignment.MiddleLeft;
             //
             // 
             // button2
@@ -501,9 +542,11 @@ namespace diplom
             this.button6.Click += new System.EventHandler(this.button6_Click);
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button6.FlatAppearance.BorderSize = 0;
+         
 
             if (CheckBox2Active == true)
             {
+                this.pictureBox1.Image = Properties.Resources.ClockForLightTheme;
                 this.button1.BackColor = Color.FromArgb(182, 192, 196);
                 this.button3.BackColor = Color.FromArgb(182, 192, 196);
                 this.button10.BackColor = Color.FromArgb(182, 192, 196);
@@ -551,7 +594,7 @@ namespace diplom
 
             if (CheckBox1Active == true)
             {
-
+                this.pictureBox1.Image = Properties.Resources.ClockForDarkTheme;
                 this.button3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
                 this.button3.BackColor = Color.FromArgb(6, 40, 68);
 
@@ -600,9 +643,10 @@ namespace diplom
                 this.button6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
                 this.button6.BackColor = Color.FromArgb(6, 40, 68);
             }
-                // 
-                // Form1
-                // 
+            
+            // 
+            // Form1
+            // 
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1044, 734);
             this.Controls.Add(this.button1);
@@ -620,6 +664,7 @@ namespace diplom
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+           
             this.Controls.Add(this.pictureBox6);
             this.Controls.Add(this.pictureBox7);
             this.Controls.Add(this.pictureBox8);
@@ -654,17 +699,15 @@ namespace diplom
 
             var plotModel = new PlotModel
             {
-                //Title = "Статистика за останній тиждень",
-                //TitleColor = OxyColor.FromRgb(169, 169, 169),
-
-                PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25)
+                PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25),
+                PlotAreaBorderThickness = new OxyThickness(1)
             };
 
             var lineSeries = new LineSeries
             {
                 Title = "Час (секунди)",
                 MarkerType = MarkerType.Circle,
-                Color = OxyColor.FromRgb(169, 169, 169)
+                Color = OxyColor.FromRgb(159, 183, 213)
             };
 
             for (int i = 0; i < xPoints.Count; i++)
@@ -674,36 +717,79 @@ namespace diplom
 
             plotModel.Series.Add(lineSeries);
 
+            // Ось X
             var axisX = new DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
                 Title = "Дата",
-                TitleColor = OxyColor.FromRgb(169, 169, 169),
-                TextColor = OxyColor.FromRgb(169, 169, 169),
+                TitleColor = OxyColor.FromRgb(159, 183, 213),
+                TextColor = OxyColor.FromRgb(159, 183, 213),
                 StringFormat = "dd.MM.yyyy",
-                MajorGridlineColor = OxyColor.FromRgb(169, 169, 169),
-                MinorGridlineColor = OxyColor.FromRgb(169, 169, 169),
+                MajorGridlineColor = OxyColor.FromRgb(159, 183, 213),
+                MinorGridlineColor = OxyColor.FromRgb(159, 183, 213),
+                MajorGridlineThickness = 1,  // Товщина основної сітки
+                MinorGridlineThickness = 0.5, // Товщина допоміжної сітки
                 IsZoomEnabled = false,
-                AxislineColor = OxyColor.FromArgb(0, 0, 0, 0),
-                TicklineColor = OxyColor.FromArgb(0, 0, 0, 0),
-                IsAxisVisible = false
+                AxislineColor = OxyColor.FromRgb(159, 183, 213),
+                TicklineColor = OxyColor.FromRgb(159, 183, 213),
+                IsAxisVisible = true,
+                AxisTitleDistance = 10 // Відстань підпису від осі Y (можна змінити за потреби)
             };
 
+            // Ось Y
             var axisY = new LinearAxis
             {
+                Position = AxisPosition.Left,
                 Title = "Секунди",
-                TitleColor = OxyColor.FromRgb(169, 169, 169),
-                TextColor = OxyColor.FromRgb(169, 169, 169),
-                MajorGridlineColor = OxyColor.FromRgb(169, 169, 169),
-                MinorGridlineColor = OxyColor.FromRgb(169, 169, 169),
+                TitleColor = OxyColor.FromRgb(159, 183, 213),
+                TextColor = OxyColor.FromRgb(159, 183, 213),
+                MajorGridlineColor = OxyColor.FromRgb(159, 183, 213),
+                MinorGridlineColor = OxyColor.FromRgb(81, 99, 119),
+                MajorGridlineThickness = 1,
+                MinorGridlineThickness = 0.5,
+                MajorStep = 100, // Крок основних ліній
+                MinorStep = 20, // Крок допоміжних ліній
                 IsZoomEnabled = false,
-                AxislineColor = OxyColor.FromArgb(0, 0, 0, 0),
-                TicklineColor = OxyColor.FromArgb(0, 0, 0, 0),
-                IsAxisVisible = false
+                AxislineColor = OxyColor.FromRgb(159, 183, 213),
+                TicklineColor = OxyColor.FromRgb(159, 183, 213),
             };
+
+            var MinimumY = yPoints.Min() - 2;  // Мінімум на основі даних
+            var MaximumY = yPoints.Max() + 2;  // Максимум на основі даних
+
+            var MinimumX = DateTimeAxis.ToDouble(xPoints.Min().AddDays(-2)); // Мінімальна дата на основі даних
+            var MaximumX = DateTimeAxis.ToDouble(xPoints.Max().AddDays(+2)); // Максимальна дата на основі даних
 
             plotModel.Axes.Add(axisX);
             plotModel.Axes.Add(axisY);
+
+            // Побудова сітки окремо (не прив'язано до основних серій)
+            for (double x = MinimumX; x <= MaximumX; x += (MaximumX - MinimumX) / 10)
+            {
+                var gridLine = new LineAnnotation
+                {
+                    Type = LineAnnotationType.Vertical,
+                    X = x,
+                    Color = OxyColor.FromRgb(81, 99, 119), // Колір сітки
+                    LineStyle = LineStyle.Solid,
+                    StrokeThickness = 1.5  // Товща лінія для кращої видимості
+                };
+                plotModel.Annotations.Add(gridLine);
+            }
+
+            // Додавання власної сітки
+            for (double y = MinimumY; y <= MaximumY; y += axisY.MinorStep) // Використовуємо MinorStep для допоміжних ліній
+            {
+                var gridLine = new LineAnnotation
+                {
+                    Type = LineAnnotationType.Horizontal,
+                    Y = y,
+                    Color = OxyColor.FromRgb(81, 99, 119), // Колір сітки
+                    LineStyle = y % axisY.MajorStep == 0 ? LineStyle.Solid : LineStyle.Dot, // Основна — суцільна, допоміжна — пунктирна
+                    StrokeThickness = y % axisY.MajorStep == 0 ? 1.5 : 0.5
+                };
+                plotModel.Annotations.Add(gridLine);
+            }
 
             plotView.Model = plotModel;
 
@@ -726,21 +812,21 @@ namespace diplom
                 this.label9.ForeColor = System.Drawing.SystemColors.ActiveCaption;
                 this.label9.BackColor = Color.FromArgb(2, 14, 25);
                 plotModel.PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25);
-                lineSeries.Color = OxyColor.FromRgb(169, 169, 169);
+                lineSeries.Color = OxyColor.FromRgb(159, 183, 213);
 
-                axisX.TitleColor = OxyColor.FromRgb(169, 169, 169);
-                axisX.TextColor = OxyColor.FromRgb(169, 169, 169);
-                axisX.MajorGridlineColor = OxyColor.FromRgb(169, 169, 169);
-                axisX.MinorGridlineColor = OxyColor.FromRgb(169, 169, 169);
-                axisX.AxislineColor = OxyColor.FromArgb(0, 0, 0, 0);
-                axisX.TicklineColor = OxyColor.FromArgb(0, 0, 0, 0);
+                axisX.TitleColor = OxyColor.FromRgb(159, 183, 213);
+                axisX.TextColor = OxyColor.FromRgb(159, 183, 213);
+                axisX.MajorGridlineColor = OxyColor.FromRgb(159, 183, 213);
+                axisX.MinorGridlineColor = OxyColor.FromRgb(159, 183, 213);
+                axisX.AxislineColor = OxyColor.FromRgb(159, 183, 213);
+                axisX.TicklineColor = OxyColor.FromRgb(159, 183, 213);
 
-                axisY.TitleColor = OxyColor.FromRgb(169, 169, 169);
-                axisY.TextColor = OxyColor.FromRgb(169, 169, 169);
-                axisY.MajorGridlineColor = OxyColor.FromRgb(169, 169, 169);
-                axisY.MinorGridlineColor = OxyColor.FromRgb(169, 169, 169);
-                axisY.AxislineColor = OxyColor.FromArgb(0, 0, 0, 0);
-                axisY.TicklineColor = OxyColor.FromArgb(0, 0, 0, 0);
+                axisY.TitleColor = OxyColor.FromRgb(159, 183, 213);
+                axisY.TextColor = OxyColor.FromRgb(159, 183, 213);
+                axisY.MajorGridlineColor = OxyColor.FromRgb(159, 183, 213);
+                axisY.MinorGridlineColor = OxyColor.FromRgb(159, 183, 213);
+                axisY.AxislineColor = OxyColor.FromRgb(159, 183, 213);
+                axisY.TicklineColor = OxyColor.FromRgb(159, 183, 213);
             }
 
             if (CheckBox2Active == true)
@@ -755,15 +841,15 @@ namespace diplom
                 axisX.TextColor = OxyColor.FromRgb(82, 82, 82);
                 axisX.MajorGridlineColor = OxyColor.FromRgb(82, 82, 82);
                 axisX.MinorGridlineColor = OxyColor.FromRgb(82, 82, 82);
-                axisX.AxislineColor = OxyColor.FromRgb(212, 220, 225);
-                axisX.TicklineColor = OxyColor.FromRgb(212, 220, 225);
+                axisX.AxislineColor = OxyColor.FromRgb(82, 82, 82);
+                axisX.TicklineColor = OxyColor.FromRgb(82, 82, 82);
 
                 axisY.TitleColor = OxyColor.FromRgb(82, 82, 82);
                 axisY.TextColor = OxyColor.FromRgb(82, 82, 82);
                 axisY.MajorGridlineColor = OxyColor.FromRgb(82, 82, 82);
                 axisY.MinorGridlineColor = OxyColor.FromRgb(82, 82, 82);
-                axisY.AxislineColor = OxyColor.FromRgb(212, 220, 225);
-                axisY.TicklineColor = OxyColor.FromRgb(212, 220, 225);
+                axisY.AxislineColor = OxyColor.FromRgb(82, 82, 82);
+                axisY.TicklineColor = OxyColor.FromRgb(82, 82, 82);
 
             }
         }
@@ -1292,19 +1378,23 @@ namespace diplom
             this.textBox1.BackColor = Color.FromArgb(6, 40, 68);// Розмір поля
             this.textBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.textBox1.Font = new Font("Arial", 9, FontStyle.Regular);
-            this.textBox1.Text = "Введіть лише число за допомогою цифр";
+            //this.textBox1.Text = "Введіть лише число за допомогою цифр";
             this.textBox1.BorderStyle = BorderStyle.None;
             this.Controls.Add(textBox1);
-
+            //this.textBox1.Leave += ValidateTextBox;
 
             // Подія для ручного зняття вибору
-            checkBox7.CheckedChanged += (sender, e) =>
+           /* checkBox7.CheckedChanged += (sender, e) =>
             {
-                if (checkBox7.Checked)
+                if (checkBox7.Checked &&
+                (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр" || textBoxText == null))
                 {
                     checkBox5.Checked = false;
                     checkBox6.Checked = false;
                     CheckBox7Active = true;
+
+                    nonActiveTime = 15;
+                    //checkBox7.CheckedChanged += ValidateTextBox;
                 }
             };
 
@@ -1316,11 +1406,15 @@ namespace diplom
             // Подія для ручного зняття вибору
             checkBox6.CheckedChanged += (sender, e) =>
             {
-                if (checkBox6.Checked)
+                if (checkBox6.Checked &&
+                (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр" || textBoxText == null))
                 {
                     checkBox5.Checked = false;
                     checkBox7.Checked = false;
                     CheckBox6Active = true;
+
+                    nonActiveTime = 10;
+                    //checkBox6.CheckedChanged += ValidateTextBox;
                 }
             };
 
@@ -1332,13 +1426,17 @@ namespace diplom
             // Подія для ручного зняття вибору
             checkBox5.CheckedChanged += (sender, e) =>
             {
-                if (checkBox5.Checked)
+                if (checkBox5.Checked &&
+                (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр" || textBoxText == null))
                 {
                     checkBox6.Checked = false;
                     checkBox7.Checked = false;
                     CheckBox5Active = true;
+
+                    nonActiveTime = 5;
+                   // checkBox7.CheckedChanged += ValidateTextBox;
                 }
-            };
+            };*/
 
             if (CheckBox5Active == true)
             {
@@ -1356,6 +1454,10 @@ namespace diplom
 
                     ProperColorTheme();
                 }
+                if (!checkBox1.Checked && !checkBox2.Checked)
+                {
+                    checkBox1.Checked = true; // Повертаємо назад, якщо жоден інший не вибраний
+                }
             };
 
                 checkBox2.CheckedChanged += (sender, e) =>
@@ -1368,6 +1470,10 @@ namespace diplom
                     CheckBox1Active = false;
 
                     ProperColorTheme();
+                }
+                if (!checkBox2.Checked && !checkBox1.Checked)
+                {
+                    checkBox2.Checked = true; // Повертаємо назад, якщо жоден інший не вибраний
                 }
             };
 
@@ -1400,6 +1506,39 @@ namespace diplom
                 checkBox4.Checked = true;
 
             }
+
+            if (textBoxText == null)
+            {
+                textBox1.Text = "Введіть лише число за допомогою цифр";
+            }
+            else
+            {
+                textBox1.Text = textBoxText;
+                CheckBox5Active = false;
+                checkBox5.Checked = false;
+                CheckBox6Active = false;
+                checkBox6.Checked = false;
+                CheckBox7Active = false;
+                checkBox7.Checked = false;
+            }
+
+
+            /* if (!(string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр"))
+             {
+                 nonActiveTime = int.Parse(textBox1.Text);
+             }*/
+
+            /*if (!(checkBox5.Checked || checkBox6.Checked || checkBox7.Checked) && (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр"))
+            {
+                MessageBox.Show("Будь ласка, виберіть значення, яке буде вважатися за мінімальну неактивність. Якщо не вибрати жодного значення, програма не зможе якісно виконувати освновну функцію",
+                    "Попередження", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox1.Focus();
+            }*/
+
+           /* if (!(nonActiveTime == 5 || nonActiveTime == 10 || nonActiveTime == 15))
+            {
+                textBox1.Text = Convert.ToString(nonActiveTime);
+            }*/
 
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1527,13 +1666,14 @@ namespace diplom
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Button button26;
         private System.Windows.Forms.Button button27;
+        private System.Windows.Forms.Button button28;
 
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel5;
-       // private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel panel6;
 
 
         //Для річної статистики
@@ -1572,6 +1712,7 @@ namespace diplom
 
 
         private System.Windows.Forms.TextBox textBox1;
+
 
     }
 }

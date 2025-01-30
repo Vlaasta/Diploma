@@ -19,6 +19,7 @@ namespace diplom
 
         private Statistic statistic = new Statistic();
         private bool isPreviousWeek = true;
+        private string textBoxText = null;
 
         public bool CheckBox1Active;
         public bool CheckBox2Active;
@@ -28,16 +29,26 @@ namespace diplom
         public bool CheckBox6Active;
         public bool CheckBox7Active;
 
+        private bool isPersonChoose;
+
+        private ToolTip toolTip;
+
+        // Завантажуємо час з файлу при запуску програми
+        TimeSpan lastElapsedTime = LoadLastElapsedTimeFromFile();
+
+
+        // public int nonActiveTime = 5;
+        public static int nonActiveTime = 5;
 
         public Form1()
         {
             InitializeComponentMainMenu();
-            this.button3.Visible = false;
+            // this.button3.Visible = false;
             this.MaximumSize = this.Size;  // Фіксувати максимальний розмір форми
             this.MinimumSize = this.Size;  // Фіксувати мінімальний розмір форми
 
-            // Завантажуємо час з файлу при запуску програми
-            TimeSpan lastElapsedTime = LoadLastElapsedTimeFromFile();
+            toolTip = new ToolTip();
+
             label2.Text = lastElapsedTime.ToString(@"hh\:mm\:ss");
 
             Instance = this;
@@ -45,13 +56,9 @@ namespace diplom
             GetLabel1Text = () => label2.Text;
             Program.GetLabel1TextDelegate = this.GetLabel1Text;
 
-            // Ініціалізація HandButton
+
             handButton = new HandButton();
             handButton.OnTimeUpdated += HandButton_OnTimeUpdated;
-
-
-           // var notification = new Notifications();
-            //notification.ShowNotification(); // Викликає метод
 
             loadValues();
 
@@ -59,10 +66,29 @@ namespace diplom
             CheckBox2Active = false;
             CheckBox3Active = false;
             CheckBox4Active = false;
-            CheckBox5Active = false;
+            CheckBox5Active = true;
             CheckBox6Active = false;
             CheckBox7Active = false;
 
+            // Додаємо обробники подій
+            label3.MouseEnter += Label1_MouseEnter;
+            label4.MouseEnter += Label1_MouseEnter;
+            label5.MouseEnter += Label1_MouseEnter;
+            label6.MouseEnter += Label1_MouseEnter;
+            label7.MouseEnter += Label1_MouseEnter;
+            label8.MouseEnter += Label1_MouseEnter;
+
+            label3.MouseLeave += Label1_MouseLeave;
+            label4.MouseLeave += Label1_MouseLeave;
+            label5.MouseLeave += Label1_MouseLeave;
+            label6.MouseLeave += Label1_MouseLeave;
+            label7.MouseLeave += Label1_MouseLeave;
+            label8.MouseLeave += Label1_MouseLeave;
+
+            isPersonChoose = false;
+
+            LabelsToShow();
+            ButtonsToShow();
         }
 
         public static TimeSpan LoadLastElapsedTimeFromFile()
@@ -101,7 +127,6 @@ namespace diplom
             // Якщо не вдалося, повертаємо 0
             return TimeSpan.Zero;
         }
-
 
         public void HandButton_OnTimeUpdated(TimeSpan elapsed)
         {
@@ -167,8 +192,26 @@ namespace diplom
             {
                 projectsPath[i].Text = projects[i].Path;
             }
-        }
 
+            // Перевірка на кількість символів і обрізка після циклів
+            /*foreach (var label in projectsNames)
+            {
+                if (label.Text.Length > 41)
+                {
+                    label.Text = label.Text.Substring(0, 41);
+                }
+                Console.WriteLine($"Label: {label.Name}, символів: {label.Text.Length}");
+            }
+
+            foreach (var label in projectsPath)
+            {
+                if (label.Text.Length > 41)
+                {
+                    label.Text = label.Text.Substring(0, 41);
+                }
+                Console.WriteLine($"Label: {label.Name}, символів: {label.Text.Length}");
+            }*/
+        }
 
         private void button7_Click(object sender, EventArgs e) //графік поточного тижня
         {
@@ -198,30 +241,6 @@ namespace diplom
             label9.Text = "Усього витрачено на роботу:  " + totalTime;
             label10.Text = "Статистика за останній тиждень";
         }
-
-        /* public void fuck()
-         {
-             // Фільтрація даних для поточного тижня
-             var filteredData = statistic.FilterDataForCurrentWeek(statistic.timerData);
-
-             // Заповнення пропущених днів (якщо потрібно)
-             var (startOfWeek, endOfWeek) = statistic.GetCurrentWeekRange();
-             var filledData = statistic.FillMissingDays(filteredData, startOfWeek, endOfWeek);
-
-             // Отримання точок X і Y
-             var xPoints = statistic.GetXPoints(filledData);
-             var yPoints = statistic.GetYPoints(filledData);
-
-             // Побудова графіка
-             buildChart(xPoints, yPoints);
-
-             // Обчислення загального часу
-             string totalTime = statistic.CalculateTotalTime(filledData);
-
-             // Виведення у Label9
-             label9.Text = "Усього витрачено на роботу:  " + totalTime;
-             label10.Text = "Статистика за останній тиждень";
-         }*/
 
         private void button11_Click(object sender, EventArgs e)
         {
@@ -303,6 +322,8 @@ namespace diplom
             {
                 DeleteProject(projectName);
                 loadValues();
+                LabelsToShow();
+                ButtonsToShow();
             }
         } //видалити проект
 
@@ -315,6 +336,8 @@ namespace diplom
             {
                 DeleteProject(projectName);
                 loadValues();
+                LabelsToShow();
+                ButtonsToShow();
 
             }
         } //видалити проект
@@ -328,6 +351,8 @@ namespace diplom
             {
                 DeleteProject(projectName);
                 loadValues();
+                LabelsToShow();
+                ButtonsToShow();
             }
         } //видалити проект
 
@@ -348,6 +373,9 @@ namespace diplom
                     {
                         JsonProcessing.AddProject(selectedFilePath);
                         MessageBox.Show($"Файл успішно додано: {selectedFilePath}", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LabelsToShow();
+                        loadValues();
+                        ButtonsToShow();
                     }
                     catch (Exception ex)
                     {
@@ -392,13 +420,26 @@ namespace diplom
 
         private void button8_Click(object sender, EventArgs e) //головне меню на панелі
         {
+            if (isPersonChoose == true)
+            {
+                checkBox5.CheckedChanged -= ValidateTextBox;
+                checkBox6.CheckedChanged -= ValidateTextBox;
+                checkBox7.CheckedChanged -= ValidateTextBox;
+                textBox1.Leave -= ValidateTextBox;
+            }
+
             this.Controls.Clear();
             InitializeComponentMainMenu();
             this.button3.Visible = false;
+            label2.Text = lastElapsedTime.ToString(@"hh\:mm\:ss");
             loadValues();
+            LabelsToShow();
+            ButtonsToShow();
+
+           // MessageBox.Show(Convert.ToString(isPersonChoose));
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)//кнопка вверх
         {
             // Завантажуємо проєкти
             var projects = JsonProcessing.LoadProjects();
@@ -450,14 +491,28 @@ namespace diplom
                 this.button10.Visible = true;
             }
 
+            /* var labelsToCheck = new List<Label> { label3, label4, label5, label6, label7 };
+
+             // Перевірка кожного Label на кількість символів
+             foreach (var label in labelsToCheck)
+             {
+                 if (label.Text.Length > 41)
+                 {
+                     label.Text = label.Text.Substring(0, 41);
+                 }
+             }*/
+
+            LabelsToShow();
+            // ButtonsToShow();
         }
 
-        private void button10_Click(object sender, EventArgs e)
+        private void button10_Click(object sender, EventArgs e) //кнопка вниз
         {
             // Завантажуємо проєкти
             var projects = JsonProcessing.LoadProjects();
             string lastProjectName = GetLastProjectName();
             button3.Visible = true;
+            //MessageBox.Show(lastProjectName);
 
             // Поточні значення Label
             string currentLabel3 = label3.Text;
@@ -482,6 +537,7 @@ namespace diplom
             {
                 this.button10.Visible = false; // Приховуємо кнопку
                 this.button3.Visible = true;
+
             }
 
             // Поточні значення Label
@@ -501,7 +557,21 @@ namespace diplom
             label6.Text = currentLabel7;  // label3 отримує попереднє значення
             label7.Text = currentLabel8;   // label4 отримує значення label3
             label8.Text = nextLabel8;   // label5 отримує значення label4
-            //MessageBox.Show($"Привіт");
+                                        //MessageBox.Show($"Привіт");
+
+            /* var labelsToCheck = new List<Label> { label3, label4, label5, label6, label7 };
+
+             // Перевірка кожного Label на кількість символів
+             foreach (var label in labelsToCheck)
+             {
+                 if (label.Text.Length > 41)
+                 {
+                     label.Text = label.Text.Substring(0, 41);
+                 }
+             }*/
+
+            LabelsToShow();
+            // ButtonsToShow();
         }
 
         private string GetLastProjectName()
@@ -536,6 +606,11 @@ namespace diplom
             return "Немає даних";
 
 
+        }
+
+        public static int GetNonActiveTime()
+        {
+            return nonActiveTime;
         }
 
         private void button13_Click(object sender, EventArgs e)
@@ -669,27 +744,267 @@ namespace diplom
             ExitButton();
         }
 
-        private void button26_Click(object sender, EventArgs e)
+        private void button26_Click(object sender, EventArgs e) //статистика на панелі
         {
+            if (isPersonChoose == true)
+            {
+                checkBox5.CheckedChanged -= ValidateTextBox;
+                checkBox6.CheckedChanged -= ValidateTextBox;
+                checkBox7.CheckedChanged -= ValidateTextBox;
+                textBox1.Leave -= ValidateTextBox;
+            }
+
             this.Controls.Clear();
             InitializeComponentMain();
             AnnualStatistics();
         }
 
-        private void button27_Click(object sender, EventArgs e)
+        private void button27_Click(object sender, EventArgs e) //налаштування на панелі
         {
             this.Controls.Clear();
             InitializeComponentMain();
             SettingsMenu();
+
+            if (isPersonChoose == true)
+            {
+                CheckBox5Active = false;
+                checkBox5.Checked = false;
+
+                // MessageBox.Show("DA");
+            }
+            else if (isPersonChoose == false)
+            {
+                CheckBox5Active = true;
+                checkBox5.Checked = true;
+            }
+
+            if (textBoxText != null)
+            {
+                nonActiveTime = Convert.ToInt32(textBoxText);
+               /* CheckBox5Active = false;
+                checkBox5.Checked = false;
+                CheckBox6Active = false;
+                checkBox6.Checked = false;
+                CheckBox7Active = false;
+                checkBox7.Checked = false;*/
+            }
+
+            checkBox5.CheckedChanged += ValidateTextBox;
+            checkBox6.CheckedChanged += ValidateTextBox;
+            checkBox7.CheckedChanged += ValidateTextBox;
+            textBox1.Leave += ValidateTextBox;
+
+            // MessageBox.Show(isPersonChoose.ToString());
+
+            // textBox1.Text = Convert.ToString(nonActiveTime);
+
+            textBox1.KeyPress += textBox1_KeyPress;
+            textBox1.TextChanged += textBox1_TextChanged;
+
+            //MessageBox.Show(Convert.ToString(nonActiveTime));
         }
 
         private void NotificationsOn()
         {
-             var notification = new Notifications();
-             //notification.ShowNotification(); // Викликає метод
+            var notification = new Notifications();
+            //notification.ShowNotification(); // Викликає метод
 
-          //  MessageBox.Show("Fllf");
+            //  MessageBox.Show("Fllf");
         }
+
+        private void Label1_MouseEnter(object sender, EventArgs e)
+        {
+            if (sender is Label label)
+            {
+                toolTip.SetToolTip(label, label.Text);
+            }
+        }
+
+        private void Label1_MouseLeave(object sender, EventArgs e)
+        {
+            if (sender is Label label)
+            {
+                toolTip.Hide(label);
+            }
+        }
+
+        private void LabelsToShow()
+        {
+            // var projects = JsonProcessing.LoadProjects();
+
+            if (JsonProcessing.LoadProjects().Count == 0)
+            {
+                pictureBox3.Visible = false;
+                pictureBox4.Visible = false;
+                pictureBox5.Visible = false;
+                pictureBox6.Visible = false;
+                pictureBox7.Visible = false;
+                pictureBox8.Visible = false;
+
+                label3.Visible = false;
+                label4.Visible = false;
+                label5.Visible = false;
+                label6.Visible = false;
+                label7.Visible = false;
+                label8.Visible = false;
+
+                button6.Visible = false;
+                button10.Visible = false;
+                button3.Visible = false;
+                button5.Visible = false;
+                button4.Visible = false;
+            }
+            else if (JsonProcessing.LoadProjects().Count == 1)
+            {
+                pictureBox3.Visible = true;
+                pictureBox4.Visible = false;
+                pictureBox5.Visible = false;
+                pictureBox6.Visible = true;
+                pictureBox7.Visible = false;
+                pictureBox8.Visible = false;
+
+                label3.Visible = true;
+                label4.Visible = false;
+                label5.Visible = false;
+                label6.Visible = true;
+                label7.Visible = false;
+                label8.Visible = false;
+
+                button6.Visible = false;
+                button10.Visible = false;
+                button3.Visible = false;
+                button5.Visible = false;
+                button4.Visible = true;
+                button5.Visible = false;
+
+            }
+            else if (JsonProcessing.LoadProjects().Count == 2)
+            {
+                pictureBox3.Visible = true;
+                pictureBox4.Visible = true;
+                pictureBox5.Visible = false;
+                pictureBox6.Visible = true;
+                pictureBox7.Visible = true;
+                pictureBox8.Visible = false;
+
+                label3.Visible = true;
+                label4.Visible = true;
+                label5.Visible = false;
+                label6.Visible = true;
+                label7.Visible = true;
+                label8.Visible = false;
+
+                button6.Visible = false;
+                button10.Visible = false;
+                button3.Visible = false;
+                button4.Visible = true;
+                button5.Visible = true;
+            }
+            else if (JsonProcessing.LoadProjects().Count >= 3)
+            {
+                pictureBox3.Visible = true;
+                pictureBox4.Visible = true;
+                pictureBox5.Visible = true;
+                pictureBox6.Visible = true;
+                pictureBox7.Visible = true;
+
+                label3.Visible = true;
+                label4.Visible = true;
+                label5.Visible = true;
+                label6.Visible = true;
+                label7.Visible = true;
+                label8.Visible = true;
+
+                button4.Visible = true;
+                button5.Visible = true;
+                button6.Visible = true;
+            }
+        }
+
+        private void ButtonsToShow()
+        {
+            string firstProjectName = GetFirstProjectName();
+            string lastProjectName = GetLastProjectName();
+
+            if (label3.Text == firstProjectName)
+            {
+                this.button3.Visible = false;
+            }
+
+            if (label5.Text == lastProjectName)
+            {
+                this.button10.Visible = false;
+            }
+
+            if (label5.Text != lastProjectName && JsonProcessing.LoadProjects().Count >= 3)
+            {
+                this.button10.Visible = true;
+            }
+
+            if (label3.Text != firstProjectName && JsonProcessing.LoadProjects().Count >= 3)
+            {
+                this.button3.Visible = true;
+            }
+        }
+        private void ValidateTextBox(object sender, EventArgs e)
+        {
+            if (!(checkBox5.Checked || checkBox6.Checked || checkBox7.Checked) &&
+                (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр"))
+            {
+                MessageBox.Show("Будь ласка, виберіть значення, яке буде вважатися за мінімальну неактивність. Якщо не вибрати жодного значення, програма не зможе якісно виконувати основну функцію",
+                    "Попередження", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                isPersonChoose = true;
+            }
+
+            if (textBoxText != null)
+            {
+                CheckBox5Active = false;
+                checkBox5.Checked = false;
+                CheckBox6Active = false;
+                checkBox6.Checked = false;
+                CheckBox7Active = false;
+                checkBox7.Checked = false;
+            }
+        }
+
+         private void textBox1_TextChanged(object sender, EventArgs e)
+         {
+             if (!(string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр"))
+             {
+                textBoxText = textBox1.Text;
+
+               /* CheckBox5Active = false;
+                checkBox5.Checked = false;
+                CheckBox6Active = false;
+                checkBox6.Checked = false;
+                CheckBox7Active = false;
+                checkBox7.Checked = false;*/
+                // MessageBox.Show(Convert.ToString(nonActiveTime));
+             }
+
+             if (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр")
+             {
+                textBoxText = "Введіть лише число за допомогою цифр";
+             }
+         }
+
+        /* private void SomeoneWroteSomething(object sender, EventArgs e)
+        {
+            if (!(string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр"))
+            {
+                nonActiveTime = Convert.ToInt32(textBox1.Text);
+            }
+        }*/
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true; // Блокуємо введення, якщо це не цифра
+            }
+        }
+
     }   
 }
 

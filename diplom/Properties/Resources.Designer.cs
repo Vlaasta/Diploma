@@ -63,9 +63,19 @@ namespace diplom.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Clock {
+        internal static System.Drawing.Bitmap ClockForDarkTheme {
             get {
-                object obj = ResourceManager.GetObject("Clock", resourceCulture);
+                object obj = ResourceManager.GetObject("ClockForDarkTheme", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ClockForLightTheme {
+            get {
+                object obj = ResourceManager.GetObject("ClockForLightTheme", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

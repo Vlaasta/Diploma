@@ -21,13 +21,13 @@ namespace diplom
         private bool isPreviousWeek = true;
         private string textBoxText = null;
 
-        public bool CheckBox1Active;
-        public bool CheckBox2Active;
-        public bool CheckBox3Active;
-        public bool CheckBox4Active;
-        public bool CheckBox5Active;
-        public bool CheckBox6Active;
-        public bool CheckBox7Active;
+        public static bool CheckBox1Active;
+        public static bool CheckBox2Active;
+        public static bool CheckBox3Active;
+        public static bool CheckBox4Active;
+        public static bool CheckBox5Active;
+        public static bool CheckBox6Active;
+        public static bool CheckBox7Active;
 
         private bool isPersonChoose;
 
@@ -37,8 +37,13 @@ namespace diplom
         TimeSpan lastElapsedTime = LoadLastElapsedTimeFromFile();
 
 
+        public static DataSettings settings;
         // public int nonActiveTime = 5;
-        public static int nonActiveTime = 5;
+        public static int nonActiveTime;
+        public static string themeColor;
+        public static bool autoStart;
+        public static bool notificationsOnOff;
+        public static int TextBoxValue;
 
         public Form1()
         {
@@ -60,17 +65,10 @@ namespace diplom
             handButton = new HandButton();
             handButton.OnTimeUpdated += HandButton_OnTimeUpdated;
 
+            settings = new DataSettings();
+
             loadValues();
 
-            CheckBox1Active = true;
-            CheckBox2Active = false;
-            CheckBox3Active = false;
-            CheckBox4Active = false;
-            CheckBox5Active = true;
-            CheckBox6Active = false;
-            CheckBox7Active = false;
-
-            // Додаємо обробники подій
             label3.MouseEnter += Label1_MouseEnter;
             label4.MouseEnter += Label1_MouseEnter;
             label5.MouseEnter += Label1_MouseEnter;
@@ -89,6 +87,31 @@ namespace diplom
 
             LabelsToShow();
             ButtonsToShow();
+
+            JsonProcessing.LoadSettings();
+        }
+
+        private void GetTimeAmount()
+        {
+            string json = File.ReadAllText(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json");
+            var timerDataList = JsonConvert.DeserializeObject<List<TimerData>>(json);
+
+            // Отримуємо поточну дату
+            string todayDate = DateTime.Now.ToString("dd.MM.yyyy");
+
+            // Шукаємо запис для поточної дати
+            var entry = timerDataList.FirstOrDefault(data => data.Date == todayDate);
+
+            if (entry != null)
+            {
+                // Якщо знайдено, оновлюємо час на label2
+                label2.Text = TimeSpan.Parse(entry.Time).ToString(@"hh\:mm\:ss");
+            }
+            else
+            {
+                // Якщо запису для поточної дати немає
+                label2.Text = "00:00:00";
+            }
         }
 
         public static TimeSpan LoadLastElapsedTimeFromFile()
@@ -192,25 +215,6 @@ namespace diplom
             {
                 projectsPath[i].Text = projects[i].Path;
             }
-
-            // Перевірка на кількість символів і обрізка після циклів
-            /*foreach (var label in projectsNames)
-            {
-                if (label.Text.Length > 41)
-                {
-                    label.Text = label.Text.Substring(0, 41);
-                }
-                Console.WriteLine($"Label: {label.Name}, символів: {label.Text.Length}");
-            }
-
-            foreach (var label in projectsPath)
-            {
-                if (label.Text.Length > 41)
-                {
-                    label.Text = label.Text.Substring(0, 41);
-                }
-                Console.WriteLine($"Label: {label.Name}, символів: {label.Text.Length}");
-            }*/
         }
 
         private void button7_Click(object sender, EventArgs e) //графік поточного тижня
@@ -220,8 +224,10 @@ namespace diplom
             InitializeComponentMain();
             StatisticsMainMenu();
 
+            var freshData = statistic.LoadTimerData();
+
             // Фільтрація даних для поточного тижня
-            var filteredData = statistic.FilterDataForCurrentWeek(statistic.timerData);
+            var filteredData = statistic.FilterDataForCurrentWeek(freshData);
 
             // Заповнення пропущених днів (якщо потрібно)
             var (startOfWeek, endOfWeek) = statistic.GetCurrentWeekRange();
@@ -252,9 +258,11 @@ namespace diplom
             StatisticsMainMenu();
 
             // Фільтрація даних залежно від стану
+            var freshData = statistic.LoadTimerData(); // Завантажуємо актуальні дані з JSON
+
             var filteredData = currentState
-                ? statistic.FilterDataForPreviousWeek(statistic.timerData)
-                : statistic.FilterDataForCurrentWeek(statistic.timerData);
+                ? statistic.FilterDataForPreviousWeek(freshData)
+                : statistic.FilterDataForCurrentWeek(freshData);
 
             var (startOfWeek, endOfWeek) = currentState
                 ? statistic.GetPreviousWeekRange()
@@ -291,8 +299,9 @@ namespace diplom
             InitializeComponentMain();
             StatisticsMainMenu();
 
+            var freshData = statistic.LoadTimerData(); // Завантажуємо актуальні дані з JSON
             // Фільтрація даних для попереднього тижня
-            var filteredData = statistic.FilterDataForLastMonth(statistic.timerData);
+            var filteredData = statistic.FilterDataForLastMonth(freshData);
 
             // Заповнення пропущених днів (якщо потрібно)
             var (startOfLastMonth, endOfLastMonth) = statistic.GetLastMonthRange();
@@ -420,18 +429,10 @@ namespace diplom
 
         private void button8_Click(object sender, EventArgs e) //головне меню на панелі
         {
-            if (isPersonChoose == true)
-            {
-                checkBox5.CheckedChanged -= ValidateTextBox;
-                checkBox6.CheckedChanged -= ValidateTextBox;
-                checkBox7.CheckedChanged -= ValidateTextBox;
-                textBox1.Leave -= ValidateTextBox;
-            }
-
             this.Controls.Clear();
             InitializeComponentMainMenu();
             this.button3.Visible = false;
-            label2.Text = lastElapsedTime.ToString(@"hh\:mm\:ss");
+            GetTimeAmount();
             loadValues();
             LabelsToShow();
             ButtonsToShow();
@@ -719,8 +720,9 @@ namespace diplom
 
         public void BuildMonthlyChart(int year, int month)
         {
+            var freshData = statistic.LoadTimerData(); // Завантажуємо актуальні дані з JSON
             // Фільтрація даних за конкретний місяць
-            var filteredData = statistic.GetDataForSpecificMonth(statistic.timerData, year, month);
+            var filteredData = statistic.GetDataForSpecificMonth(freshData, year, month);
 
             // Визначення початку і кінця місяця
             var startOfMonth = new DateTime(year, month, 1);
@@ -748,10 +750,10 @@ namespace diplom
         {
             if (isPersonChoose == true)
             {
-                checkBox5.CheckedChanged -= ValidateTextBox;
+                /*checkBox5.CheckedChanged -= ValidateTextBox;
                 checkBox6.CheckedChanged -= ValidateTextBox;
                 checkBox7.CheckedChanged -= ValidateTextBox;
-                textBox1.Leave -= ValidateTextBox;
+                textBox1.Leave -= ValidateTextBox;*/
             }
 
             this.Controls.Clear();
@@ -765,7 +767,7 @@ namespace diplom
             InitializeComponentMain();
             SettingsMenu();
 
-            if (isPersonChoose == true)
+           /* if (isPersonChoose == true)
             {
                 CheckBox5Active = false;
                 checkBox5.Checked = false;
@@ -776,23 +778,23 @@ namespace diplom
             {
                 CheckBox5Active = true;
                 checkBox5.Checked = true;
-            }
+            }*/
 
-            if (textBoxText != null)
+          /*  if (textBoxText != null)
             {
                 nonActiveTime = Convert.ToInt32(textBoxText);
-               /* CheckBox5Active = false;
+                CheckBox5Active = false;
                 checkBox5.Checked = false;
                 CheckBox6Active = false;
                 checkBox6.Checked = false;
                 CheckBox7Active = false;
-                checkBox7.Checked = false;*/
-            }
+                checkBox7.Checked = false;
+            }*/
 
-            checkBox5.CheckedChanged += ValidateTextBox;
+           /* checkBox5.CheckedChanged += ValidateTextBox;
             checkBox6.CheckedChanged += ValidateTextBox;
             checkBox7.CheckedChanged += ValidateTextBox;
-            textBox1.Leave += ValidateTextBox;
+            textBox1.Leave += ValidateTextBox;*/
 
             // MessageBox.Show(isPersonChoose.ToString());
 
@@ -804,9 +806,19 @@ namespace diplom
             //MessageBox.Show(Convert.ToString(nonActiveTime));
         }
 
-        private void NotificationsOn()
+        private void button28_Click(object sender, EventArgs e)
         {
-            var notification = new Notifications();
+            this.Controls.Clear();
+            InitializeComponentMain();
+            AboutProgram();
+        }
+
+        public static void NotificationsOn()
+        {
+            if (notificationsOnOff)
+            {
+                var notification = new Notifications();
+            }
             //notification.ShowNotification(); // Викликає метод
 
             //  MessageBox.Show("Fllf");
@@ -946,56 +958,44 @@ namespace diplom
                 this.button3.Visible = true;
             }
         }
-        private void ValidateTextBox(object sender, EventArgs e)
-        {
-            if (!(checkBox5.Checked || checkBox6.Checked || checkBox7.Checked) &&
-                (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр"))
-            {
-                MessageBox.Show("Будь ласка, виберіть значення, яке буде вважатися за мінімальну неактивність. Якщо не вибрати жодного значення, програма не зможе якісно виконувати основну функцію",
-                    "Попередження", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                isPersonChoose = true;
-            }
+         private void textBox1_TextChanged(object sender, EventArgs e)
+         {
+             if (!(string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр") || Form1.settings.TextBoxValue != 0)
+             {
+                //textBox1.Text = Convert.ToString(Form1.settings.TextBoxValue);
 
-            if (textBoxText != null)
-            {
+                textBoxText = textBox1.Text;
+
                 CheckBox5Active = false;
                 checkBox5.Checked = false;
                 CheckBox6Active = false;
                 checkBox6.Checked = false;
                 CheckBox7Active = false;
                 checkBox7.Checked = false;
-            }
-        }
 
-         private void textBox1_TextChanged(object sender, EventArgs e)
-         {
-             if (!(string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр"))
-             {
-                textBoxText = textBox1.Text;
-
-               /* CheckBox5Active = false;
-                checkBox5.Checked = false;
-                CheckBox6Active = false;
-                checkBox6.Checked = false;
-                CheckBox7Active = false;
-                checkBox7.Checked = false;*/
+                if (int.TryParse(textBoxText, out int result))
+                {
+                    nonActiveTime = result;
+                    UpdateTextBoxValue(this, nonActiveTime);
+                }
                 // MessageBox.Show(Convert.ToString(nonActiveTime));
-             }
-
-             if (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр")
-             {
-                textBoxText = "Введіть лише число за допомогою цифр";
-             }
-         }
-
-        /* private void SomeoneWroteSomething(object sender, EventArgs e)
-        {
-            if (!(string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр"))
-            {
-                nonActiveTime = Convert.ToInt32(textBox1.Text);
             }
-        }*/
+
+            if (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр" || Form1.settings.TextBoxValue == 0)
+           // if (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр")
+            {
+                textBoxText = "Введіть лише число за допомогою цифр";
+                TextBoxValue = 0;
+
+                UpdateTextBoxValue(this, TextBoxValue);
+
+                CheckBox5Active = true;
+                checkBox5.Checked = true;
+                nonActiveTime = 5;
+            }
+
+         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -1005,6 +1005,51 @@ namespace diplom
             }
         }
 
-    }   
+        public static void UpdateInactivityAmount(Form1 form1, int newInactivityAmount)
+        {
+            // Оновлюємо властивість в об'єкті settings
+            Form1.settings.InactivityAmount = newInactivityAmount;
+
+            // Тепер зберігаємо оновлені налаштування у файл
+            JsonProcessing.SaveSettings(form1); 
+        }
+
+        public static void UpdateColorTheme(Form1 form1, string newColorTheme)
+        {
+            // Оновлюємо властивість в об'єкті settings
+            Form1.settings.ColorTheme = newColorTheme;
+
+            // Тепер зберігаємо оновлені налаштування у файл
+            JsonProcessing.SaveSettings(form1);
+        }
+
+        public static void UpdateAutostart(Form1 form1, bool newAutostart)
+        {
+            // Оновлюємо властивість в об'єкті settings
+            Form1.settings.Autostart = newAutostart;
+
+            // Тепер зберігаємо оновлені налаштування у файл
+            JsonProcessing.SaveSettings(form1);
+        }
+
+        public static void UpdateNotificaton(Form1 form1, bool newNotificatonOnOff)
+        {
+            // Оновлюємо властивість в об'єкті settings
+            Form1.settings.NotificatonOnOff = newNotificatonOnOff;
+
+            // Тепер зберігаємо оновлені налаштування у файл
+            JsonProcessing.SaveSettings(form1);
+            MessageBox.Show("UpdateNotificaton викликано!");
+        }
+
+        public static void UpdateTextBoxValue(Form1 form1, int newTextBoxValue)
+        {
+            // Оновлюємо властивість в об'єкті settings
+            Form1.settings.TextBoxValue = newTextBoxValue;
+
+            // Тепер зберігаємо оновлені налаштування у файл
+            JsonProcessing.SaveSettings(form1);
+        }
+    }
 }
 

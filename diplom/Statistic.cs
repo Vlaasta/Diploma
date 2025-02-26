@@ -10,9 +10,18 @@ namespace diplom
 {
     public class Statistic : Form
     {
+        private string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json";
 
-       // string jsonContent = File.ReadAllText(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json");
-       public List<TimerData> timerData = JsonSerializer.Deserialize<List<TimerData>>(File.ReadAllText(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json"));
+        // Метод для зчитування актуальних даних із JSON-файлу
+        public List<TimerData> LoadTimerData()
+        {
+            if (File.Exists(filePath))
+            {
+                string jsonContent = File.ReadAllText(filePath);
+                return JsonSerializer.Deserialize<List<TimerData>>(jsonContent) ?? new List<TimerData>();
+            }
+            return new List<TimerData>();
+        }
 
         // Метод для визначення діапазону попереднього тижня
         public (DateTime startOfWeek, DateTime endOfWeek) GetPreviousWeekRange()
@@ -37,6 +46,7 @@ namespace diplom
         // Метод для фільтрації даних для поточного тижня
         public List<TimerData> FilterDataForCurrentWeek(List<TimerData> timerData)
         {
+            timerData = LoadTimerData();
             var (startOfWeek, endOfWeek) = GetCurrentWeekRange();
             return timerData.Where(data =>
             {
@@ -48,6 +58,7 @@ namespace diplom
         // Метод для фільтрації даних для попереднього тижня
         public List<TimerData> FilterDataForPreviousWeek(List<TimerData> timerData)
         {
+            timerData = LoadTimerData();
             var (startOfWeek, endOfWeek) = GetPreviousWeekRange();
             return timerData.Where(data =>
             {

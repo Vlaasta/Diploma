@@ -221,10 +221,8 @@ namespace diplom
         {
             while (true)
             {
-                var stLP = Stopwatch.StartNew();
+                // Завантажуємо проєкти з файлу projects.json
                 var projects = LoadProjects();
-                stLP.Stop();
-                Console.WriteLine($"stlp {stLP.Elapsed.TotalSeconds}");
 
                 if (projects.Count == 0)
                 {
@@ -232,28 +230,29 @@ namespace diplom
                 }
                 else
                 {
-                    var stLP2 = Stopwatch.StartNew();
-
                     await CompareProjectsWithOpenProcessesAsync(projects);
 
-                    stLP2.Stop();
-                    Console.WriteLine($"stlp2 {stLP2.Elapsed.TotalSeconds}");
-
-                    CheckActiveWindow(projects, elapsed =>
+                    // Якщо активне вікно - це браузер, не оновлюємо таймер проєкту
+                    if (!BrowserMonitor.IsBrowserActive())
                     {
-                        // Потрібно викликати метод HandButton_OnTimeUpdated
-                        Form1.Instance?.Invoke(new Action(() =>
+                        CheckActiveWindow(projects, elapsed =>
                         {
-                            Form1.Instance?.HandButton_OnTimeUpdated(elapsed);
-                        }));
-                    });
-
-                    IfUserActive();
+                            Form1.Instance?.Invoke(new Action(() =>
+                            {
+                                Form1.Instance?.HandButton_OnTimeUpdated(elapsed);
+                            }));
+                        });
+                    }
                 }
 
+                // **Перевірка активного вікна браузера**
+                BrowserMonitor.CheckActiveWindow();
+
+                IfUserActive();
                 await Task.Delay(1000); // Асинхронна пауза
             }
         }
+
 
         private static void IfUserActive()
         {
@@ -273,6 +272,8 @@ namespace diplom
         [STAThread]
         private static void Main()
         {
+            JsonProcessing.LoadSettings();
+
             // Запуск форми в окремому потоці
             Thread formThread = new Thread(() =>
             {

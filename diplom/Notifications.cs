@@ -7,6 +7,7 @@ namespace diplom
     internal class Notifications : Form
     {
         private NotifyIcon notifyIcon;
+       // public bool notificationState = false;
 
         public Notifications()
         {
@@ -30,6 +31,11 @@ namespace diplom
         public void ShowNotification()
         {
             InitializeNotification(); // Виклик приватного методу
+
+        }
+
+        public void GetNotificationState()
+        {
 
         }
     }

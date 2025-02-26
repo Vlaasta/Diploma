@@ -1,22 +1,27 @@
 [
   {
-    "Name": "крем_для_глаз.docx",
-    "Path": "E:\\мультисим\\Тексти\\Help\\крем_для_глаз.docx",
+    "Name": "5.psd",
+    "Path": "E:\\blackpink\\5.psd",
+    "Type": ".psd"
+  },
+  {
+    "Name": "clock.psd",
+    "Path": "E:\\4 KURS\\Диплом\\Стаф\\clock.psd",
+    "Type": ".psd"
+  },
+  {
+    "Name": "ДляРади.docx",
+    "Path": "E:\\4 KURS\\ДляРади.docx",
     "Type": ".docx"
   },
   {
-    "Name": "Гидрофильное_масло.docx",
-    "Path": "E:\\мультисим\\Тексти\\Help\\Гидрофильное_масло.docx",
+    "Name": "наборы_для_тела.docx",
+    "Path": "E:\\Тексти\\Help\\наборы_для_тела.docx",
     "Type": ".docx"
   },
   {
     "Name": "шея_декольте.docx",
-    "Path": "E:\\мультисим\\Тексти\\Help\\шея_декольте.docx",
-    "Type": ".docx"
-  },
-  {
-    "Name": "пенка_для_умывания.docx",
-    "Path": "E:\\мультисим\\Тексти\\Help\\пенка_для_умывания.docx",
+    "Path": "E:\\Тексти\\Help\\шея_декольте.docx",
     "Type": ".docx"
   }
 ]

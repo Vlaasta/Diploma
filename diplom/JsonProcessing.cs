@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms; 
 using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System.Linq;
+
+//using System.Text.Json;
 
 namespace diplom
 {
@@ -10,6 +14,41 @@ namespace diplom
     {
         private static string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json"; // Шлях до JSON-файлу з статистикою
         private static string fileSecondPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\projects.json"; // Шлях до JSON-файлу з проектами
+        private static string fileThirdPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\settings.json"; // Шлях до JSON-файлу з проектами
+
+        private static string FindFile(string fileName)
+        {
+            var result = new List<string>();
+
+            // Використовуємо паралельний пошук на всіх дисках
+            Parallel.ForEach(DriveInfo.GetDrives(), drive =>
+            {
+                if (drive.IsReady) // Переконуємось, що диск доступний
+                {
+                    try
+                    {
+                        Console.WriteLine($"Шукаємо на диску: {drive.Name}"); // Додано діагностичний вивід
+                        var files = Directory.EnumerateFiles(drive.RootDirectory.FullName, fileName, SearchOption.AllDirectories);
+                        foreach (var file in files)
+                        {
+                            Console.WriteLine($"Знайдено файл: {file}"); // Виводимо знайдений файл
+                            result.Add(file);
+                        }
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        Console.WriteLine($"Доступ заборонено до диску: {drive.Name}");
+                    }
+                    catch (IOException ex)
+                    {
+                        Console.WriteLine($"Помилка при доступі до диску {drive.Name}: {ex.Message}");
+                    }
+                }
+            });
+
+            // Якщо були знайдені файли, повертаємо перший з них
+            return result.FirstOrDefault();
+        }
 
         public static List<Project> LoadProjects()
         {
@@ -17,8 +56,39 @@ namespace diplom
                 throw new FileNotFoundException($"Файл {fileSecondPath} не знайдено.");
 
             string jsonContent = File.ReadAllText(fileSecondPath);
-            return JsonConvert.DeserializeObject<List<Project>>(jsonContent);
+            var projects = JsonConvert.DeserializeObject<List<Project>>(jsonContent) ?? new List<Project>();
+
+            bool changesMade = false;
+
+            for (int i = 0; i < projects.Count; i++)
+            {
+                if (!File.Exists(projects[i].Path))
+                {
+                    // Пошук файлу по всьому комп'ютеру
+                    string newPath = FindFile(projects[i].Name);
+
+                    if (!string.IsNullOrEmpty(newPath))
+                    {
+                        projects[i].Path = newPath; // Оновлюємо шлях
+                        changesMade = true;
+                    }
+                    else
+                    {
+                        // Якщо файл не знайдено – видаляємо його зі списку
+                        projects.RemoveAt(i);
+                        i--; // Щоб не пропустити наступний елемент
+                        changesMade = true;
+                    }
+                }
+            }
+
+            // Якщо були зміни – зберігаємо оновлений список
+            if (changesMade)
+                SaveProjects(projects);
+
+            return projects;
         }
+
 
 
         // Запис проектів у файл
@@ -117,5 +187,76 @@ namespace diplom
             // Зберігаємо оновлений список проєктів
             SaveProjects(projects);
         }
+
+        public static void SaveSettings(Form1 form1)
+        {
+            // Серіалізуємо об'єкт settings у JSON
+            string json = JsonConvert.SerializeObject(Form1.settings, Formatting.Indented);
+
+            // Записуємо в файл
+            File.WriteAllText(fileThirdPath, json);
+        }
+
+        public static void LoadSettings()
+        {
+            if (File.Exists(fileThirdPath))
+            {
+                string json = File.ReadAllText(fileThirdPath); // Читаємо файл в рядок
+                                                               // Десеріалізуємо JSON в об'єкт типу DataSettings
+                Form1.settings = JsonConvert.DeserializeObject<DataSettings>(json) ?? new DataSettings();
+
+                if(Form1.settings.InactivityAmount == 5)
+                {
+                    Form1.nonActiveTime = 5;
+                    Form1.CheckBox5Active = true;
+                    Form1.CheckBox6Active = false;
+                    Form1.CheckBox7Active = false;
+                }
+                if (Form1.settings.InactivityAmount == 10)
+                {
+                    Form1.nonActiveTime = 10;
+                    Form1.CheckBox6Active = true;
+                    Form1.CheckBox7Active = false;
+                    Form1.CheckBox5Active = false;
+                }
+                if (Form1.settings.InactivityAmount == 15)
+                {
+                    Form1.nonActiveTime = 15;
+                    Form1.CheckBox7Active = true;
+                    Form1.CheckBox6Active = false;
+                    Form1.CheckBox5Active = false;
+                }
+                if (Form1.settings.ColorTheme == "dark")
+                {
+                    Form1.CheckBox1Active = true;
+                    Form1.CheckBox2Active = false;
+                }
+                if (Form1.settings.ColorTheme == "light")
+                {
+                    Form1.CheckBox1Active = false;
+                    Form1.CheckBox2Active = true;
+                }
+                if (Form1.settings.NotificatonOnOff == true)
+                {
+                    Form1.notificationsOnOff = true;
+                    Form1.CheckBox4Active = true;
+                    Form1.NotificationsOn();
+
+                }
+                if (Form1.settings.NotificatonOnOff == false)
+                {
+                    Form1.notificationsOnOff = false;
+                    Form1.CheckBox4Active = false;
+                }
+                if (Form1.settings.TextBoxValue != 0)
+                {
+                    Form1.nonActiveTime = Form1.settings.TextBoxValue;
+                    Form1.CheckBox6Active = false;
+                    Form1.CheckBox7Active = false;
+                    Form1.CheckBox5Active = false;
+                }
+            }
+        }
+
     }
 }

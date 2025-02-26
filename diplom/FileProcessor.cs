@@ -1,47 +1,55 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Linq;
 
 namespace diplom
 {
-    public class FileProcessor
+    public class BrowserTracker
     {
-        private readonly string projectsFilePath;
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
 
-        public FileProcessor(string projectsFilePath)
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+        public static string GetActiveWindowTitle()
         {
-            this.projectsFilePath = projectsFilePath;
+            const int nChars = 256;
+            StringBuilder buff = new StringBuilder(nChars);
+            IntPtr handle = GetForegroundWindow();
+
+            if (GetWindowText(handle, buff, nChars) > 0)
+            {
+                return buff.ToString();
+            }
+
+            return "Без назви";
         }
 
-        // Зчитування проектів з JSON файлу
-        public List<Project> ReadProjectsFromJson()
+        public static bool IsBrowserActive()
         {
-            try
-            {
-                string jsonContent = File.ReadAllText(projectsFilePath);
-                return JsonSerializer.Deserialize<List<Project>>(jsonContent);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Помилка при читанні з файлу: {ex.Message}");
-                return null;
-            }
+            string[] browsers = { "Chrome", "Edge", "Firefox", "Opera", "Brave" };
+            string activeWindowTitle = GetActiveWindowTitle();
+
+            return browsers.Any(browser => activeWindowTitle.Contains(browser));
         }
 
-        // Запис часу в файл JSON
-        public void WriteTimerToJson(TimeSpan accumulatedTime)
+        public static void MonitorBrowser()
         {
-            var jsonObject = new { ElapsedTime = accumulatedTime.ToString(@"hh\:mm\:ss") };
-            try
+            while (true)
             {
-                string jsonContent = JsonSerializer.Serialize(jsonObject, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText("timerAmounts.json", jsonContent);
-                Console.WriteLine("Час успішно записано в файл timerAmounts.json");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Помилка при записі в файл: {ex.Message}");
+                string windowTitle = GetActiveWindowTitle();
+                bool isBrowser = IsBrowserActive();
+
+                if (isBrowser)
+                {
+                    Console.WriteLine($"Браузер активний: {windowTitle}");
+                    // Тут можна викликати функцію запису часу або аналізу вкладок
+                }
+
+                System.Threading.Thread.Sleep(1000);
             }
         }
     }

@@ -133,7 +133,7 @@ namespace diplom
             // this.button27.TabIndex = 21;
             this.button28.Text = "Про програму";
             this.button28.UseVisualStyleBackColor = true;
-            this.button28.Click += new System.EventHandler(this.button27_Click);
+            this.button28.Click += new System.EventHandler(this.button28_Click);
             this.button28.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button28.FlatAppearance.BorderSize = 0;
             // 
@@ -160,7 +160,7 @@ namespace diplom
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button8.FlatAppearance.BorderSize = 0;
 
-            if (CheckBox2Active == true)
+            if (CheckBox2Active == true || Form1.settings.ColorTheme == "light")
             {
                 this.BackColor = Color.FromArgb(212, 220, 225);
                 this.panel1.BackColor = Color.FromArgb(171, 176, 180);
@@ -168,9 +168,11 @@ namespace diplom
                 this.button8.ForeColor = Color.FromArgb(82, 82, 82);
                 this.button27.ForeColor = Color.FromArgb(82, 82, 82);
 
+                this.button28.ForeColor = Color.FromArgb(82, 82, 82);
+
             }
 
-            if (CheckBox1Active == true)
+            if (CheckBox1Active == true || Form1.settings.ColorTheme == "dark")
             {
                 this.BackColor = Color.FromArgb(2, 14, 25);
 
@@ -203,7 +205,7 @@ namespace diplom
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             InitializeComponentMain();
-           // this.panel2 = new System.Windows.Forms.Panel();
+            // this.panel2 = new System.Windows.Forms.Panel();
             this.button3 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -439,7 +441,6 @@ namespace diplom
             this.label5.Text = "label5";
             this.label5.AutoEllipsis = true; // Додає "..." якщо текст не влізе
             this.label5.TextAlign = ContentAlignment.MiddleLeft;
-
             // 
             // label6
             // 
@@ -454,11 +455,6 @@ namespace diplom
             this.label6.Text = "label6";
             this.label6.AutoEllipsis = true; // Додає "..." якщо текст не влізе
             this.label6.TextAlign = ContentAlignment.MiddleLeft;
-
-            // 
-            // label7
-            // 
-
             // 
             // pictureBox8
             // 
@@ -469,7 +465,6 @@ namespace diplom
             this.pictureBox8.TabIndex = 10;
             this.pictureBox8.TabStop = false;
             this.pictureBox8.BackColor = Color.FromArgb(6, 40, 68);
-
             // 
             // label8
             // 
@@ -544,7 +539,7 @@ namespace diplom
             this.button6.FlatAppearance.BorderSize = 0;
          
 
-            if (CheckBox2Active == true)
+            if (CheckBox2Active == true || Form1.settings.ColorTheme == "light")
             {
                 this.pictureBox1.Image = Properties.Resources.ClockForLightTheme;
                 this.button1.BackColor = Color.FromArgb(182, 192, 196);
@@ -592,7 +587,7 @@ namespace diplom
                 this.button6.BackColor = Color.FromArgb(182, 192, 196);
             }
 
-            if (CheckBox1Active == true)
+            if (CheckBox1Active == true || Form1.settings.ColorTheme == "dark")
             {
                 this.pictureBox1.Image = Properties.Resources.ClockForDarkTheme;
                 this.button3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
@@ -1237,6 +1232,7 @@ namespace diplom
         private void SettingsMenu()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+
             this.label11 = new System.Windows.Forms.Label();
             this.label11.AutoSize = true;
             this.label11.ForeColor = System.Drawing.SystemColors.ActiveCaption;
@@ -1285,8 +1281,6 @@ namespace diplom
             this.label14.Text = "Налаштування роботи програми";
             this.Controls.Add(this.label14);
 
-
-
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox1.AutoSize = true;
             this.checkBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
@@ -1307,7 +1301,7 @@ namespace diplom
             this.checkBox2.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
             this.checkBox2.Size = new System.Drawing.Size(180, 180);
             // this.label9.TabIndex = 19;
-            this.checkBox2.BackColor = Color.FromArgb(2, 14, 25);
+            this.checkBox2.BackColor = Color.Transparent;
             this.checkBox2.Text = "Світла тема";
             this.Controls.Add(this.checkBox2);
 
@@ -1378,13 +1372,16 @@ namespace diplom
             this.textBox1.BackColor = Color.FromArgb(6, 40, 68);// Розмір поля
             this.textBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.textBox1.Font = new Font("Arial", 9, FontStyle.Regular);
-            //this.textBox1.Text = "Введіть лише число за допомогою цифр";
+            this.textBox1.Text = "Введіть лише число за допомогою цифр";
             this.textBox1.BorderStyle = BorderStyle.None;
             this.Controls.Add(textBox1);
             //this.textBox1.Leave += ValidateTextBox;
 
+            ProperColorTheme();
+            JsonProcessing.LoadSettings();
+
             // Подія для ручного зняття вибору
-           /* checkBox7.CheckedChanged += (sender, e) =>
+            checkBox7.CheckedChanged += (sender, e) =>
             {
                 if (checkBox7.Checked &&
                 (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр" || textBoxText == null))
@@ -1395,6 +1392,11 @@ namespace diplom
 
                     nonActiveTime = 15;
                     //checkBox7.CheckedChanged += ValidateTextBox;
+
+                    // Наприклад, коли користувач змінює стан чекбокса
+                    UpdateInactivityAmount(this, nonActiveTime);
+
+                   // MessageBox.Show("jfvnkjnjk");
                 }
             };
 
@@ -1406,7 +1408,7 @@ namespace diplom
             // Подія для ручного зняття вибору
             checkBox6.CheckedChanged += (sender, e) =>
             {
-                if (checkBox6.Checked &&
+                if (checkBox6.Checked  &&
                 (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр" || textBoxText == null))
                 {
                     checkBox5.Checked = false;
@@ -1415,6 +1417,7 @@ namespace diplom
 
                     nonActiveTime = 10;
                     //checkBox6.CheckedChanged += ValidateTextBox;
+                    UpdateInactivityAmount(this, nonActiveTime);
                 }
             };
 
@@ -1434,9 +1437,10 @@ namespace diplom
                     CheckBox5Active = true;
 
                     nonActiveTime = 5;
-                   // checkBox7.CheckedChanged += ValidateTextBox;
+                    // checkBox7.CheckedChanged += ValidateTextBox;
+                    UpdateInactivityAmount(this, nonActiveTime);
                 }
-            };*/
+            };
 
             if (CheckBox5Active == true)
             {
@@ -1445,12 +1449,16 @@ namespace diplom
 
             checkBox1.CheckedChanged += (sender, e) =>
             {
-                if (checkBox1.Checked)
+                if (checkBox1.Checked || Form1.settings.ColorTheme == "dark")
                 {
                     checkBox2.Checked = false;
 
                     CheckBox1Active = true;
                     CheckBox2Active = false;
+
+                    themeColor = "dark";
+
+                    UpdateColorTheme(this, themeColor);
 
                     ProperColorTheme();
                 }
@@ -1462,12 +1470,16 @@ namespace diplom
 
                 checkBox2.CheckedChanged += (sender, e) =>
             {
-                if (checkBox2.Checked)
+                if (checkBox2.Checked || Form1.settings.ColorTheme == "light")
                 {
                     checkBox1.Checked = false;
 
                     CheckBox2Active = true;
                     CheckBox1Active = false;
+
+                    themeColor = "light";
+
+                    UpdateColorTheme(this, themeColor);
 
                     ProperColorTheme();
                 }
@@ -1477,14 +1489,17 @@ namespace diplom
                 }
             };
 
-            ProperColorTheme();
-
             checkBox3.CheckedChanged += (sender, e) =>
             {
                 if (checkBox3.Checked)
                 {
                     CheckBox3Active = true;
+
+                    autoStart = true;
+
+                    UpdateAutostart(this, autoStart);
                 }
+
             };
 
             if (CheckBox3Active == true)
@@ -1497,30 +1512,38 @@ namespace diplom
                 if (checkBox4.Checked)
                 {
                     CheckBox4Active = true;
+                    notificationsOnOff = true;
+                    UpdateNotificaton(this, notificationsOnOff);
                     NotificationsOn();
+                }
+                else
+                {
+                    CheckBox4Active = false;
+                    notificationsOnOff = false;
+                    UpdateNotificaton(this, notificationsOnOff);
                 }
             };
 
             if (CheckBox4Active == true)
             {
                 checkBox4.Checked = true;
-
             }
 
-            if (textBoxText == null)
-            {
-                textBox1.Text = "Введіть лише число за допомогою цифр";
-            }
-            else
-            {
-                textBox1.Text = textBoxText;
-                CheckBox5Active = false;
-                checkBox5.Checked = false;
-                CheckBox6Active = false;
-                checkBox6.Checked = false;
-                CheckBox7Active = false;
-                checkBox7.Checked = false;
-            }
+             if (Form1.settings.TextBoxValue == 0)
+             {
+                 textBox1.Text = "Введіть лише число за допомогою цифр";
+             }
+             else if (Form1.settings.TextBoxValue != 0)
+             {
+                 textBox1.Text = Convert.ToString(Form1.settings.TextBoxValue);
+                 nonActiveTime = Form1.settings.TextBoxValue;
+                 CheckBox5Active = false;
+                 checkBox5.Checked = false;
+                 CheckBox6Active = false;
+                 checkBox6.Checked = false;
+                 CheckBox7Active = false;
+                 checkBox7.Checked = false;
+             }
 
 
             /* if (!(string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр"))
@@ -1535,19 +1558,18 @@ namespace diplom
                 textBox1.Focus();
             }*/
 
-           /* if (!(nonActiveTime == 5 || nonActiveTime == 10 || nonActiveTime == 15))
-            {
-                textBox1.Text = Convert.ToString(nonActiveTime);
-            }*/
+            /* if (!(nonActiveTime == 5 || nonActiveTime == 10 || nonActiveTime == 15))
+             {
+                 textBox1.Text = Convert.ToString(nonActiveTime);
+             }*/
 
             this.ResumeLayout(false);
             this.PerformLayout();
         }
-
         
         private void ProperColorTheme()
         {
-            if (CheckBox1Active == true)
+            if (CheckBox1Active == true || Form1.settings.ColorTheme == "dark")
             {
                 checkBox1.Checked = true;
 
@@ -1590,7 +1612,7 @@ namespace diplom
                 this.pictureBox2.BackColor = Color.FromArgb(2, 14, 25);
             }
 
-            if (CheckBox2Active == true)
+            if (CheckBox2Active == true || Form1.settings.ColorTheme == "light")
             {
                 checkBox2.Checked = true;
 
@@ -1630,6 +1652,67 @@ namespace diplom
                 this.textBox1.ForeColor = Color.FromArgb(82, 82, 82);
             }
 
+        }
+
+        private void AboutProgram()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+
+            this.label15 = new System.Windows.Forms.Label();
+            this.label15.AutoSize = true;
+            this.label15.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label15.Location = new System.Drawing.Point(300, 150);
+            this.label15.Name = "label15";
+            this.label15.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.label15.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.label15.BackColor = Color.FromArgb(2, 14, 25);
+            this.label15.Text = "Ця програма представляє собою кваліфікаційну роботу";
+            this.Controls.Add(this.label15);
+
+            this.label16 = new System.Windows.Forms.Label();
+            this.label16.AutoSize = true;
+            this.label16.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label16.Location = new System.Drawing.Point(300, 200);
+            this.label16.Name = "label16";
+            this.label16.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.label16.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.label16.BackColor = Color.FromArgb(2, 14, 25);
+            this.label16.Text = "Більшість людей у сучасному світі працює дистанційно у вільному графіку, і тому багато хто не знає, скільки реально часу працює, " +
+                                "оскільки робочий день не нормований. Дома людям важко залишатися повністю зосередженими на роботі і не відволікатися на сторонні " +
+                                "фактори. Через це часто люди можуть перепрацьовувати. Це призводить до зниження ефективності роботи і виникненню проблем зі здоров'ям." +
+                                "Ця програма створена для того, щоб вирішити цю проблему та допомогти людям отримати реальні данні про робочий час.";
+            this.Controls.Add(this.label16);
+
+           /* this.label17 = new System.Windows.Forms.Label();
+            this.label17.AutoSize = true;
+            this.label17.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label17.Location = new System.Drawing.Point(300, 400);
+            this.label17.Name = "label17";
+            this.label17.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.label17.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            this.label17.BackColor = Color.FromArgb(2, 14, 25);
+            this.label17.Text = "Якщо вас не задовільнило жодне значення, введіть власне значення в наступне поле:";
+            this.Controls.Add(this.label17);
+
+            this.label18 = new System.Windows.Forms.Label();
+            this.label18.AutoSize = true;
+            this.label18.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label18.Location = new System.Drawing.Point(400, 50);
+            this.label18.Name = "label18";
+            this.label18.Font = new Font("Arial", 20, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.label18.Size = new System.Drawing.Size(180, 180);
+            // this.label9.TabIndex = 19;
+            //this.label14.BackColor = Color.FromArgb(2, 14, 25);
+            this.label18.Text = "Докладні відомості про програму";
+            this.Controls.Add(this.label18);*/
+
+            ProperColorTheme();
+
+            this.ResumeLayout(false);
+            this.PerformLayout();
         }
 
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -1695,20 +1778,20 @@ namespace diplom
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
-       /* private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Label label20;*/
+        private System.Windows.Forms.Label label20;
 
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox3;
-        private System.Windows.Forms.CheckBox checkBox4;
-        private System.Windows.Forms.CheckBox checkBox5;
-        private System.Windows.Forms.CheckBox checkBox6;
-        private System.Windows.Forms.CheckBox checkBox7;
+        public System.Windows.Forms.CheckBox checkBox1;
+        public System.Windows.Forms.CheckBox checkBox2;
+        public System.Windows.Forms.CheckBox checkBox3;
+        public System.Windows.Forms.CheckBox checkBox4;
+        public System.Windows.Forms.CheckBox checkBox5;
+        public System.Windows.Forms.CheckBox checkBox6;
+        public System.Windows.Forms.CheckBox checkBox7;
 
 
         private System.Windows.Forms.TextBox textBox1;

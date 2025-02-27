@@ -6,10 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Newtonsoft.Json;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using WebDriverManager;
-using WebDriverManager.DriverConfigs.Impl;
+
 
 namespace diplom
 {
@@ -56,12 +53,14 @@ namespace diplom
             {
                 if (currentActiveBrowserPage != activeWindowTitle)
                 {
+                    // Якщо попередня сторінка була і таймер працював, збережемо дані
                     if (browserStopwatch.IsRunning)
                     {
                         browserStopwatch.Stop();
-                        AnalyzeAndSaveBrowserActivity(currentActiveBrowserPage, browserStopwatch.Elapsed);
+                        SaveBrowserActivity(currentActiveBrowserPage, browserStopwatch.Elapsed, "Browser");
                     }
 
+                    // Перезапуск лічильника для нової сторінки
                     browserStopwatch.Reset();
                     browserStopwatch.Start();
                     currentActiveBrowserPage = activeWindowTitle;
@@ -69,29 +68,13 @@ namespace diplom
             }
             else
             {
+                // Якщо браузер більше не активний, зберігаємо активність
                 if (browserStopwatch.IsRunning)
                 {
                     browserStopwatch.Stop();
-                    AnalyzeAndSaveBrowserActivity(currentActiveBrowserPage, browserStopwatch.Elapsed);
+                    SaveBrowserActivity(currentActiveBrowserPage, browserStopwatch.Elapsed, "Browser");
                     currentActiveBrowserPage = null;
                 }
-            }
-        }
-
-        private static void AnalyzeAndSaveBrowserActivity(string pageTitle, TimeSpan timeSpent)
-        {
-            if (string.IsNullOrEmpty(pageTitle) || timeSpent.TotalSeconds < 1) return;
-
-            string browserContent = GetWebPageContent();
-            string projectContent = GetProjectContent();
-
-            if (AnalyzeSimilarity(browserContent, projectContent))
-            {
-                SaveBrowserActivity(pageTitle, timeSpent, "Робота");
-            }
-            else
-            {
-                SaveBrowserActivity(pageTitle, timeSpent, "Інше");
             }
         }
 
@@ -130,68 +113,10 @@ namespace diplom
                 Console.WriteLine($"Помилка запису у файл: {ex.Message}");
             }
         }
-
-        private static string GetWebPageContent()
-        {
-            try
-            {
-                ChromeOptions options = new ChromeOptions();
-                options.AddArgument("--headless"); // Прихований режим
-                options.AddArgument("--disable-gpu");
-                options.AddArgument("--no-sandbox");
-                options.AddArgument("--remote-allow-origins=*");
-
-                ChromeDriverService service = ChromeDriverService.CreateDefaultService();
-                service.HideCommandPromptWindow = true; // Приховує консольне вікно chromedriver.exe
-
-                using (IWebDriver driver = new ChromeDriver(service, options))
-                {
-                    driver.Navigate().GoToUrl("https://www.google.com");
-                    return driver.PageSource;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Помилка отримання вмісту сторінки: {ex.Message}");
-                return string.Empty;
-            }
-        }
-
-        private static string GetProjectContent()
-        {
-            try
-            {
-                if (File.Exists(ProjectsPath))
-                {
-                    return File.ReadAllText(ProjectsPath);
-                }
-                return string.Empty;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Помилка при зчитуванні проекту: {ex.Message}");
-                return string.Empty;
-            }
-        }
-
-        private static bool AnalyzeSimilarity(string text1, string text2)
-        {
-            if (string.IsNullOrEmpty(text1) || string.IsNullOrEmpty(text2)) return false;
-
-            // Розбиваємо текст на слова та переводимо в нижній регістр
-            HashSet<string> words1 = new HashSet<string>(text1.ToLower().Split(' '));
-            HashSet<string> words2 = new HashSet<string>(text2.ToLower().Split(' '));
-
-            // Рахуємо, скільки спільних слів
-            int commonWords = words1.Intersect(words2).Count();
-            int totalWords = words1.Count + words2.Count;
-
-            // Визначаємо відсоток схожості (чим більше, тим схожіше)
-            double similarity = (2.0 * commonWords) / totalWords;
-
-            return similarity > 0.2; // Наприклад, 20% спільних слів вважаємо схожістю
-        }
     }
 }
+
+
+
 
 

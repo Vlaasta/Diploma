@@ -36,7 +36,7 @@ namespace diplom
 
         public static Func<string> GetLabel1TextDelegate { get; set; }
 
-       // private static TimeSpan ElapsedTime;
+        // private static TimeSpan ElapsedTime;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern bool UnhookWindowsHookEx(IntPtr hhk);
@@ -290,8 +290,6 @@ namespace diplom
         }
     }
 }
-
-
 
 
 

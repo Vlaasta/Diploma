@@ -10,7 +10,7 @@ namespace diplom
 {
     public class Statistic : Form
     {
-        private string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json";
+        private string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\timerAmounts.json";
 
         // Метод для зчитування актуальних даних із JSON-файлу
         public List<TimerData> LoadTimerData()

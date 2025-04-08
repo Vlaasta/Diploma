@@ -1,4 +1,6 @@
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\AngleSharp.1.1.2\lib\net472\AngleSharp.dll
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\Google.Protobuf.3.21.12\lib\net45\Google.Protobuf.dll
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\HtmlAgilityPack.1.11.73\lib\Net45\HtmlAgilityPack.dll
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll
@@ -21,6 +23,9 @@ E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\Serilog.2.10.0\lib\net46\Ser
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\Serilog.Sinks.Console.4.1.0\lib\net45\Serilog.Sinks.Console.dll
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.ClientModel.1.2.1\lib\netstandard2.0\System.ClientModel.dll
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\lib\net46\System.Data.SQLite.dll
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.Data.SQLite.EF6.1.0.119.0\lib\net46\System.Data.SQLite.EF6.dll
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.Data.SQLite.Linq.1.0.119.0\lib\net46\System.Data.SQLite.Linq.dll
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.Diagnostics.DiagnosticSource.6.0.1\lib\net461\System.Diagnostics.DiagnosticSource.dll
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.IO.Pipelines.9.0.0\lib\net462\System.IO.Pipelines.dll
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.Memory.Data.6.0.0\lib\net461\System.Memory.Data.dll
@@ -36,9 +41,12 @@ E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.Threading.Tasks.Exten
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\TensorFlow.NET.0.150.0\lib\netstandard2.0\Tensorflow.Binding.dll
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\Selenium.WebDriver.4.29.0\lib\netstandard2.0\WebDriver.dll
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\Selenium.Support.4.29.0\lib\netstandard2.0\WebDriver.Support.dll
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\WebDriverManager.2.17.5\lib\net472\WebDriverManager.dll
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\ZedGraph.5.1.7\lib\net35-Client\ZedGraph.dll
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\AngleSharp.1.1.2\lib\net472\AngleSharp.xml
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.xml
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\Google.Protobuf.3.21.12\lib\net45\Google.Protobuf.pdb
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\Google.Protobuf.3.21.12\lib\net45\Google.Protobuf.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\HtmlAgilityPack.1.11.73\lib\Net45\HtmlAgilityPack.pdb
@@ -63,6 +71,7 @@ E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\Serilog.2.10.0\lib\net46\Ser
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\Serilog.Sinks.Console.4.1.0\lib\net45\Serilog.Sinks.Console.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.ClientModel.1.2.1\lib\netstandard2.0\System.ClientModel.xml
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\lib\net46\System.Data.SQLite.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.Diagnostics.DiagnosticSource.6.0.1\lib\net461\System.Diagnostics.DiagnosticSource.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.IO.Pipelines.9.0.0\lib\net462\System.IO.Pipelines.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.Memory.4.5.5\lib\net461\System.Memory.xml
@@ -78,6 +87,7 @@ E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.Threading.Tasks.Exten
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\TensorFlow.NET.0.150.0\lib\netstandard2.0\Tensorflow.Binding.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\Selenium.WebDriver.4.29.0\lib\netstandard2.0\WebDriver.xml
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\Selenium.Support.4.29.0\lib\netstandard2.0\WebDriver.Support.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\ZedGraph.5.1.7\lib\net35-Client\ZedGraph.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\ZedGraph.5.1.7\lib\net35-Client\de\ZedGraph.resources.dll
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\packages\ZedGraph.5.1.7\lib\net35-Client\es\ZedGraph.resources.dll

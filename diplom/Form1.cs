@@ -93,7 +93,7 @@ namespace diplom
 
         private void GetTimeAmount()
         {
-            string json = File.ReadAllText(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json");
+            string json = File.ReadAllText(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\timerAmounts.json");
             var timerDataList = JsonConvert.DeserializeObject<List<TimerData>>(json);
 
             // Отримуємо поточну дату

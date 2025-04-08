@@ -12,9 +12,9 @@ namespace diplom
 {
     public static class JsonProcessing
     {
-        private static string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json"; // Шлях до JSON-файлу з статистикою
-        private static string fileSecondPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\projects.json"; // Шлях до JSON-файлу з проектами
-        private static string fileThirdPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\settings.json"; // Шлях до JSON-файлу з проектами
+        private static string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\timerAmounts.json"; // Шлях до JSON-файлу з статистикою
+        private static string fileSecondPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json"; // Шлях до JSON-файлу з проектами
+        private static string fileThirdPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\settings.json"; // Шлях до JSON-файлу з проектами
 
         private static string FindFile(string fileName)
         {

@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Newtonsoft.Json;
 
-
 namespace diplom
 {
     public static class BrowserMonitor
@@ -64,6 +63,10 @@ namespace diplom
                     browserStopwatch.Reset();
                     browserStopwatch.Start();
                     currentActiveBrowserPage = activeWindowTitle;
+
+                    // Викликаємо методи з BrowserHistoryReader для отримання історії
+                    BrowserHistoryReader.GetChromeHistory();  // Отримуємо історію Chrome
+                   // BrowserHistoryReader.GetOperaHistory();  // Отримуємо історію Opera
                 }
             }
             else
@@ -115,6 +118,8 @@ namespace diplom
         }
     }
 }
+
+
 
 
 

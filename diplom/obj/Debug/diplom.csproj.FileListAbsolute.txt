@@ -127,3 +127,13 @@ E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\Serilog.Sinks.Consol
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\Tensorflow.Binding.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\obj\Debug\diplom.csproj.Fody.CopyLocal.cache
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\obj\Debug\diplom.csproj.Fody.RuntimeCopyLocal.cache
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\EntityFramework.dll
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\EntityFramework.SqlServer.dll
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\System.Data.SQLite.dll
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\System.Data.SQLite.EF6.dll
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\System.Data.SQLite.Linq.dll
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\EntityFramework.xml
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\EntityFramework.SqlServer.xml
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\System.Data.SQLite.xml
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\WebDriver.Support.dll
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\WebDriver.Support.xml

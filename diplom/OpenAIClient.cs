@@ -4,32 +4,46 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-public class OpenAIClient
+namespace diplom
 {
-    private static readonly HttpClient client = new HttpClient();
-    private const string apiKey = "your-openai-api-key"; // Встав свій ключ API
-
-    public async Task<string> GetGPT3ResponseAsync(string prompt)
+    internal class OpenAIClient
     {
-        var url = "https://api.openai.com/v1/completions";
+        private readonly string _apiKey;
+        private readonly HttpClient _httpClient;
+        private const string ApiUrl = "https://api.openai.com/v1/chat/completions";
 
-        var requestBody = new
+        public OpenAIClient(string apiKey)
         {
-            model = "text-davinci-003", // або будь-яка інша модель GPT-3
-            prompt = prompt,
-            max_tokens = 100
-        };
+            _apiKey = apiKey;
+            _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_apiKey}");
+        }
 
-        var requestContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+        public async Task<string> GetChatGptResponse(string prompt)
+        {
+            var requestBody = new
+            {
+                model = "gpt-3.5-turbo",
+                messages = new[] { new { role = "user", content = prompt } },
+                max_tokens = 500
+            };
 
-        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+            var jsonRequest = JsonConvert.SerializeObject(requestBody);
+            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
-        var response = await client.PostAsync(url, requestContent);
-        var responseContent = await response.Content.ReadAsStringAsync();
+            var response = await _httpClient.PostAsync(ApiUrl, content);
+            if (!response.IsSuccessStatusCode)
+            {
+                return $"Помилка API: {response.StatusCode}";
+            }
 
-        // Парсимо відповідь
-        dynamic responseJson = JsonConvert.DeserializeObject(responseContent);
-        return responseJson.choices[0].text.ToString();
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            dynamic responseObject = JsonConvert.DeserializeObject(jsonResponse);
+            return responseObject.choices[0].message.content.ToString();
+        }
     }
 }
+
+
+
 

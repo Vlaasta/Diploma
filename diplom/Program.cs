@@ -22,7 +22,7 @@ namespace diplom
 
         public delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
 
-        private static readonly string ProjectsFilePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\projects.json";
+        private static readonly string ProjectsFilePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json";
         private static TimeSpan lastElapsedTime = TimeSpan.Zero;
         public static bool ShouldSaveTimeToJson = true;
         private static HandButton timer = new HandButton();
@@ -217,6 +217,30 @@ namespace diplom
             await Task.Delay(100); // Імітація затримки
         }
 
+        private static void AnalyzProj()
+        {
+            FileReader fileReader = new FileReader();
+            string projectFilePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json";
+            string projectAnalysis = fileReader.ProcessFile(projectFilePath);
+            //Console.WriteLine("Аналіз проєкту: " + projectAnalysis);
+
+            // Зберігаємо аналіз проекту
+            fileReader.SaveProjectAnalysis(projectFilePath, projectAnalysis);
+        }
+
+        private static void Analyzwebpage()
+        {
+            // Аналіз веб-сторінки
+            FileReader fileReader = new FileReader();
+            string url = "https://makeup.com.ua/ua/categorys/339673/";
+            string pageContent = "<html><body>Content of the webpage</body></html>";
+            string webPageAnalysis = fileReader.SummarizeText(pageContent);
+            //Console.WriteLine("Аналіз веб-сторінки: " + webPageAnalysis);
+
+            // Зберігаємо аналіз веб-сторінки
+            fileReader.SaveWebPageAnalysis(url, webPageAnalysis);
+        }
+
         private static async Task MainLoopAsync()
         {
             while (true)
@@ -231,6 +255,20 @@ namespace diplom
                 else
                 {
                     await CompareProjectsWithOpenProcessesAsync(projects);
+
+                     //string apiKey = "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"; // Замініть на ваш API ключ
+                    // ChatGptAutomation chatGptAutomation = new ChatGptAutomation(apiKey);
+
+
+                    // Аналіз проекту
+                   // AnalyzProj();
+
+                    // Аналіз веб-сторінки
+                    //Analyzwebpage();
+
+                    // Порівняння аналізів
+                    // string comparisonResult = await chatGptAutomation.CompareAnalysis();
+                    //Console.WriteLine("Результат порівняння: " + comparisonResult);
 
                     // Якщо активне вікно - це браузер, не оновлюємо таймер проєкту
                     if (!BrowserMonitor.IsBrowserActive())
@@ -247,14 +285,28 @@ namespace diplom
 
                 // **Перевірка активного вікна браузера**
                 BrowserMonitor.CheckActiveWindow();
+                
 
-                IfUserActive();
+                string apiKey = "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"; // Замініть на ваш ключ API
+                string projectFilePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json"; // Шлях до вашого файлу проекту
+                string url = "https://makeup.com.ua/ua/categorys/339673/"; // URL веб-сторінки для аналізу
+                string pageContent = "Косметика для шиї та декольте"; // Вміст веб-сторінки для аналізу
+
+                // Ініціалізуємо контролер для аналізу
+                var analysisController = new AnalysisController(apiKey);
+
+                // Запускаємо повний аналіз
+                await analysisController.ExecuteFullAnalysisAsync(projectFilePath, url, pageContent);
+
+
+
+                // IfUserActive();
                 await Task.Delay(1000); // Асинхронна пауза
             }
         }
 
 
-        private static void IfUserActive()
+      /*  private static void IfUserActive()
         {
             uint idleTime = GetIdleTime();
             int currentNonActiveTime = Form1.GetNonActiveTime();
@@ -267,12 +319,24 @@ namespace diplom
             {
                 Console.WriteLine("Користувач неактивний більше" + currentNonActiveTime);
             }
+        }*/
+
+        private static void Foranalys()
+        {
+
         }
 
         [STAThread]
         private static void Main()
         {
             JsonProcessing.LoadSettings();
+
+           // GPTController gptController = new GPTController();
+
+            // TelegramChatGPT.lalala();
+
+            // Запуск отримання історії в окремому потоці
+            //Task.Run(() => BrowserHistoryReader.GetChromeHistory()).Wait();
 
             // Запуск форми в окремому потоці
             Thread formThread = new Thread(() =>

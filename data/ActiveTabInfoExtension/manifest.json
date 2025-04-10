@@ -3,21 +3,24 @@
   "version": "1.0",
   "manifest_version": 3,
   "permissions": [
-    "activeTab",
     "tabs",
+    "storage",
     "scripting"
+  ],
+  "host_permissions": [
+    "http://localhost:5000/"
   ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["contentScript.js"]
+      "matches": [ "<all_urls>" ],
+      "js": [ "contentScript.js" ]
     }
   ],
   "action": {
-    "default_title": "Отримати URL та HTML"
+    "default_title": "Автоматичне збереження URL"
   }
-}
 
+}

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Newtonsoft.Json;
+using System.Globalization;
+
 
 namespace diplom
 {
@@ -14,7 +16,8 @@ namespace diplom
         private static string currentActiveBrowserPage = null;
         private static Stopwatch browserStopwatch = new Stopwatch();
         private static readonly string BrowserLogPath = @"E:\\4 KURS\\Диплом\\DiplomaRepo\\Diploma\\data\\browserActivity.json";
-        private static readonly string ProjectsPath = @"E:\\4 KURS\\Диплом\\DiplomaRepo\\Diploma\\data\\projects.json";
+        private static readonly string UrlsPath = @"E:\\4 KURS\\Диплом\\DiplomaRepo\\Diploma\\data\\browserUrls.json";
+
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
@@ -35,7 +38,6 @@ namespace diplom
 
             return "Без назви";
         }
-
         public static bool IsBrowserActive()
         {
             string[] browsers = { "Chrome", "Edge", "Firefox", "Opera", "Brave" };
@@ -56,17 +58,13 @@ namespace diplom
                     if (browserStopwatch.IsRunning)
                     {
                         browserStopwatch.Stop();
-                        SaveBrowserActivity(currentActiveBrowserPage, browserStopwatch.Elapsed, "Browser");
+                       // SaveBrowserActivity(currentActiveBrowserPage, browserStopwatch.Elapsed, "Browser");
                     }
 
                     // Перезапуск лічильника для нової сторінки
                     browserStopwatch.Reset();
                     browserStopwatch.Start();
                     currentActiveBrowserPage = activeWindowTitle;
-
-                    // Викликаємо методи з BrowserHistoryReader для отримання історії
-                    BrowserHistoryReader.GetChromeHistory();  // Отримуємо історію Chrome
-                   // BrowserHistoryReader.GetOperaHistory();  // Отримуємо історію Opera
                 }
             }
             else
@@ -75,16 +73,17 @@ namespace diplom
                 if (browserStopwatch.IsRunning)
                 {
                     browserStopwatch.Stop();
-                    SaveBrowserActivity(currentActiveBrowserPage, browserStopwatch.Elapsed, "Browser");
+                    //SaveBrowserActivity(currentActiveBrowserPage, browserStopwatch.Elapsed, "Browser");
                     currentActiveBrowserPage = null;
                 }
             }
         }
 
-        private static void SaveBrowserActivity(string pageTitle, TimeSpan timeSpent, string category)
+       /* private static void SaveBrowserActivity(string pageTitle, TimeSpan timeSpent, string category)
         {
-            List<BrowserActivityLog> logs = new List<BrowserActivityLog>();
+            //string url = SaveUrlController.LastReceivedUrl; // отримаємо останній URL з оперативної памʼяті
 
+            List<BrowserActivityLog> logs = new List<BrowserActivityLog>();
             if (File.Exists(BrowserLogPath))
             {
                 try
@@ -103,7 +102,8 @@ namespace diplom
                 PageTitle = pageTitle,
                 TimeSpent = timeSpent.ToString(@"hh\:mm\:ss"),
                 Category = category,
-                Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+               // Url = url // отут додається
             });
 
             try
@@ -115,7 +115,53 @@ namespace diplom
             {
                 Console.WriteLine($"Помилка запису у файл: {ex.Message}");
             }
+
+            MatchClosestUrls(BrowserLogPath, UrlsPath);
+            Console.WriteLine("Готово! URL-адреси оновлено.");
         }
+
+        public static void MatchClosestUrls(string activityPath, string urlPath)
+        {
+            string activityJson = File.ReadAllText(activityPath);
+            string urlJson = File.ReadAllText(urlPath);
+
+            var activityLogs = JsonConvert.DeserializeObject<List<BrowserActivityLog>>(activityJson);
+            var urlDataList = JsonConvert.DeserializeObject<List<UrlData>>(urlJson);
+
+            foreach (var log in activityLogs)
+            {
+                if (!DateTime.TryParseExact(log.Timestamp, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out DateTime logTime))
+                    continue;
+
+                UrlData closestUrl = null;
+                TimeSpan minDiff = TimeSpan.MaxValue;
+
+                foreach (var urlEntry in urlDataList)
+                {
+                    if (!DateTime.TryParse(urlEntry.Timestamp, null, DateTimeStyles.AdjustToUniversal, out DateTime urlTimeUtc))
+                        continue;
+
+                    DateTime urlTimeLocal = urlTimeUtc.ToLocalTime(); // Приводимо до локального часу
+
+                    var diff = (logTime - urlTimeLocal).Duration(); // Абсолютна різниця
+
+                    if (diff < minDiff)
+                    {
+                        minDiff = diff;
+                        closestUrl = urlEntry;
+                    }
+                }
+
+                if (closestUrl != null)
+                {
+                    log.Url = closestUrl.Url; // Перезаписуємо, навіть якщо щось було
+                }
+            }
+
+            string updatedJson = JsonConvert.SerializeObject(activityLogs, Formatting.Indented);
+            File.WriteAllText(activityPath, updatedJson);
+        }*/
+
     }
 }
 

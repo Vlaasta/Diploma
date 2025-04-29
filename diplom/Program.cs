@@ -22,7 +22,7 @@ namespace diplom
 
         public delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
 
-        private static readonly string ProjectsFilePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\projects.json";
+        private static readonly string ProjectsFilePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json";
         private static TimeSpan lastElapsedTime = TimeSpan.Zero;
         public static bool ShouldSaveTimeToJson = true;
         private static HandButton timer = new HandButton();
@@ -287,6 +287,24 @@ namespace diplom
             formThread.SetApartmentState(ApartmentState.STA);
             formThread.IsBackground = true;
             formThread.Start();
+
+            // Введіть ваш API ключ
+            string apiKey = "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"; // Замініть на ваш реальний API ключ
+
+            // Шлях до JSON файлу з проектами
+            string projectsJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json";
+
+            // Шлях для збереження результатів аналізу
+            string outputJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\projectsAnalysis.json";
+
+            // Створюємо об'єкт DeepSeekClient
+            DeepSeekClient deepSeekClient = new DeepSeekClient(apiKey);
+
+            // Викликаємо метод аналізу файлів
+            string analysisResult = deepSeekClient.AnalyzeFiles(projectsJsonPath, outputJsonPath);
+
+            // Виводимо результат аналізу
+            Console.WriteLine(analysisResult);
 
             // Асинхронний запуск основного циклу
             Task.Run(MainLoopAsync).Wait();

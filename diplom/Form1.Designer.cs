@@ -214,17 +214,9 @@ namespace diplom
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
             this.pictureBox8 = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
@@ -241,52 +233,7 @@ namespace diplom
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
             this.SuspendLayout();
-            // 
-            // button3
-            // 
-           // this.button3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button3.BackgroundImage")));
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.FlatAppearance.BorderSize = 0;
-            this.button3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button3.Location = new System.Drawing.Point(282, 394);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(50, 41);
-           // this.button3.TabIndex = 21;
-            this.button3.Text = "Вверх";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            this.button3.BackColor = Color.FromArgb(6, 40, 68);
-            //
-            //
-            //
-            //
-            this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button10.FlatAppearance.BorderSize = 0;
-            this.button10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button10.Location = new System.Drawing.Point(282, 535);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(50, 41);
-            // this.button3.TabIndex = 21;
-            this.button10.Text = "Вниз";
-            this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
-            this.button10.BackColor = Color.FromArgb(6, 40, 68);
-            // 
-            // pictureBox1
-            // 
-            // this.pictureBox1.Image = System.Drawing.Image.FromFile("E:\\4 KURS\\DiplomaRepo\\Диплом\\Diploma\\Design\\Clock.png");
-            //this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("Clock")));
-            this.pictureBox1.Image = Properties.Resources.ClockForDarkTheme;
-            this.pictureBox1.Location = new System.Drawing.Point(552, 62);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(194, 193);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
-            // 
-            // button1
-            // 
-            //this.button1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button1.BackgroundImage")));
+
             this.button1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.button1.Location = new System.Drawing.Point(859, 394);
             this.button1.Name = "button1";
@@ -298,192 +245,7 @@ namespace diplom
             this.button1.BackColor = Color.FromArgb(6, 40, 68);
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.FlatAppearance.BorderSize = 0;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
-            this.pictureBox2.Location = new System.Drawing.Point(338, 394);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(515, 41);
-            this.pictureBox2.TabIndex = 4;
-            this.pictureBox2.TabStop = false;
-            this.pictureBox2.BackColor = Color.FromArgb(6, 40, 68);
-            // 
-            // pictureBox3
-            // 
 
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox4.BackgroundImage")));
-            this.pictureBox4.Location = new System.Drawing.Point(338, 488);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(255, 41);
-            this.pictureBox4.TabIndex = 6;
-            this.pictureBox4.TabStop = false;
-            this.pictureBox4.BackColor = Color.FromArgb(6, 40, 68);
-            // 
-            // pictureBox5
-            // 
-            this.pictureBox5.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox5.BackgroundImage")));
-            this.pictureBox5.Location = new System.Drawing.Point(338, 535);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(255, 41);
-            this.pictureBox5.TabIndex = 7;
-            this.pictureBox5.TabStop = false;
-            this.pictureBox5.BackColor = Color.FromArgb(6, 40, 68);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
-            this.label2.Location = new System.Drawing.Point(624, 153);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 16);
-            this.label2.BackColor = Color.FromArgb(186, 192, 196);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "00:00:00";
-            // 
-            // pictureBox6
-            // 
-            this.pictureBox6.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox6.BackgroundImage")));
-            this.pictureBox6.Location = new System.Drawing.Point(598, 441);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(255, 41);
-            this.pictureBox6.TabIndex = 12;
-            this.pictureBox6.TabStop = false;
-            this.pictureBox6.BackColor = Color.FromArgb(6, 40, 68);
-            // 
-            // pictureBox7
-            // 
-            // this.pictureBox7.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox7.BackgroundImage")));
-            this.pictureBox7.Location = new System.Drawing.Point(598, 488);
-            this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(255, 41);
-            this.pictureBox7.TabIndex = 11;
-            this.pictureBox7.TabStop = false;
-            this.pictureBox7.BackColor = Color.FromArgb(6, 40, 68);
-
-            this.label7.AutoSize = false;
-            this.label7.BackColor = System.Drawing.SystemColors.Control;
-            this.label7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-           // this.label7.Image = ((System.Drawing.Image)(resources.GetObject("label3.Image")));
-            this.label7.Location = new System.Drawing.Point(598, 488);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(44, 16);
-            this.label7.TabIndex = 14;
-            this.label7.BackColor = Color.FromArgb(6, 40, 68);
-            this.label7.Text = "label7";
-            this.label7.Size = new System.Drawing.Size(this.pictureBox7.Width, this.pictureBox7.Height);
-            this.label7.AutoEllipsis = true; // Додає "..." якщо текст не влізе
-            this.label7.TextAlign = ContentAlignment.MiddleLeft;
-
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            //this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
-            this.label1.Location = new System.Drawing.Point(479, 407);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(287, 16);
-            this.label1.TabIndex = 13;
-            this.label1.BackColor = Color.FromArgb(6, 40, 68);
-            this.label1.Text = "Щоб додати новий проект, натисніть на  \"+\"";
-
-            this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
-            this.pictureBox3.Location = new System.Drawing.Point(338, 441);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(255, 41);
-            this.pictureBox3.TabIndex = 5;
-            this.pictureBox3.TabStop = false;
-            this.pictureBox3.BackColor = Color.FromArgb(6, 40, 68);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = false;
-            this.label3.BackColor = System.Drawing.SystemColors.Control;
-            this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label3.Image = ((System.Drawing.Image)(resources.GetObject("label3.Image")));
-            this.label3.Location = new System.Drawing.Point(338, 441);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(this.pictureBox3.Width, this.pictureBox3.Height);
-            this.label3.TabIndex = 14;
-            this.label3.BackColor = Color.FromArgb(6, 40, 68);
-            this.label3.Text = "label3";
-            this.label3.AutoEllipsis = true; // Додає "..." якщо текст не влізе
-            this.label3.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = false;
-            this.label4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label4.Image = ((System.Drawing.Image)(resources.GetObject("label4.Image")));
-            this.label4.Location = new System.Drawing.Point(338, 488);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(this.pictureBox4.Width, this.pictureBox4.Height);
-            this.label4.TabIndex = 15;
-            this.label4.BackColor = Color.FromArgb(6, 40, 68);
-            this.label4.Text = "label4";
-            this.label4.AutoEllipsis = true; // Додає "..." якщо текст не влізе
-            this.label4.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = false;
-            this.label5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label5.Image = ((System.Drawing.Image)(resources.GetObject("label5.Image")));
-            this.label5.Location = new System.Drawing.Point(338, 535);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(this.pictureBox5.Width, this.pictureBox5.Height);
-            this.label5.TabIndex = 16;
-            this.label5.BackColor = Color.FromArgb(6, 40, 68);
-            this.label5.Text = "label5";
-            this.label5.AutoEllipsis = true; // Додає "..." якщо текст не влізе
-            this.label5.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = false;
-            this.label6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label6.Image = ((System.Drawing.Image)(resources.GetObject("label6.Image")));
-            this.label6.Location = new System.Drawing.Point(598, 441);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(this.pictureBox6.Width, this.pictureBox6.Height);
-            this.label6.TabIndex = 17;
-            this.label6.BackColor = Color.FromArgb(6, 40, 68);
-            this.label6.Text = "label6";
-            this.label6.AutoEllipsis = true; // Додає "..." якщо текст не влізе
-            this.label6.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // pictureBox8
-            // 
-            //this.pictureBox8.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox8.BackgroundImage")));
-            this.pictureBox8.Location = new System.Drawing.Point(598, 535);
-            this.pictureBox8.Name = "pictureBox8";
-            this.pictureBox8.Size = new System.Drawing.Size(255, 41);
-            this.pictureBox8.TabIndex = 10;
-            this.pictureBox8.TabStop = false;
-            this.pictureBox8.BackColor = Color.FromArgb(6, 40, 68);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = false;
-            this.label8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label8.Image = ((System.Drawing.Image)(resources.GetObject("label8.Image")));
-            this.label8.Location = new System.Drawing.Point(598, 535);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(this.pictureBox8.Width, this.pictureBox8.Height);
-            this.label8.TabIndex = 19;
-            this.label8.BackColor = Color.FromArgb(6, 40, 68);
-            this.label8.Text = "label8";
-            this.label8.AutoEllipsis = true; // Додає "..." якщо текст не влізе
-            this.label8.TextAlign = ContentAlignment.MiddleLeft;
-            //
-            // 
-            // button2
-            // 
-            // this.button2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button2.BackgroundImage")));
             this.button2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.button2.Location = new System.Drawing.Point(543, 273);
             this.button2.Name = "button2";
@@ -495,9 +257,18 @@ namespace diplom
             this.button2.BackColor = Color.FromArgb(6, 40, 68);
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.FlatAppearance.BorderSize = 0;
-            // 
-            // button4
-            // 
+
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.FlatAppearance.BorderSize = 0;
+            this.button3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button3.Location = new System.Drawing.Point(282, 394);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(50, 41);
+            this.button3.Text = "Вверх";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button3.BackColor = Color.FromArgb(6, 40, 68);
+
             this.button4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.button4.Location = new System.Drawing.Point(859, 441);
             this.button4.Name = "button4";
@@ -509,9 +280,7 @@ namespace diplom
             this.button4.BackColor = Color.FromArgb(6, 40, 68);
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button4.FlatAppearance.BorderSize = 0;
-            // 
-            // button5
-            // 
+
             this.button5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.button5.Location = new System.Drawing.Point(859, 488);
             this.button5.Name = "button5";
@@ -523,9 +292,7 @@ namespace diplom
             this.button5.Click += new System.EventHandler(this.button5_Click);
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button5.FlatAppearance.BorderSize = 0;
-            // 
-            // button6
-            // 
+
             this.button6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.button6.Location = new System.Drawing.Point(859, 537);
             this.button6.Name = "button6";
@@ -537,108 +304,122 @@ namespace diplom
             this.button6.Click += new System.EventHandler(this.button6_Click);
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button6.FlatAppearance.BorderSize = 0;
-         
+
+            this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button10.FlatAppearance.BorderSize = 0;
+            this.button10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button10.Location = new System.Drawing.Point(282, 535);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(50, 41);
+            this.button10.Text = "Вниз";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            this.button10.BackColor = Color.FromArgb(6, 40, 68);
+
+            // Налаштування для pictureBox1
+            this.pictureBox1.Image = Properties.Resources.ClockForDarkTheme;
+            this.ConfigurePictureBox(pictureBox1, new Point(552, 62), new Size(194, 193), backColor: Color.Transparent);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabStop = false;
+
+            // Налаштування для pictureBox2 - pictureBox5 (з однаковим стилем)
+            var commonBackColor = Color.FromArgb(6, 40, 68);
+            this.ConfigurePictureBox(pictureBox2, new Point(338, 394), new Size(515, 41), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox3, new Point(338, 441), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox3.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox4, new Point(338, 488), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox4.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox5, new Point(338, 535), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox5.BackgroundImage"), backColor: commonBackColor);
+
+            // Налаштування для pictureBox6 - pictureBox8 (з однаковим стилем)
+            this.ConfigurePictureBox(pictureBox6, new Point(598, 441), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox6.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox7, new Point(598, 488), new Size(255, 41), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox8, new Point(598, 535), new Size(255, 41), backColor: commonBackColor);
+
+            this.label2 = ConfigureLabel(new Point(624, 153), new Size(55, 16), "00:00:00", backColor: Color.FromArgb(186, 192, 196));
+            this.label2.ForeColor = Color.FromArgb(0, 0, 0);
+            this.label1 = ConfigureLabel(new Point(479, 407), new Size(287, 16), "Щоб додати новий проект, натисніть на  \"+\"", backColor: Color.FromArgb(6, 40, 68));
+            this.label7 = ConfigureLabel(new Point(598, 488), new Size(pictureBox7.Width, pictureBox7.Height), "label7", backColor: Color.FromArgb(6, 40, 68));
+            this.label3 = ConfigureLabel(new Point(338, 441), new Size(pictureBox3.Width, pictureBox3.Height), "label3", image: (Image)resources.GetObject("label3.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label4 = ConfigureLabel(new Point(338, 488), new Size(pictureBox4.Width, pictureBox4.Height), "label4", image: (Image)resources.GetObject("label4.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label5 = ConfigureLabel(new Point(338, 535), new Size(pictureBox5.Width, pictureBox5.Height), "label5", image: (Image)resources.GetObject("label5.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label6 = ConfigureLabel(new Point(598, 441), new Size(pictureBox6.Width, pictureBox6.Height), "label6", image: (Image)resources.GetObject("label6.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label8 = ConfigureLabel(new Point(598, 535), new Size(pictureBox8.Width, pictureBox8.Height), "label8", image: (Image)resources.GetObject("label8.Image"), backColor: Color.FromArgb(6, 40, 68));
 
             if (CheckBox2Active == true || Form1.settings.ColorTheme == "light")
             {
-                this.pictureBox1.Image = Properties.Resources.ClockForLightTheme;
-                this.button1.BackColor = Color.FromArgb(182, 192, 196);
-                this.button3.BackColor = Color.FromArgb(182, 192, 196);
                 this.button10.BackColor = Color.FromArgb(182, 192, 196);
-
-                this.button3.ForeColor = Color.FromArgb(82, 82, 82);
                 this.button10.ForeColor = Color.FromArgb(82, 82, 82);
-                this.button1.ForeColor = Color.FromArgb(82, 82, 82);
-                this.button2.ForeColor = Color.FromArgb(82, 82, 82);
-                this.button4.ForeColor = Color.FromArgb(82, 82, 82);
 
-                this.button2.BackColor = Color.FromArgb(182, 192, 196);
-                this.button4.BackColor = Color.FromArgb(182, 192, 196);
+                for (int i = 1; i <= 6; i++)
+                {
+                    Control button = this.Controls["button" + i];
+                    button.BackColor = Color.FromArgb(182, 192, 196);
+                    button.ForeColor = Color.FromArgb(82, 82, 82);
+                }
 
-                this.pictureBox2.BackColor = Color.FromArgb(182, 192, 196);
-                this.pictureBox3.BackColor = Color.FromArgb(182, 192, 196);
-                this.pictureBox4.BackColor = Color.FromArgb(182, 192, 196);
-                this.pictureBox5.BackColor = Color.FromArgb(182, 192, 196);
-                this.pictureBox6.BackColor = Color.FromArgb(182, 192, 196);
-                this.pictureBox7.BackColor = Color.FromArgb(182, 192, 196);
-                this.pictureBox8.BackColor = Color.FromArgb(182, 192, 196);
+                pictureBox1.Image = Properties.Resources.ClockForLightTheme;
 
-                this.label2.BackColor = Color.FromArgb(182, 192, 196);
-                this.label1.ForeColor = Color.FromArgb(82, 82, 82);
-                this.label1.BackColor = Color.FromArgb(182, 192, 196);
-                this.label3.ForeColor = Color.FromArgb(82, 82, 82);
-                this.label3.BackColor = Color.FromArgb(182, 192, 196);
-                this.label4.ForeColor = Color.FromArgb(82, 82, 82);
-                this.label4.BackColor = Color.FromArgb(182, 192, 196);
-                this.label5.ForeColor = Color.FromArgb(82, 82, 82);
+                for (int i = 2; i <= 8; i++)
+                {
+                    Control pictureBox = this.Controls["pictureBox" + i];
+                    pictureBox.BackColor = Color.FromArgb(182, 192, 196);
+                }
 
-                this.label5.BackColor = Color.FromArgb(182, 192, 196);
-                this.label6.ForeColor = Color.FromArgb(82, 82, 82);
-                this.label6.BackColor = Color.FromArgb(182, 192, 196);
-                this.label7.ForeColor = Color.FromArgb(82, 82, 82);
-                this.label7.BackColor = Color.FromArgb(182, 192, 196);
-                this.label8.ForeColor = Color.FromArgb(82, 82, 82);
-                this.label8.BackColor = Color.FromArgb(182, 192, 196);
-
-                this.button5.ForeColor = Color.FromArgb(82, 82, 82);
-                this.button5.BackColor = Color.FromArgb(182, 192, 196);
-
-                this.button6.ForeColor = Color.FromArgb(82, 82, 82);
-                this.button6.BackColor = Color.FromArgb(182, 192, 196);
+                for (int i = 1; i <= 8; i++)
+                {
+                    Control label = this.Controls["label" + i];
+                    label.BackColor = Color.FromArgb(182, 192, 196);
+                    label.ForeColor = Color.FromArgb(82, 82, 82);
+                }
             }
 
             if (CheckBox1Active == true || Form1.settings.ColorTheme == "dark")
             {
-                this.pictureBox1.Image = Properties.Resources.ClockForDarkTheme;
-                this.button3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.button3.BackColor = Color.FromArgb(6, 40, 68);
-
                 this.button10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
                 this.button10.BackColor = Color.FromArgb(6, 40, 68);
 
-                this.button1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.button1.BackColor = Color.FromArgb(6, 40, 68);
+                for (int i = 1; i <= 6; i++)
+                {
+                    Control button = this.Controls["button" + i];
+                    if (button != null)
+                    {
+                        button.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                        button.BackColor = Color.FromArgb(6, 40, 68);
+                    }
+                }
 
-                this.pictureBox2.BackColor = Color.FromArgb(6, 40, 68);
-                this.pictureBox3.BackColor = Color.FromArgb(6, 40, 68);
-                this.pictureBox4.BackColor = Color.FromArgb(6, 40, 68);
-                this.pictureBox5.BackColor = Color.FromArgb(6, 40, 68);
-                this.label2.BackColor = Color.FromArgb(186, 192, 196);
-                this.pictureBox6.BackColor = Color.FromArgb(6, 40, 68);
-                this.pictureBox7.BackColor = Color.FromArgb(6, 40, 68);
-                this.pictureBox8.BackColor = Color.FromArgb(6, 40, 68);
-                this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.label1.BackColor = Color.FromArgb(6, 40, 68);
+                this.pictureBox1.Image = Properties.Resources.ClockForDarkTheme;
 
-                this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.label3.BackColor = Color.FromArgb(6, 40, 68);
-                this.label4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.label4.BackColor = Color.FromArgb(6, 40, 68);
+                for (int i = 1; i <= 8; i++)
+                {
+                    Control pictureBox = this.Controls["pictureBox" + i];
+                    if (pictureBox != null)
+                    {
+                        pictureBox.BackColor = Color.FromArgb(6, 40, 68);
+                    }
+                }
 
-                this.label5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.label5.BackColor = Color.FromArgb(6, 40, 68);
+                if (label1 != null)
+                {
+                    label1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    label1.BackColor = Color.FromArgb(6, 40, 68);
+                }
 
-                this.label6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.label6.BackColor = Color.FromArgb(6, 40, 68);
-                this.label7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.label7.BackColor = Color.FromArgb(6, 40, 68);
+                if (label2 != null)
+                {
+                    label2.BackColor = Color.FromArgb(186, 192, 196);
+                }
 
-                this.label8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.label8.BackColor = Color.FromArgb(6, 40, 68);
+                for (int i = 3; i <= 8; i++)
+                {
+                    Control label = this.Controls["label" + i];
+                    if (label != null)
+                    {
+                        label.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                        label.BackColor = Color.FromArgb(6, 40, 68);
+                    }
+                }
 
-                this.button2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.button2.BackColor = Color.FromArgb(6, 40, 68);
-
-                this.button4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.button4.BackColor = Color.FromArgb(6, 40, 68);
-
-                this.button5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.button5.BackColor = Color.FromArgb(6, 40, 68);
-
-                this.button6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.button6.BackColor = Color.FromArgb(6, 40, 68);
             }
-            
             // 
             // Form1
             // 
@@ -651,14 +432,6 @@ namespace diplom
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button10);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
            
             this.Controls.Add(this.pictureBox6);
             this.Controls.Add(this.pictureBox7);
@@ -681,6 +454,39 @@ namespace diplom
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+        }
+
+        private System.Windows.Forms.Label ConfigureLabel(Point location, Size size, string text, Image image = null, Color? backColor = null, Color? foreColor = null)
+        {
+            var label = new System.Windows.Forms.Label();
+            label.Location = location;
+            label.Size = size;
+            label.Text = text;
+            if (image != null)
+            {
+                label.Image = image;
+            }
+            label.BackColor = backColor ?? Color.Transparent;
+            if (label != label2)
+            {
+                label.ForeColor = foreColor ?? System.Drawing.SystemColors.ActiveCaption;
+            }
+            label.AutoEllipsis = true;  // Додає "..." якщо текст не влізе
+            label.TextAlign = ContentAlignment.MiddleLeft;
+            this.Controls.Add(label);
+            return label;
+        }
+
+        private void ConfigurePictureBox(PictureBox pictureBox, Point location, Size size, Image backgroundImage = null, Color? backColor = null)
+        {
+            pictureBox.Location = location;
+            pictureBox.Size = size;
+            if (backgroundImage != null)
+            {
+                pictureBox.BackgroundImage = backgroundImage;
+            }
+            pictureBox.BackColor = backColor ?? Color.Transparent;
+            pictureBox.TabStop = false;
         }
 
         private void buildChart(List<DateTime> xPoints, List<int> yPoints)
@@ -707,7 +513,9 @@ namespace diplom
 
             for (int i = 0; i < xPoints.Count; i++)
             {
-                lineSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(xPoints[i]), yPoints[i]));
+                // Перетворення DateTime в double
+                var dateAsDouble = DateTimeAxis.ToDouble(xPoints[i]);
+                lineSeries.Points.Add(new DataPoint(dateAsDouble, yPoints[i]));
             }
 
             plotModel.Series.Add(lineSeries);
@@ -797,7 +605,6 @@ namespace diplom
             this.label9.Name = "label9";
             this.label9.Font = new Font("Arial", 16, FontStyle.Regular); // Arial, 16 пт, курсив
             this.label9.Size = new System.Drawing.Size(180, 180);
-            // this.label9.TabIndex = 19;
             this.label9.BackColor = Color.FromArgb(2, 14, 25);
             this.label9.Text = "label9";
             this.Controls.Add(this.label9);
@@ -845,70 +652,25 @@ namespace diplom
                 axisY.MinorGridlineColor = OxyColor.FromRgb(82, 82, 82);
                 axisY.AxislineColor = OxyColor.FromRgb(82, 82, 82);
                 axisY.TicklineColor = OxyColor.FromRgb(82, 82, 82);
-
             }
         }
+
 
         private void StatisticsMainMenu()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-           
-            
-            this.button11 = new System.Windows.Forms.Button();
-            this.button11.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button11.Location = new System.Drawing.Point(240, 620);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(240, 41);
-           // this.button11.TabIndex = 24;
-            this.button11.Text = "Статистика за попередній тиждень";
-            this.button11.UseVisualStyleBackColor = true;
-            this.button11.BackColor = Color.FromArgb(6, 40, 68);
-            this.button11.Click += new System.EventHandler(this.button11_Click);
-            this.button11.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button11.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button11);
 
+            this.button11 = CreateButton("button11", "Статистика за попередній тиждень", new Point(240, 600), new Size(240, 41), this.button11_Click);
+            this.button12 = CreateButton("button12", "Статистика за останній місяць", new Point(505, 600), new Size(240, 41), this.button12_Click);
+            this.button13 = CreateButton("button13", "Статистика за останній рік", new Point(770, 600), new Size(240, 41), this.button13_Click);
+            this.button29 = CreateButton("button29", "Дані активності в браузері", new Point(240, 670), new Size(240, 41), this.button29_Click);
+            this.button40 = CreateButton("button40", "Статистика активності в браузері", new Point(505, 670), new Size(240, 41), this.button40_Click);
+            button40.Text = isBrowserStats
+              ? "Статистика за проєктами"
+              : "Статистика активності в браузері";
+            this.button41 = CreateButton("button41", "Статистика з урахуванням активності в браузері", new Point(770, 670), new Size(240, 41), this.button41_Click);
 
-            this.button12 = new System.Windows.Forms.Button();
-            this.button12.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button12.Location = new System.Drawing.Point(505, 620); 
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(240, 41);
-           // this.button12.TabIndex = 24;
-            this.button12.Text = "Статистика за останній місяць";
-            this.button12.UseVisualStyleBackColor = true;
-            this.button12.BackColor = Color.FromArgb(6, 40, 68);
-            this.button12.Click += new System.EventHandler(this.button12_Click);
-            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button12.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button12);
-
-
-            this.button13 = new System.Windows.Forms.Button();
-            this.button13.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button13.Location = new System.Drawing.Point(770, 620);
-            this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(240, 41);
-            // this.button12.TabIndex = 24;
-            this.button13.Text = "Статистика за останній рік";
-            this.button13.UseVisualStyleBackColor = true;
-            this.button13.BackColor = Color.FromArgb(6, 40, 68);
-            this.button13.Click += new System.EventHandler(this.button13_Click);
-            this.button13.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button13.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button13);
-
-            this.label10 = new System.Windows.Forms.Label();
-            this.label10.AutoSize = true;
-            this.label10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label10.Location = new System.Drawing.Point(452, 50);
-            this.label10.Name = "label10";
-            this.label10.Font = new Font("Arial", 16, FontStyle.Regular); // Arial, 16 пт, курсив
-            this.label10.Size = new System.Drawing.Size(180, 180);
-            // this.label9.TabIndex = 19;
-            this.label10.BackColor = Color.FromArgb(2, 14, 25);
-            this.label10.Text = "label10";
-            this.Controls.Add(this.label10);
+            this.label10 = CreateMainLabel("label10", "label10", new Point(452, 50), new Size(180, 180), new Font("Arial", 16, FontStyle.Regular));
 
 
             if (CheckBox2Active == true)
@@ -921,6 +683,9 @@ namespace diplom
 
                 this.button13.ForeColor = Color.FromArgb(82, 82, 82);
                 this.button13.BackColor = Color.FromArgb(171, 176, 180);
+
+                this.button29.ForeColor = Color.FromArgb(82, 82, 82);
+                this.button29.BackColor = Color.FromArgb(171, 176, 180);
 
                 this.label10.ForeColor = Color.FromArgb(82, 82, 82);
                 this.label10.BackColor = Color.FromArgb(212, 220, 225);
@@ -938,6 +703,9 @@ namespace diplom
                 this.button13.ForeColor = System.Drawing.SystemColors.ActiveCaption;
                 this.button13.BackColor = Color.FromArgb(6, 40, 68);
 
+                this.button29.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button29.BackColor = Color.FromArgb(6, 40, 68);
+
                 this.label10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
                 this.label10.BackColor = Color.FromArgb(2, 14, 25);
             }
@@ -946,193 +714,59 @@ namespace diplom
             this.ResumeLayout(false);
             this.PerformLayout();
         }
-      
+
+        private System.Windows.Forms.Button CreateButton(string name, string text, Point location, Size size, EventHandler clickHandler)
+        {
+            var button = new System.Windows.Forms.Button
+            {
+                Name = name,
+                Text = text,
+                Location = location,
+                Size = size,
+                ForeColor = System.Drawing.SystemColors.ActiveCaption,
+                BackColor = System.Drawing.Color.FromArgb(6, 40, 68),
+                FlatStyle = System.Windows.Forms.FlatStyle.Flat,
+                UseVisualStyleBackColor = true
+            };
+            button.FlatAppearance.BorderSize = 0;
+            button.Click += clickHandler;
+            this.Controls.Add(button);
+            return button;
+        }
+
+        private System.Windows.Forms.Label CreateMainLabel(string name, string text, Point location, Size size, Font font)
+        {
+            var label = new System.Windows.Forms.Label();
+            label.AutoSize = true;
+            label.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            label.Location = location;
+            label.Name = name;
+            label.Font = font;
+            label.Size = size;
+            label.BackColor = System.Drawing.Color.FromArgb(2, 14, 25);
+            label.Text = text;
+            this.Controls.Add(label);
+            return label;
+        }
+
         private void AnnualStatistics()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 
+            this.button14 = CreateButton("button14", "Статистика за Жовтень", new Point(240, 500), new Size(240, 41), this.button14_Click);
+            this.button15 = CreateButton("button15", "Статистика за Листопад", new Point(505, 500), new Size(240, 41), this.button15_Click);
+            this.button16 = CreateButton("button16", "Статистика за Грудень", new Point(770, 500), new Size(240, 41), this.button16_Click);
+            this.button17 = CreateButton("button17", "Статистика за Липень", new Point(240, 400), new Size(240, 41), this.button17_Click);
+            this.button18 = CreateButton("button18", "Статистика за Серпень", new Point(505, 400), new Size(240, 41), this.button18_Click);
+            this.button19 = CreateButton("button19", "Статистика за Вересень", new Point(770, 400), new Size(240, 41), this.button19_Click);
+            this.button20 = CreateButton("button20", "Статистика за Квітень", new Point(240, 300), new Size(240, 41), this.button20_Click);
+            this.button21 = CreateButton("button21", "Статистика за Травень", new Point(505, 300), new Size(240, 41), this.button21_Click);
+            this.button22 = CreateButton("button22", "Статистика за Червень", new Point(770, 300), new Size(240, 41), this.button22_Click);
+            this.button23 = CreateButton("button23", "Статистика за Січень", new Point(240, 200), new Size(240, 41), this.button23_Click);
+            this.button24 = CreateButton("button24", "Статистика за Лютий", new Point(505, 200), new Size(240, 41), this.button24_Click);
+            this.button25 = CreateButton("button25", "Статистика за Березень", new Point(770, 200), new Size(240, 41), this.button25_Click);
 
-            this.button14 = new System.Windows.Forms.Button();
-            this.button14.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button14.Location = new System.Drawing.Point(240, 500);
-            this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(240, 41);
-            // this.buttn11.TabIndex = 24;
-            this.button14.Text = "Статистика за Жовтень";
-            this.button14.UseVisualStyleBackColor = true;
-            this.button14.BackColor = Color.FromArgb(6, 40, 68);
-            this.button14.Click += new System.EventHandler(this.button14_Click);
-            this.button14.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button14.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button14);
-
-
-            this.button15 = new System.Windows.Forms.Button();
-            this.button15.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button15.Location = new System.Drawing.Point(505, 500);
-            this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(240, 41);
-            // this.button12.TabIndex = 24;
-            this.button15.Text = "Статистика за Листопад";
-            this.button15.UseVisualStyleBackColor = true;
-            this.button15.BackColor = Color.FromArgb(6, 40, 68);
-            this.button15.Click += new System.EventHandler(this.button15_Click);
-            this.button15.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button15.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button15);
-
-
-            this.button16 = new System.Windows.Forms.Button();
-            this.button16.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button16.Location = new System.Drawing.Point(770, 500);
-            this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(240, 41);
-            // this.button12.TabIndex = 24;
-            this.button16.Text = "Статистика за Грудень";
-            this.button16.UseVisualStyleBackColor = true;
-            this.button16.BackColor = Color.FromArgb(6, 40, 68);
-            this.button16.Click += new System.EventHandler(this.button16_Click);
-            this.button16.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button16.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button16);
-
-
-            this.button17 = new System.Windows.Forms.Button();
-            this.button17.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button17.Location = new System.Drawing.Point(240, 400);
-            this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(240, 41);
-            // this.buttn11.TabIndex = 24;
-            this.button17.Text = "Статистика за Липень";
-            this.button17.UseVisualStyleBackColor = true;
-            this.button17.BackColor = Color.FromArgb(6, 40, 68);
-            this.button17.Click += new System.EventHandler(this.button17_Click);
-            this.button17.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button17.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button17);
-
-
-            this.button18 = new System.Windows.Forms.Button();
-            this.button18.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button18.Location = new System.Drawing.Point(505, 400);
-            this.button18.Name = "button18";
-            this.button18.Size = new System.Drawing.Size(240, 41);
-            // this.button12.TabIndex = 24;
-            this.button18.Text = "Статистика за Серпень";
-            this.button18.UseVisualStyleBackColor = true;
-            this.button18.BackColor = Color.FromArgb(6, 40, 68);
-            this.button18.Click += new System.EventHandler(this.button18_Click);
-            this.button18.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button18.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button18);
-
-
-            this.button19 = new System.Windows.Forms.Button();
-            this.button19.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button19.Location = new System.Drawing.Point(770, 400);
-            this.button19.Name = "button19";
-            this.button19.Size = new System.Drawing.Size(240, 41);
-            // this.button12.TabIndex = 24;
-            this.button19.Text = "Статистика за Вересень";
-            this.button19.UseVisualStyleBackColor = true;
-            this.button19.BackColor = Color.FromArgb(6, 40, 68);
-            this.button19.Click += new System.EventHandler(this.button19_Click);
-            this.button19.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button19.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button19);
-
-
-
-            this.button20 = new System.Windows.Forms.Button();
-            this.button20.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button20.Location = new System.Drawing.Point(240, 300);
-            this.button20.Name = "button20";
-            this.button20.Size = new System.Drawing.Size(240, 41);
-            // this.buttn11.TabIndex = 24;
-            this.button20.Text = "Статистика за Квітень";
-            this.button20.UseVisualStyleBackColor = true;
-            this.button20.BackColor = Color.FromArgb(6, 40, 68);
-            this.button20.Click += new System.EventHandler(this.button20_Click);
-            this.button20.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button20.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button20);
-
-
-            this.button21 = new System.Windows.Forms.Button();
-            this.button21.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button21.Location = new System.Drawing.Point(505, 300);
-            this.button21.Name = "button21";
-            this.button21.Size = new System.Drawing.Size(240, 41);
-            // this.button12.TabIndex = 24;
-            this.button21.Text = "Статистика за Травень";
-            this.button21.UseVisualStyleBackColor = true;
-            this.button21.BackColor = Color.FromArgb(6, 40, 68);
-            this.button21.Click += new System.EventHandler(this.button21_Click);
-            this.button21.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button21.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button21);
-
-
-            this.button22 = new System.Windows.Forms.Button();
-            this.button22.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button22.Location = new System.Drawing.Point(770, 300);
-            this.button22.Name = "button22";
-            this.button22.Size = new System.Drawing.Size(240, 41);
-            // this.button12.TabIndex = 24;
-            this.button22.Text = "Статистика за Червень";
-            this.button22.UseVisualStyleBackColor = true;
-            this.button22.BackColor = Color.FromArgb(6, 40, 68);
-            this.button22.Click += new System.EventHandler(this.button22_Click);
-            this.button22.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button22.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button22);
-
-
-            this.button23 = new System.Windows.Forms.Button();
-            this.button23.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button23.Location = new System.Drawing.Point(240, 200);
-            this.button23.Name = "button23";
-            this.button23.Size = new System.Drawing.Size(240, 41);
-            // this.buttn11.TabIndex = 24;
-            this.button23.Text = "Статистика за Січень";
-            this.button23.UseVisualStyleBackColor = true;
-            this.button23.BackColor = Color.FromArgb(6, 40, 68);
-            this.button23.Click += new System.EventHandler(this.button23_Click);
-            this.button23.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button23.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button23);
-
-
-            this.button24 = new System.Windows.Forms.Button();
-            this.button24.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button24.Location = new System.Drawing.Point(505, 200);
-            this.button24.Name = "button24";
-            this.button24.Size = new System.Drawing.Size(240, 41);
-            // this.button12.TabIndex = 24;
-            this.button24.Text = "Статистика за Лютий";
-            this.button24.UseVisualStyleBackColor = true;
-            this.button24.BackColor = Color.FromArgb(6, 40, 68);
-            this.button24.Click += new System.EventHandler(this.button24_Click);
-            this.button24.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button24.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button24);
-
-
-            this.button25 = new System.Windows.Forms.Button();
-            this.button25.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button25.Location = new System.Drawing.Point(770, 200);
-            this.button25.Name = "button25";
-            this.button25.Size = new System.Drawing.Size(240, 41);
-            // this.button12.TabIndex = 24;
-            this.button25.Text = "Статистика за Березень";
-            this.button25.UseVisualStyleBackColor = true;
-            this.button25.BackColor = Color.FromArgb(6, 40, 68);
-            this.button25.Click += new System.EventHandler(this.button25_Click);
-            this.button25.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button25.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button25);
-
-            if(CheckBox1Active == true)
+            if (CheckBox1Active == true)
             {
                 this.button14.ForeColor = System.Drawing.SystemColors.ActiveCaption;
                 this.button15.ForeColor = System.Drawing.SystemColors.ActiveCaption;
@@ -1198,20 +832,9 @@ namespace diplom
         private void ExitButton()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.button26 = new System.Windows.Forms.Button();
-            this.button26.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button26.Location = new System.Drawing.Point(505, 650);
-            this.button26.Name = "button26";
-            this.button26.Size = new System.Drawing.Size(240, 41);
-            // this.button12.TabIndex = 24;
-            this.button26.Text = "Повернутися назад";
-            this.button26.UseVisualStyleBackColor = true;
-            this.button26.BackColor = Color.FromArgb(6, 40, 68);
-            this.button26.Click += new System.EventHandler(this.button26_Click);
-            this.button26.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button26.FlatAppearance.BorderSize = 0;
-            this.Controls.Add(this.button26);
-            this.ResumeLayout(false);
+
+            this.button26 = CreateButton("button26", "Повернутися назад", new Point(505, 650), new Size(240, 41), this.button26_Click);
+
             this.PerformLayout();
 
             if (CheckBox1Active == true)
@@ -1715,6 +1338,78 @@ namespace diplom
             this.PerformLayout();
         }
 
+        private void BrowserInfo()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            this.pictureBox9 = new System.Windows.Forms.PictureBox();
+            this.pictureBox10 = new System.Windows.Forms.PictureBox();
+            this.pictureBox11 = new System.Windows.Forms.PictureBox();
+            this.pictureBox12 = new System.Windows.Forms.PictureBox();
+            this.pictureBox13 = new System.Windows.Forms.PictureBox();
+            this.pictureBox14 = new System.Windows.Forms.PictureBox();
+            this.pictureBox15 = new System.Windows.Forms.PictureBox();
+            this.pictureBox16 = new System.Windows.Forms.PictureBox();
+            this.pictureBox17 = new System.Windows.Forms.PictureBox();
+            this.pictureBox18 = new System.Windows.Forms.PictureBox();
+            // Створюємо основну мітку
+            this.label10 = CreateMainLabel("label10", "label10", new Point(410, 50), new Size(180, 180), new Font("Arial", 16, FontStyle.Regular));
+            var commonBackColor = Color.FromArgb(6, 40, 68);
+
+            // Налаштовуємо PictureBox з фоновим зображенням
+           // this.ConfigurePictureBox(pictureBox2, new Point(338, 394), new Size(515, 41), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox3, new Point(338, 441), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox3.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox4, new Point(338, 488), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox4.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox5, new Point(338, 535), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox5.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox6, new Point(338, 582), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox6.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox7, new Point(338, 629), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox3.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox8, new Point(338, 676), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox4.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox9, new Point(338, 723), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox5.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox10, new Point(338, 770), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox6.BackgroundImage"), backColor: commonBackColor);
+
+            // Налаштовуємо Label з зображенням
+            this.label3 = ConfigureLabel(new Point(360, 150), new Size(pictureBox3.Width, pictureBox3.Height), "label3", image: (Image)resources.GetObject("label3.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label4 = ConfigureLabel(new Point(360, 200), new Size(pictureBox4.Width, pictureBox4.Height), "label4", image: (Image)resources.GetObject("label4.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label5 = ConfigureLabel(new Point(360, 250), new Size(pictureBox5.Width, pictureBox5.Height), "label5", image: (Image)resources.GetObject("label5.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label6 = ConfigureLabel(new Point(360, 300), new Size(pictureBox6.Width, pictureBox6.Height), "label6", image: (Image)resources.GetObject("label6.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label7 = ConfigureLabel(new Point(360, 350), new Size(pictureBox7.Width, pictureBox7.Height), "label7", image: (Image)resources.GetObject("label7.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label8 = ConfigureLabel(new Point(360, 400), new Size(pictureBox8.Width, pictureBox8.Height), "label8", image: (Image)resources.GetObject("label8.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label9 = ConfigureLabel(new Point(360, 450), new Size(pictureBox9.Width, pictureBox9.Height), "label9", image: (Image)resources.GetObject("label9.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label11 = ConfigureLabel(new Point(360, 500), new Size(pictureBox10.Width, pictureBox10.Height), "label11", image: (Image)resources.GetObject("label11.Image"), backColor: Color.FromArgb(6, 40, 68));
+
+            this.ConfigurePictureBox(pictureBox11, new Point(338, 441), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox11.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox12, new Point(338, 488), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox12.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox13, new Point(338, 535), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox13.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox14, new Point(338, 582), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox14.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox15, new Point(338, 629), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox15.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox16, new Point(338, 676), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox16.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox17, new Point(338, 723), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox17.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox18, new Point(338, 770), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox18.BackgroundImage"), backColor: commonBackColor);
+
+            // Налаштовуємо Label з зображенням
+            this.label12 = ConfigureLabel(new Point(630, 150), new Size(pictureBox11.Width, pictureBox11.Height), "label12", image: (Image)resources.GetObject("label12.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label13 = ConfigureLabel(new Point(630, 200), new Size(pictureBox12.Width, pictureBox12.Height), "label13", image: (Image)resources.GetObject("label13.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label14 = ConfigureLabel(new Point(630, 250), new Size(pictureBox13.Width, pictureBox13.Height), "label14", image: (Image)resources.GetObject("label14.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label15 = ConfigureLabel(new Point(630, 300), new Size(pictureBox14.Width, pictureBox14.Height), "label15", image: (Image)resources.GetObject("label15.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label16 = ConfigureLabel(new Point(630, 350), new Size(pictureBox15.Width, pictureBox15.Height), "label16", image: (Image)resources.GetObject("label16.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label17 = ConfigureLabel(new Point(630, 400), new Size(pictureBox16.Width, pictureBox16.Height), "label17", image: (Image)resources.GetObject("label17.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label18 = ConfigureLabel(new Point(630, 450), new Size(pictureBox17.Width, pictureBox17.Height), "label18", image: (Image)resources.GetObject("label18.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label19 = ConfigureLabel(new Point(630, 500), new Size(pictureBox18.Width, pictureBox18.Height), "label19", image: (Image)resources.GetObject("label19.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+
+            this.button30 = CreateButton("button30", "-", new Point(900, 150), new Size(50, 41), this.button30_Click);
+            this.button31 = CreateButton("button31", "-", new Point(900, 200), new Size(50, 41), this.button31_Click);
+            this.button32 = CreateButton("button32", "-", new Point(900, 250), new Size(50, 41), this.button32_Click);
+            this.button33 = CreateButton("button33", "-", new Point(900, 300), new Size(50, 41), this.button33_Click);
+            this.button34 = CreateButton("button34", "-", new Point(900, 350), new Size(50, 41), this.button34_Click);
+            this.button35 = CreateButton("button35", "-", new Point(900, 400), new Size(50, 41), this.button35_Click);
+            this.button36 = CreateButton("button36", "-", new Point(900, 450), new Size(50, 41), this.button36_Click);
+            this.button37 = CreateButton("button37", "-", new Point(900, 500), new Size(50, 41), this.button37_Click);
+
+            this.button38 = CreateButton("button38", "Вверх", new Point(300, 150), new Size(50, 41), this.button38_Click);
+            this.button39 = CreateButton("button39", "Вниз", new Point(300, 500), new Size(50, 41), this.button39_Click);
+        }
+
+
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
@@ -1723,6 +1418,17 @@ namespace diplom
         private System.Windows.Forms.PictureBox pictureBox6;
         private System.Windows.Forms.PictureBox pictureBox7;
         private System.Windows.Forms.PictureBox pictureBox8;
+        private System.Windows.Forms.PictureBox pictureBox9;
+        private System.Windows.Forms.PictureBox pictureBox10;
+
+        private System.Windows.Forms.PictureBox pictureBox11;
+        private System.Windows.Forms.PictureBox pictureBox12;
+        private System.Windows.Forms.PictureBox pictureBox13;
+        private System.Windows.Forms.PictureBox pictureBox14;
+        private System.Windows.Forms.PictureBox pictureBox15;
+        private System.Windows.Forms.PictureBox pictureBox16;
+        private System.Windows.Forms.PictureBox pictureBox17;
+        private System.Windows.Forms.PictureBox pictureBox18;
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
@@ -1734,6 +1440,18 @@ namespace diplom
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
+        //налаштування програми
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
+        //
+        //налаштування програми
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label19;
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
@@ -1747,18 +1465,6 @@ namespace diplom
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button13;
-        private System.Windows.Forms.Button button26;
-        private System.Windows.Forms.Button button27;
-        private System.Windows.Forms.Button button28;
-
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Panel panel6;
-
-
         //Для річної статистики
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.Button button15;
@@ -1773,17 +1479,31 @@ namespace diplom
         private System.Windows.Forms.Button button24;
         private System.Windows.Forms.Button button25;
 
-        //налаштування програми
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Button button26;
+        private System.Windows.Forms.Button button27;
+        private System.Windows.Forms.Button button28;
+        private System.Windows.Forms.Button button29;
+
+        private System.Windows.Forms.Button button30;
+        private System.Windows.Forms.Button button31;
+        private System.Windows.Forms.Button button32;
+        private System.Windows.Forms.Button button33;
+        private System.Windows.Forms.Button button34;
+        private System.Windows.Forms.Button button35;
+        private System.Windows.Forms.Button button36;
+        private System.Windows.Forms.Button button37;
+        private System.Windows.Forms.Button button38;
+        private System.Windows.Forms.Button button39;
+        private System.Windows.Forms.Button button40;
+        private System.Windows.Forms.Button button41;
+
+
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel panel6;
 
         public System.Windows.Forms.CheckBox checkBox1;
         public System.Windows.Forms.CheckBox checkBox2;

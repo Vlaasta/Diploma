@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System.IO;
 using System.Collections.Generic;
+using System.Globalization;
 using Newtonsoft.Json;
 using System.Linq;
 
@@ -28,6 +29,13 @@ namespace diplom
         public static bool CheckBox5Active;
         public static bool CheckBox6Active;
         public static bool CheckBox7Active;
+
+        private bool isBrowserStats = false; // Початково: показує браузерну статистику
+
+        private string typeOfStatictics = "за проєктами";
+
+        private int currentOffset = 0;
+        private const int visibleItemsCount = 8; // label3–9 + label11 = 8
 
         private bool isPersonChoose;
 
@@ -226,24 +234,36 @@ namespace diplom
 
             var freshData = statistic.LoadTimerData();
 
-            // Фільтрація даних для поточного тижня
-            var filteredData = statistic.FilterDataForCurrentWeek(freshData);
+            // Універсальна фільтрація для поточного тижня
+            var filteredData = statistic.FilterDataForCurrentWeek(
+                freshData,
+                item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)
+            );
 
-            // Заповнення пропущених днів (якщо потрібно)
+            // Заповнення пропущених днів
             var (startOfWeek, endOfWeek) = statistic.GetCurrentWeekRange();
-            var filledData = statistic.FillMissingDays(filteredData, startOfWeek, endOfWeek);
+            var filledData = statistic.FillMissingDays(
+                filteredData,
+                startOfWeek,
+                endOfWeek
+            );
 
-            // Отримання точок X і Y
-            var xPoints = statistic.GetXPoints(filledData);
-            var yPoints = statistic.GetYPoints(filledData);
+            // Отримання X і Y точок з універсальними функціями
+            var xPoints = filledData
+                .Select(item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture))
+                .ToList();
+
+            var yPoints = filledData
+                .Select(item => (int)TimeSpan.Parse(item.Time).TotalSeconds)
+                .ToList();
 
             // Побудова графіка
             buildChart(xPoints, yPoints);
 
             // Обчислення загального часу
-            string totalTime = statistic.CalculateTotalTime(filledData);
+            string totalTime = statistic.CalculateTotalTime(filledData, "Time");
 
-            // Виведення у Label9
+            // Виведення результатів
             label9.Text = "Усього витрачено на роботу:  " + totalTime;
             label10.Text = "Статистика за останній тиждень";
         }
@@ -257,40 +277,184 @@ namespace diplom
             InitializeComponentMain();
             StatisticsMainMenu();
 
-            // Фільтрація даних залежно від стану
-            var freshData = statistic.LoadTimerData(); // Завантажуємо актуальні дані з JSON
+            Console.WriteLine(typeOfStatictics);
 
-            var filteredData = currentState
-                ? statistic.FilterDataForPreviousWeek(freshData)
-                : statistic.FilterDataForCurrentWeek(freshData);
+            if (typeOfStatictics == "за проєктами")
+            {
+                // Фільтрація даних залежно від стану
+                var freshData = statistic.LoadTimerData(); // Завантажуємо актуальні дані з JSON
 
-            var (startOfWeek, endOfWeek) = currentState
-                ? statistic.GetPreviousWeekRange()
-                : statistic.GetCurrentWeekRange();
+                // Отримуємо діапазон дат залежно від стану
+                var (startOfWeek, endOfWeek) = currentState
+                    ? statistic.GetPreviousWeekRange()
+                    : statistic.GetCurrentWeekRange();
 
-            var filledData = statistic.FillMissingDays(filteredData, startOfWeek, endOfWeek);
+                // Фільтрація універсальним методом
+                var filteredData = statistic.FilterDataForDateRange(
+                    freshData,
+                    startOfWeek,
+                    endOfWeek,
+                    item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                );
 
-            // Побудова графіка
-            var xPoints = statistic.GetXPoints(filledData);
-            var yPoints = statistic.GetYPoints(filledData);
-            buildChart(xPoints, yPoints);
+                // Заповнення відсутніх днів
+                var filledData = statistic.FillMissingDays(filteredData, startOfWeek, endOfWeek);
 
-            // Обчислення загального часу
-            string totalTime = statistic.CalculateTotalTime(filledData);
+                // Побудова графіка
+                var xPoints = filledData
+                    .Select(item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture))
+                    .ToList();
 
-            // Виведення в Label
-            label9.Text = "Усього витрачено на роботу: " + totalTime;
-            label10.Text = currentState
-                ? "Статистика за попередній тиждень"
-                : "Статистика за останній тиждень";
+                var yPoints = filledData
+                    .Select(item => (int)TimeSpan.Parse(item.Time).TotalSeconds)
+                    .ToList();
 
-            // Оновлення тексту кнопки
-            button11.Text = currentState
-                ? "Статистика за останній тиждень"
-                : "Статистика за попередній тиждень";
+                buildChart(xPoints, yPoints);
 
-            // Змінюємо стан для наступного натискання
-            isPreviousWeek = !currentState;
+                // Обчислення загального часу
+                string totalTime = statistic.CalculateTotalTime(filteredData, "Time");
+
+                // Виведення в Label
+                label9.Text = "Усього витрачено на роботу: " + totalTime;
+                label10.Text = currentState
+                    ? "Статистика за попередній тиждень"
+                    : "Статистика за останній тиждень";
+
+                // Оновлення тексту кнопки
+                button11.Text = currentState
+                    ? "Статистика за останній тиждень"
+                    : "Статистика за попередній тиждень";
+
+                // Змінюємо стан для наступного натискання
+                isPreviousWeek = !currentState;
+            }
+
+            if (typeOfStatictics == "за браузером")
+            {
+                // Завантажуємо всі дані з JSON
+                var allData = statistic.LoadUrlData();
+
+                // Визначаємо діапазон дат
+                var (startOfWeek, endOfWeek) = currentState
+                    ? statistic.GetPreviousWeekRange()
+                    : statistic.GetCurrentWeekRange();
+
+                // Фільтрація за тижнем
+                var freshData = allData
+                    .Where(d => d.Timestamp.Date >= startOfWeek && d.Timestamp.Date <= endOfWeek)
+                    .ToList();
+
+                // Групуємо по датах
+                var timerDataList = freshData
+                    .GroupBy(d => d.Timestamp.Date)
+                    .Select(g => new TimerData
+                    {
+                        Date = g.Key.ToString("dd.MM.yyyy"),
+                        Time = TimeSpan.FromSeconds(g.Sum(d => d.TimeSpent)).ToString()
+                    })
+                    .ToList();
+
+                // Далі все як було:
+                var filteredData = statistic.FilterDataForDateRange(
+                    timerDataList,
+                    startOfWeek,
+                    endOfWeek,
+                    item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                );
+
+                var filledData = statistic.FillMissingDays(filteredData, startOfWeek, endOfWeek);
+
+                var xPoints = filledData
+                    .Select(item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture))
+                    .ToList();
+
+                var yPoints = filledData
+                    .Select(item => (int)TimeSpan.Parse(item.Time).TotalSeconds)
+                    .ToList();
+
+                buildChart(xPoints, yPoints);
+
+                string totalTime = statistic.CalculateTotalTime(filteredData, "Time");
+
+                label9.Text = "Усього витрачено на роботу: " + totalTime;
+                label10.Text = currentState
+                    ? "Статистика за попередній тиждень я лох"
+                    : "Статистика за останній тиждень я лох";
+
+                button11.Text = currentState
+                    ? "Статистика за останній тиждень"
+                    : "Статистика за попередній тиждень";
+
+                isPreviousWeek = !currentState;
+            }
+            if (typeOfStatictics == "за браузером та проєктами")
+            {
+                // 1. Завантажуємо всі дані з JSON
+                var urlData = statistic.LoadUrlData();
+                var timerData = statistic.LoadTimerData();
+
+                // 2. Визначаємо діапазон
+                var (startOfWeek, endOfWeek) = currentState
+                    ? statistic.GetPreviousWeekRange()
+                    : statistic.GetCurrentWeekRange();
+
+                // 3. Фільтруємо обидва джерела
+                var filteredUrlData = statistic.FilterDataForDateRange(
+                    urlData,
+                    startOfWeek,
+                    endOfWeek,
+                    item => item.Timestamp.Date
+                );
+
+                var filteredTimerData = statistic.FilterDataForDateRange(
+                    timerData,
+                    startOfWeek,
+                    endOfWeek,
+                    item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                );
+
+                // 4. Обʼєднуємо по датах
+                var combined = filteredUrlData
+                    .Select(d => new
+                    {
+                        Date = d.Timestamp.Date,
+                        Seconds = d.TimeSpent
+                    })
+                    .Concat(filteredTimerData.Select(d => new
+                    {
+                        Date = DateTime.ParseExact(d.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                        Seconds = (int)TimeSpan.Parse(d.Time).TotalSeconds
+                    }))
+                    .GroupBy(x => x.Date)
+                    .Select(g => new TimerData
+                    {
+                        Date = g.Key.ToString("dd.MM.yyyy"),
+                        Time = TimeSpan.FromSeconds(g.Sum(x => x.Seconds)).ToString()
+                    })
+                    .ToList();
+
+                // 5. Заповнення пропущених днів
+                var filledData = statistic.FillMissingDays(combined, startOfWeek, endOfWeek);
+
+                // 6. Побудова графіка
+                var xPoints = statistic.GetXPoints(filledData);
+                var yPoints = statistic.GetYPoints(filledData);
+                buildChart(xPoints, yPoints);
+
+                // 7. Результати
+                string totalTime = statistic.CalculateTotalTime(filledData, "Time");
+
+                label9.Text = "Усього витрачено на роботу: " + totalTime;
+                label10.Text = currentState
+                    ? "Статистика за попередній тиждень"
+                    : "Статистика за останній тиждень";
+
+                button11.Text = currentState
+                    ? "Статистика за останній тиждень"
+                    : "Статистика за попередній тиждень";
+
+                isPreviousWeek = !currentState;
+            }
         } //кнопка попередній тиждень останній тиждень
 
         private void button12_Click(object sender, EventArgs e)
@@ -299,27 +463,118 @@ namespace diplom
             InitializeComponentMain();
             StatisticsMainMenu();
 
-            var freshData = statistic.LoadTimerData(); // Завантажуємо актуальні дані з JSON
-            // Фільтрація даних для попереднього тижня
-            var filteredData = statistic.FilterDataForLastMonth(freshData);
+            if (typeOfStatictics == "за проєктами")
+            {
+                var freshData = statistic.LoadTimerData(); // Завантажуємо актуальні дані з JSON
+                                                           // Фільтрація даних для попереднього тижня
+                var filteredData = statistic.FilterDataForLastMonth(freshData, item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture));
 
-            // Заповнення пропущених днів (якщо потрібно)
-            var (startOfLastMonth, endOfLastMonth) = statistic.GetLastMonthRange();
-            var filledData = statistic.FillMissingDays(filteredData, startOfLastMonth, endOfLastMonth);
+                // Заповнення пропущених днів (якщо потрібно)
+                var (startOfLastMonth, endOfLastMonth) = statistic.GetLastMonthRange();
+                var filledData = statistic.FillMissingDays(filteredData, startOfLastMonth, endOfLastMonth);
 
-            // Отримання точок X і Y
-            var xPoints = statistic.GetXPoints(filledData);
-            var yPoints = statistic.GetYPoints(filledData);
+                // Отримання точок X і Y
+                var xPoints = statistic.GetXPoints(filledData);
+                var yPoints = statistic.GetYPoints(filledData);
 
-            // Побудова графіка
-            buildChart(xPoints, yPoints);
+                // Побудова графіка
+                buildChart(xPoints, yPoints);
 
-            string totalTime = statistic.CalculateTotalTime(filledData);
+                string totalTime = statistic.CalculateTotalTime(filteredData, "Time");
 
-            // Виведення у Label9
-            label9.Text = "Усього витрачено на роботу:  " + totalTime;
-            label10.Text = "Статистика за останній місяць";
+                // Виведення у Label9
+                label9.Text = "Усього витрачено на роботу:  " + totalTime;
+                label10.Text = "Статистика за останній місяць";
+            }
+            if (typeOfStatictics == "за браузером")
+            {
+                var freshData = statistic.LoadUrlData(); // Завантажуємо актуальні дані з JSON
+                                                        
+                var result = statistic.FilterDataForLastMonth(freshData, item => item.Timestamp.Date);
 
+                var timerDataList = result
+                    .GroupBy(item => item.Timestamp.Date)
+                    .Select(g => new TimerData
+                    {
+                        Date = g.Key.ToString("dd.MM.yyyy"),
+                        Time = TimeSpan.FromSeconds(g.Sum(item => item.TimeSpent)).ToString()
+                    })
+                    .ToList();
+
+                // Крок 2: Заповнюємо пропущені дні
+                var (startOfLastMonth, endOfLastMonth) = statistic.GetLastMonthRange();
+                var filledData = statistic.FillMissingDays(timerDataList, startOfLastMonth, endOfLastMonth);
+
+                // Отримання точок X і Y
+                var xPoints = statistic.GetXPoints(filledData);
+                var yPoints = statistic.GetYPoints(filledData);
+
+                // Побудова графіка
+                buildChart(xPoints, yPoints);
+
+                string totalTime = statistic.CalculateTotalTime(timerDataList, "Time");
+
+                // Виведення у Label9
+                label9.Text = "Усього витрачено на роботу:  " + totalTime;
+                label10.Text = "Статистика за останній місяць";
+            }
+            if (typeOfStatictics == "за браузером та проєктами")
+            {
+                // 1. Завантаження з обох джерел
+                var urlData = statistic.LoadUrlData();
+                var timerData = statistic.LoadTimerData();
+
+                // 2. Діапазон останнього місяця
+                var (startOfLastMonth, endOfLastMonth) = statistic.GetLastMonthRange();
+
+                // 3. Фільтрація обох джерел
+                var filteredUrlData = statistic.FilterDataForDateRange(
+                    urlData,
+                    startOfLastMonth,
+                    endOfLastMonth,
+                    item => item.Timestamp.Date
+                );
+
+                var filteredTimerData = statistic.FilterDataForDateRange(
+                    timerData,
+                    startOfLastMonth,
+                    endOfLastMonth,
+                    item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                );
+
+                // 4. Об'єднання в TimerData
+                var combined = filteredUrlData
+                    .Select(d => new
+                    {
+                        Date = d.Timestamp.Date,
+                        Seconds = d.TimeSpent
+                    })
+                    .Concat(filteredTimerData.Select(d => new
+                    {
+                        Date = DateTime.ParseExact(d.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                        Seconds = (int)TimeSpan.Parse(d.Time).TotalSeconds
+                    }))
+                    .GroupBy(x => x.Date)
+                    .Select(g => new TimerData
+                    {
+                        Date = g.Key.ToString("dd.MM.yyyy"),
+                        Time = TimeSpan.FromSeconds(g.Sum(x => x.Seconds)).ToString()
+                    })
+                    .ToList();
+
+                // 5. Заповнення пропущених днів
+                var filledData = statistic.FillMissingDays(combined, startOfLastMonth, endOfLastMonth);
+
+                // 6. Побудова графіка
+                var xPoints = statistic.GetXPoints(filledData);
+                var yPoints = statistic.GetYPoints(filledData);
+                buildChart(xPoints, yPoints);
+
+                // 7. Загальний час
+                string totalTime = statistic.CalculateTotalTime(filledData, "Time");
+                label9.Text = "Усього витрачено на роботу:  " + totalTime;
+                label10.Text = "Статистика за останній місяць (обʼєднана)";
+            }
         } //графік для попереднього тижня
 
         private void button6_Click(object sender, EventArgs e)
@@ -718,6 +973,288 @@ namespace diplom
             ExitButton();
         }
 
+        private void button29_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+
+            BrowserInfo();
+            label10.Text = "Статистичні дані про активність в браузері";
+
+            LoadBrowserDataIntoLabels();
+        }
+
+        private void LoadBrowserDataIntoLabels()
+        {
+            string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
+            if (!File.Exists(filePath)) return;
+
+            string json = File.ReadAllText(filePath);
+            List<UrlData> records = JsonConvert.DeserializeObject<List<UrlData>>(json);
+
+            // Обрізаємо записи згідно поточного offset
+            var visibleRecords = records.Skip(currentOffset).Take(visibleItemsCount).ToList();
+
+            // Масиви лейблів
+            Label[] urlLabels = { label3, label4, label5, label6, label7, label8, label9, label11 };
+            Label[] titleLabels = { label12, label13, label14, label15, label16, label17, label18, label19 };
+
+            for (int i = 0; i < urlLabels.Length; i++)
+            {
+                if (i < visibleRecords.Count)
+                {
+                    urlLabels[i].Text = visibleRecords[i].Url;
+                    titleLabels[i].Text = visibleRecords[i].PageTitle;
+                }
+                else
+                {
+                    urlLabels[i].Text = "";
+                    titleLabels[i].Text = "";
+                }
+            }
+
+            // Кнопка "вниз" зникає, якщо останній елемент на екрані — останній у файлі
+            button39.Visible = currentOffset + visibleItemsCount < records.Count;
+
+            // Кнопка "вгору" зникає, якщо ми на початку
+            button38.Visible = currentOffset > 0;
+        }
+
+        private void DeleteRecordAndRefreshLabels(int indexOnPage)
+        {
+            string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
+
+            if (!File.Exists(filePath))
+            {
+                MessageBox.Show("Файл не знайдено.");
+                return;
+            }
+
+            string json = File.ReadAllText(filePath);
+            List<UrlData> records = JsonConvert.DeserializeObject<List<UrlData>>(json);
+
+            int actualIndex = currentOffset + indexOnPage; // ВАЖЛИВО: зсув
+
+            if (actualIndex < 0 || actualIndex >= records.Count)
+            {
+                MessageBox.Show("Недійсний індекс.");
+                return;
+            }
+
+            records.RemoveAt(actualIndex);
+
+            // Якщо після видалення ми вийшли за межу, зменшуємо offset
+            if (currentOffset > 0 && currentOffset >= records.Count - visibleItemsCount + 1)
+            {
+                currentOffset--;
+            }
+
+            string updatedJson = JsonConvert.SerializeObject(records, Formatting.Indented);
+            File.WriteAllText(filePath, updatedJson);
+
+            LoadBrowserDataIntoLabels();
+        }
+
+        private void button30_Click(object sender, EventArgs e)
+        {
+            DeleteRecordAndRefreshLabels(0);
+        }
+        private void button31_Click(object sender, EventArgs e)
+        {
+            DeleteRecordAndRefreshLabels(1);
+        }
+        private void button32_Click(object sender, EventArgs e)
+        {
+            DeleteRecordAndRefreshLabels(2);
+        }
+        private void button33_Click(object sender, EventArgs e)
+        {
+            DeleteRecordAndRefreshLabels(3);
+        }
+        private void button34_Click(object sender, EventArgs e)
+        {
+            DeleteRecordAndRefreshLabels(4);
+        }
+        private void button35_Click(object sender, EventArgs e)
+        {
+            DeleteRecordAndRefreshLabels(5);
+        }
+        private void button36_Click(object sender, EventArgs e)
+        {
+            DeleteRecordAndRefreshLabels(6);
+        }
+        private void button37_Click(object sender, EventArgs e)
+        {
+            DeleteRecordAndRefreshLabels(7);
+        }
+        private void button38_Click(object sender, EventArgs e)
+        {
+            if (currentOffset > 0)
+            {
+                currentOffset--;
+                LoadBrowserDataIntoLabels();
+            }
+        }
+        private void button39_Click(object sender, EventArgs e)
+        {
+            string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
+            if (!File.Exists(filePath)) return;
+
+            string json = File.ReadAllText(filePath);
+            List<UrlData> records = JsonConvert.DeserializeObject<List<UrlData>>(json);
+
+            if (currentOffset + visibleItemsCount < records.Count)
+            {
+                currentOffset++;
+                LoadBrowserDataIntoLabels();
+            }
+        }
+        private void button40_Click(object sender, EventArgs e)
+        {
+            // Змінюємо стан тільки при натисканні саме цієї кнопки
+            isBrowserStats = !isBrowserStats;
+
+            // Очищення та ініціалізація
+            this.Controls.Clear();
+            InitializeComponentMain();
+            StatisticsMainMenu();
+
+            if (isBrowserStats)
+            {
+                typeOfStatictics = "за браузером";
+
+                string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
+                var data = statistic.LoadBrowserDataForCurrentWeek(filePath);
+
+                var timerDataList = data
+                    .GroupBy(d => d.Timestamp.Date)
+                    .Select(g => new TimerData
+                    {
+                        Date = g.Key.ToString("dd.MM.yyyy"),
+                        Time = TimeSpan.FromSeconds(g.Sum(d => d.TimeSpent)).ToString()
+                    })
+                    .ToList();
+
+                var (startOfWeek, endOfWeek) = statistic.GetCurrentWeekRange();
+
+                var filteredData = statistic.FilterDataForDateRange(
+                    timerDataList, startOfWeek, endOfWeek,
+                    item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                );
+
+                var filledData = statistic.FillMissingDays(filteredData, startOfWeek, endOfWeek);
+
+                var xPoints = filledData
+                    .Select(d => DateTime.ParseExact(d.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture))
+                    .ToList();
+
+                var yPoints = filledData
+                    .Select(d => (int)TimeSpan.Parse(d.Time).TotalSeconds)
+                    .ToList();
+
+                buildChart(xPoints, yPoints);
+
+                string totalTime = statistic.CalculateTotalTime(data, "TimeSpent");
+                label9.Text = "Усього витрачено на роботу: " + totalTime;
+                label10.Text = "Статистика за поточний тиждень";
+            }
+            else
+            {
+                typeOfStatictics = "за проєктами";
+
+                var freshData = statistic.LoadTimerData();
+
+                var filteredData = statistic.FilterDataForCurrentWeek(
+                    freshData,
+                    item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                );
+
+                var (startOfWeek, endOfWeek) = statistic.GetCurrentWeekRange();
+                var filledData = statistic.FillMissingDays(filteredData, startOfWeek, endOfWeek);
+
+                var xPoints = filledData
+                    .Select(item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture))
+                    .ToList();
+
+                var yPoints = filledData
+                    .Select(item => (int)TimeSpan.Parse(item.Time).TotalSeconds)
+                    .ToList();
+
+                buildChart(xPoints, yPoints);
+
+                string totalTime = statistic.CalculateTotalTime(filledData, "Time");
+                label9.Text = "Усього витрачено на роботу: " + totalTime;
+                label10.Text = "Статистика за останній тиждень";
+            }
+        }
+
+        private void button41_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponentMain();
+            StatisticsMainMenu();
+
+            typeOfStatictics = "за браузером та проєктами";
+
+            // 1. Завантаження даних
+            var urlData = statistic.LoadUrlData();
+            var timerData = statistic.LoadTimerData();
+
+            // 2. Діапазон поточного тижня
+            var (startOfWeek, endOfWeek) = statistic.GetCurrentWeekRange();
+            Console.WriteLine($"Період: {startOfWeek:dd.MM.yyyy} — {endOfWeek:dd.MM.yyyy}");
+
+            // 3. Фільтрація
+            var filteredUrlData = statistic.FilterDataForDateRange(
+                urlData,
+                startOfWeek,
+                endOfWeek,
+                item => item.Timestamp.Date
+            );
+
+            var filteredTimerData = statistic.FilterDataForDateRange(
+                timerData,
+                startOfWeek,
+                endOfWeek,
+                item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)
+            );
+
+            // 4. Обʼєднання по датах
+            var combined = filteredUrlData
+                .Select(d => new
+                {
+                    Date = d.Timestamp.Date,
+                    Seconds = d.TimeSpent
+                })
+                .Concat(filteredTimerData.Select(d => new
+                {
+                    Date = DateTime.ParseExact(d.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                    Seconds = (int)TimeSpan.Parse(d.Time).TotalSeconds
+                }))
+                .GroupBy(x => x.Date)
+                .Select(g => new TimerData
+                {
+                    Date = g.Key.ToString("dd.MM.yyyy"),
+                    Time = TimeSpan.FromSeconds(g.Sum(x => x.Seconds)).ToString()
+                })
+                .ToList();
+
+            // 5. Заповнення пропущених днів поточного тижня
+            var filledData = statistic.FillMissingDays(combined, startOfWeek, endOfWeek);
+
+            // 6. Побудова графіка
+            var xPoints = statistic.GetXPoints(filledData);
+            var yPoints = statistic.GetYPoints(filledData);
+            buildChart(xPoints, yPoints);
+
+            // 7. Вивід статистики
+            string totalTime = statistic.CalculateTotalTime(filledData, "Time");
+            label9.Text = "Усього витрачено на роботу:  " + totalTime;
+            label10.Text = "Статистика за поточний тиждень (обʼєднана)";
+
+        }
+
+
         public void BuildMonthlyChart(int year, int month)
         {
             var freshData = statistic.LoadTimerData(); // Завантажуємо актуальні дані з JSON
@@ -739,7 +1276,7 @@ namespace diplom
             buildChart(xPoints, yPoints);
 
             // Обчислення загального часу
-            string totalTime = statistic.CalculateTotalTime(filledData);
+            string totalTime = statistic.CalculateTotalTime(filteredData, "Time");
 
             // Виведення тексту в Label
             label9.Text = $"Усього витрачено на роботу: {totalTime}";

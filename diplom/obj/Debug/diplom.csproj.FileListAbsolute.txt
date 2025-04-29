@@ -266,3 +266,9 @@ E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\Newtonsoft.Json.Bson
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\System.Collections.Immutable.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\System.Reflection.Metadata.xml
 E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\System.Security.Cryptography.Xml.xml
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\DocumentFormat.OpenXml.dll
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\DocumentFormat.OpenXml.Framework.dll
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\DocumentFormat.OpenXml.xml
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\bin\Debug\DocumentFormat.OpenXml.Framework.xml
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\obj\Debug\diplom.csproj.Fody.CopyLocal.cache
+E:\4 KURS\Диплом\DiplomaRepo\Diploma\diplom\obj\Debug\diplom.csproj.Fody.RuntimeCopyLocal.cache

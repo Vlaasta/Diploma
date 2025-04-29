@@ -11,6 +11,7 @@ namespace diplom
     public class Statistic : Form
     {
         private string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\timerAmounts.json";
+        private string filePath2 = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
 
         // Метод для зчитування актуальних даних із JSON-файлу
         public List<TimerData> LoadTimerData()
@@ -21,6 +22,16 @@ namespace diplom
                 return JsonSerializer.Deserialize<List<TimerData>>(jsonContent) ?? new List<TimerData>();
             }
             return new List<TimerData>();
+        }
+
+        public List<UrlData> LoadUrlData()
+        {
+            if (File.Exists(filePath2))
+            {
+                string jsonContent = File.ReadAllText(filePath2);
+                return JsonSerializer.Deserialize<List<UrlData>>(jsonContent) ?? new List<UrlData>();
+            }
+            return new List<UrlData>();
         }
 
         // Метод для визначення діапазону попереднього тижня
@@ -43,29 +54,28 @@ namespace diplom
             return (currentMonday, currentSunday);
         }
 
-        // Метод для фільтрації даних для поточного тижня
-        public List<TimerData> FilterDataForCurrentWeek(List<TimerData> timerData)
+        public List<T> FilterDataForDateRange<T>(List<T> dataList, DateTime startDate, DateTime endDate, Func<T, DateTime> getDate)
         {
-            timerData = LoadTimerData();
-            var (startOfWeek, endOfWeek) = GetCurrentWeekRange();
-            return timerData.Where(data =>
+            return dataList.Where(item =>
             {
-                DateTime date = DateTime.ParseExact(data.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
-                return date >= startOfWeek && date <= endOfWeek;
+                var date = getDate(item);
+                return date >= startDate && date <= endDate;
             }).ToList();
         }
 
-        // Метод для фільтрації даних для попереднього тижня
-        public List<TimerData> FilterDataForPreviousWeek(List<TimerData> timerData)
+        // Метод для фільтрації даних для поточного тижня
+        public List<T> FilterDataForCurrentWeek<T>(List<T> dataList, Func<T, DateTime> getDate)
         {
-            timerData = LoadTimerData();
-            var (startOfWeek, endOfWeek) = GetPreviousWeekRange();
-            return timerData.Where(data =>
-            {
-                DateTime date = DateTime.ParseExact(data.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
-                return date >= startOfWeek && date <= endOfWeek;
-            }).ToList();
+            var (startOfWeek, endOfWeek) = GetCurrentWeekRange();
+            return FilterDataForDateRange(dataList, startOfWeek, endOfWeek, getDate);
         }
+
+        public List<T> FilterDataForPreviousWeek<T>(List<T> dataList, Func<T, DateTime> getDate)
+        {
+            var (startOfWeek, endOfWeek) = GetPreviousWeekRange();
+            return FilterDataForDateRange(dataList, startOfWeek, endOfWeek, getDate);
+        }
+
 
         // Метод для заповнення пропущених днів
         public List<TimerData> FillMissingDays(List<TimerData> timerData, DateTime startOfWeek, DateTime endOfWeek)
@@ -119,12 +129,12 @@ namespace diplom
             return (firstDayOfLastMonth, lastDayOfLastMonth);
         }
 
-        public List<TimerData> FilterDataForLastMonth(List<TimerData> timerData)
+        public List<T> FilterDataForLastMonth<T>(List<T> dataList, Func<T, DateTime> getDate)
         {
             var (startOfLastMonth, endOfLastMonth) = GetLastMonthRange();
-            return timerData.Where(data =>
+            return dataList.Where(item =>
             {
-                DateTime date = DateTime.ParseExact(data.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                DateTime date = getDate(item);
                 return date >= startOfLastMonth && date <= endOfLastMonth;
             }).ToList();
         }
@@ -136,22 +146,41 @@ namespace diplom
         }
 
         // Метод для обчислення загального часу
-        public string CalculateTotalTime(List<TimerData> timerData)
+        public string CalculateTotalTime<T>(List<T> data, string timePropertyName)
         {
-            // Підрахунок загальної кількості секунд
-            int totalSeconds = timerData.Sum(data =>
+            int totalSeconds = data.Sum(item =>
             {
-                TimeSpan timeSpan = TimeSpan.Parse(data.Time);
-                return (int)timeSpan.TotalSeconds;
+                var timeProperty = typeof(T).GetProperty(timePropertyName);
+                if (timeProperty == null)
+                {
+                    throw new ArgumentException($"Тип {typeof(T).Name} не має властивості {timePropertyName}");
+                }
+
+                var value = timeProperty.GetValue(item);
+
+                if (value == null)
+                    return 0;
+
+                if (value is int seconds)
+                {
+                    return seconds;
+                }
+                else if (value is string timeString)
+                {
+                    if (TimeSpan.TryParse(timeString, out TimeSpan timeSpan))
+                    {
+                        return (int)timeSpan.TotalSeconds;
+                    }
+                }
+
+                return 0;
             });
 
-            // Перетворення секунд у години, хвилини, секунди
             int hours = totalSeconds / 3600;
             int minutes = (totalSeconds % 3600) / 60;
-            int seconds = totalSeconds % 60;
+            int secondsLeft = totalSeconds % 60;
 
-            // Форматований рядок
-            return $"{hours} год. {minutes} хв. {seconds} сек.";
+            return $"{hours} год. {minutes} хв. {secondsLeft} сек.";
         }
 
         // Метод для групування даних за місяцями
@@ -162,12 +191,12 @@ namespace diplom
                 {
                     DateTime date = DateTime.ParseExact(data.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                     return date.Year == year; // Фільтруємо лише дані за вказаний рік
-        })
+                })
                 .GroupBy(data =>
                 {
                     DateTime date = DateTime.ParseExact(data.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                     return date.Month; // Групуємо за місяцем
-        })
+                })
                 .ToDictionary(group => group.Key, group => group.ToList());
 
             // Перевірка на відсутні місяці та їх заповнення
@@ -210,5 +239,52 @@ namespace diplom
                 return date.Year == year && date.Month == month;
             }).ToList();
         }
+
+        public List<UrlData> LoadBrowserDataForCurrentWeek(string path)
+        {
+            var result = new List<UrlData>();
+
+            if (!File.Exists(path))
+                return result;
+
+            var (startOfWeek, endOfWeek) = GetCurrentWeekRange();
+
+            try
+            {
+                // Зчитуємо весь вміст JSON файлу
+                var jsonContent = File.ReadAllText(path);
+
+                // Десеріалізуємо в список UrlData
+                var urlDataList = JsonSerializer.Deserialize<List<UrlData>>(jsonContent);
+
+                if (urlDataList != null)
+                {
+                    foreach (var entry in urlDataList)
+                    {
+                        if (entry == null || entry.Timestamp == DateTime.MinValue)
+                            continue;
+
+                        // Переводимо Timestamp у локальний час
+                        var localTimestamp = entry.Timestamp.ToLocalTime();
+
+                        // Фільтруємо за поточним тижнем
+                        if (localTimestamp >= startOfWeek && localTimestamp <= endOfWeek)
+                        {
+                            result.Add(entry);
+                        }
+                    }
+                }
+            }
+            catch (JsonException ex)
+            {
+                // Логування або інша обробка помилки
+                Console.WriteLine($"Error deserializing JSON file: {path}. Exception: {ex.Message}");
+            }
+
+            return result;
+        }
+
+
+
     }
 }

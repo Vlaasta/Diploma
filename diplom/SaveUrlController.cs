@@ -14,7 +14,6 @@ namespace diplom
     {
         //public static string LastReceivedUrl { get; private set; }
 
-
         public static async Task StartHttpServerAsync()
         {
             HttpListener listener = new HttpListener();

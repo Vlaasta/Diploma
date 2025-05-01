@@ -246,9 +246,9 @@ namespace diplom
                 }
 
                 // **Перевірка активного вікна браузера**
-              //  BrowserMonitor.CheckActiveWindow();
+                //  BrowserMonitor.CheckActiveWindow();
 
-               // IfUserActive();
+                // IfUserActive();
                 await Task.Delay(1000); // Асинхронна пауза
             }
         }
@@ -289,7 +289,7 @@ namespace diplom
             formThread.Start();
 
             // Введіть ваш API ключ
-            string apiKey = "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"; // Замініть на ваш реальний API ключ
+            string apiKey = "cWDJpW_L6doSjPSVL3FpdAcSS0aDE0WloOcJyTnT1_4"; // Замініть на ваш реальний API ключ
 
             // Шлях до JSON файлу з проектами
             string projectsJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json";
@@ -298,7 +298,7 @@ namespace diplom
             string outputJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\projectsAnalysis.json";
 
             // Створюємо об'єкт DeepSeekClient
-            DeepSeekClient deepSeekClient = new DeepSeekClient(apiKey);
+            PoeClient deepSeekClient = new PoeClient(apiKey, "Claude-3-Sonnet");
 
             // Викликаємо метод аналізу файлів
             string analysisResult = deepSeekClient.AnalyzeFiles(projectsJsonPath, outputJsonPath);
@@ -311,6 +311,26 @@ namespace diplom
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Linq;
+using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
 
 //using System.Text.Json;
 
@@ -15,6 +17,7 @@ namespace diplom
         private static string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\timerAmounts.json"; // Шлях до JSON-файлу з статистикою
         private static string fileSecondPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json"; // Шлях до JSON-файлу з проектами
         private static string fileThirdPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\settings.json"; // Шлях до JSON-файлу з проектами
+        private static string fileFourthPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json"; // Шлях до JSON-файлу з проектами
 
         private static string FindFile(string fileName)
         {
@@ -258,5 +261,40 @@ namespace diplom
             }
         }
 
+        public static void ExtractAndDecodeJsonContents(string filePath)
+        {
+            // Reader для підтримки декількох JSON-об’єктів підряд
+            using (var sr = new StreamReader(filePath))
+            using (var reader = new JsonTextReader(sr) { SupportMultipleContent = true })
+            {
+                var serializer = new JsonSerializer();
+                while (reader.Read())
+                {
+                    // Десеріалізуємо один JObject
+                    var root = serializer.Deserialize<JObject>(reader);
+                    if (root == null) continue;
+
+                    // Дістаємо масив messages → content
+                    var messages = root["Payload"]?["messages"]?.Children<JObject>();
+                    if (messages == null) continue;
+
+                    foreach (var msg in messages)
+                    {
+                        var content = (string)msg["content"];
+                        if (content == null) continue;
+
+                        // Розкодовуємо і виводимо
+                        Console.WriteLine(DecodeEscapes(content));
+                    }
+                }
+            }
+        }
+
+        // Допоміжний метод для розкодування \uXXXX та інших escape-послідовностей
+        private static string DecodeEscapes(string input)
+        {
+            // Regex.Unescape розкодовує стандартні JSON-escape-послідовності
+            return Regex.Unescape(input);
+        }
     }
 }

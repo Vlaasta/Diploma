@@ -29,6 +29,8 @@ namespace diplom
 
                 if (request.HttpMethod == "POST")
                 {
+                    Console.WriteLine($"→ New request: {request.HttpMethod} {request.Url}");
+
                     using (var reader = new StreamReader(request.InputStream, Encoding.UTF8))
                     {
                         string body = await reader.ReadToEndAsync();
@@ -37,6 +39,20 @@ namespace diplom
                     }
 
                     var response = context.Response;
+                    // Дозволяємо всім origin’ам
+                    response.AddHeader("Access-Control-Allow-Origin", "*");
+                    // Preflight  
+                    response.AddHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+                    // Заголовки, які ми використовуємо
+                    response.AddHeader("Access-Control-Allow-Headers", "Content-Type");
+
+                    // Якщо це preflight-запит
+                    if (request.HttpMethod == "OPTIONS")
+                    {
+                        response.StatusCode = 200;
+                        response.OutputStream.Close();
+                        continue;
+                    }
                     string responseString = "OK";
                     byte[] buffer = Encoding.UTF8.GetBytes(responseString);
                     response.ContentLength64 = buffer.Length;

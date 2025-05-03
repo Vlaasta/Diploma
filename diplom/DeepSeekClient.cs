@@ -5,32 +5,27 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 
-namespace diplom 
+namespace diplom
 {
-    public class PoeClient
+    public class CohereClient
     {
         private readonly HttpClient _client;
-        private readonly string _apiKey;
-        private readonly string _url;
+        private const string Url = "https://api.cohere.com/v2/chat";  // Cohere Chat endpoint
 
-        private const int MaxRequestsPerDay = 5;
+        private const int MaxRequestsPerDay = 1;
         private int _requestsSentToday = 0;
         private DateTime _lastRequestDate = DateTime.MinValue;
 
-        public PoeClient(string apiKey, string botName)
+        public CohereClient(string apiKey)
         {
-            _apiKey = apiKey;
             _client = new HttpClient();
             _client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", _apiKey);
+                new AuthenticationHeaderValue("Bearer", apiKey);
             _client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("text/event-stream"));
-
-            _url = $"https://api.poe.com/bot/{botName}";
+                new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         private bool CanSendRequest()
@@ -43,83 +38,6 @@ namespace diplom
             return _requestsSentToday < MaxRequestsPerDay;
         }
 
-        private IEnumerable<string> ChunkText(string text, int maxChars = 30000)
-        {
-            for (int i = 0; i < text.Length; i += maxChars)
-            {
-                yield return text.Substring(i, Math.Min(maxChars, text.Length - i));
-            }
-        }
-
-        private HttpResponseMessage PostWithRetry(HttpContent content, int maxRetries = 3)
-        {
-            int attempt = 0;
-            HttpResponseMessage resp = null;
-
-            while (true)
-            {
-                // Створюємо HttpRequestMessage замість прямого PostAsync
-                var request = new HttpRequestMessage(HttpMethod.Post, _url)
-                {
-                    Content = content
-                };
-
-                // Тепер можна передати HttpCompletionOption
-                resp = _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).Result;
-
-                if (resp.IsSuccessStatusCode || attempt++ >= maxRetries)
-                    return resp;
-
-                // exponential back-off: 2s, 4s, 6s…
-                Thread.Sleep(2000 * attempt);
-            }
-        }
-
-
-        private string ReadSseContent(HttpResponseMessage response)
-        {
-            var sb = new StringBuilder();
-
-            using (var stream = response.Content.ReadAsStreamAsync().Result)
-            using (var reader = new StreamReader(stream))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    // шукаємо тільки SSE-рядки з даними
-                    if (!line.StartsWith("data:"))
-                        continue;
-
-                    var json = line.Substring("data:".Length).Trim();
-                    if (json == "[DONE]")
-                        break;
-
-                    // парсимо кожен чанок як JSON
-                    using (var doc = JsonDocument.Parse(json))
-                    {
-                        var root = doc.RootElement;
-
-                        // якщо це повідомлення про нестачу поінтів — кидаємо окремий ексепшн
-                        if (root.TryGetProperty("allow_retry", out var ar)
-                            && ar.GetBoolean()
-                            && root.TryGetProperty("text", out var errTxt))
-                        {
-                            throw new InvalidOperationException(errTxt.GetString());
-                        }
-
-                        // інакше додаємо текстове поле
-                        if (root.TryGetProperty("text", out var txt))
-                        {
-                            sb.Append(txt.GetString());
-                        }
-                    }
-                }
-            }
-
-            return sb.ToString();
-        }
-
-
         private List<Project> LoadProjects(string filePath)
         {
             var json = File.ReadAllText(filePath);
@@ -129,36 +47,33 @@ namespace diplom
         public string ExtractTextFromDocx(string filePath)
         {
             var text = new StringBuilder();
-
             try
             {
-                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
+                using (var wordDoc = WordprocessingDocument.Open(filePath, false))
                 {
-                    Body body = wordDoc.MainDocumentPart.Document.Body;
-
+                    var body = wordDoc.MainDocumentPart.Document.Body;
                     foreach (var para in body.Elements<Paragraph>())
                     {
                         foreach (var run in para.Elements<Run>())
-                        {
-                            foreach (var textElement in run.Elements<Text>())
-                            {
-                                text.Append(textElement.Text);
-                            }
-                        }
+                            foreach (var txt in run.Elements<Text>())
+                                text.Append(txt.Text);
                         text.AppendLine();
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Помилка при витягуванні тексту з файлу: {ex.Message}");
+                Console.WriteLine($"Помилка при читанні {filePath}: {ex.Message}");
             }
-
             return text.ToString();
         }
 
         public string AnalyzeFiles(string projectsJsonPath, string outputJsonPath)
         {
+            const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
+            // 1) Очистимо файл з запитами на початку кожного запуску
+           // File.WriteAllText(testJsonPath, string.Empty);
+
             try
             {
                 if (!CanSendRequest())
@@ -169,7 +84,6 @@ namespace diplom
 
                 var projects = LoadProjects(projectsJsonPath);
                 var allResponses = new List<object>();
-                const string testJsonPath = "test.json";
 
                 foreach (var project in projects)
                 {
@@ -187,78 +101,57 @@ namespace diplom
                         continue;
                     }
 
-                    var projectResponses = new List<string>();
-                    var header = $"Аналіз проєкту: {Path.GetFileName(project.Path)}\n\n";
+                    // Формуємо одне велике повідомлення
+                    var userMessage = $"Аналіз проєкту: {Path.GetFileName(project.Path)}\n\n{fileText}";
 
-                    foreach (var chunk in ChunkText(header + fileText))
+                    var payload = new
                     {
-                        if (!CanSendRequest())
+                        model = "command-r-plus-08-2024",
+                        messages = new[]
                         {
-                            Console.WriteLine("Ліміт запитів на сьогодні вичерпано під час обробки чанків.");
-                            projectResponses.Add("Ліміт запитів вичерпано");
-                            break;
+                            new { role = "user", content = userMessage }
                         }
+                    };
 
-                        var payload = new
-                        {
-                            version = "1.0",
-                            type = "query",
-                            query = new[]
-                            {
-                                new { role = "user", content = chunk }
-                            },
-                            user_id = "",
-                            conversation_id = "",
-                            message_id = ""
-                        };
+                    // Серіалізуємо payload
+                    var jsonPayload = JsonSerializer.Serialize(payload);
 
-                        var jsonPayload = JsonSerializer.Serialize(payload);
-                        var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                    // 2) Записуємо запит у test.json
+                    var logEntry = new
+                    {
+                        Time = DateTime.Now.ToString("o"),
+                        Project = project.Name,
+                        Payload = JsonDocument.Parse(jsonPayload).RootElement
+                    };
+                    File.AppendAllText(
+                        testJsonPath,
+                        JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true })
+                        + Environment.NewLine
+                    );
 
-                        var response = PostWithRetry(content);
+                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                    var response = _client.PostAsync(Url, content).Result;
 
-                        File.AppendAllText(testJsonPath,
-                            JsonSerializer.Serialize(new { Project = project.Name, Prompt = chunk }) + ",\n");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseJson = response.Content.ReadAsStringAsync().Result;
+                        Console.WriteLine($"Response for {project.Name}: {responseJson}");
 
-                        if (response.IsSuccessStatusCode)
-                        {
-                            try
-                            {
-                                var respString = ReadSseContent(response);
-                                projectResponses.Add(respString);
-                                _requestsSentToday++;
-                            }
-                            catch (InvalidOperationException ex) when (ex.Message.Contains("You do not have enough points"))
-                            {
-                                // Poe повернув, що не вистачає поінтів
-                                Console.WriteLine($"Poe error для {project.Name}: {ex.Message}");
-                                projectResponses.Add($"Error: {ex.Message}. Будь ласка, поповніть Poe points або оновіться до Poe Pro.");
-                                break; // далі з цим проєктом сенсу немає
-                            }
-                            catch (Exception ex)
-                            {
-                                // інші помилки SSE
-                                Console.WriteLine($"SSE error для {project.Name}: {ex.Message}");
-                                projectResponses.Add($"Помилка SSE: {ex.Message}");
-                                break;
-                            }
-                            _requestsSentToday++;
-                        }
-                        else
-                        {
-                            var error = response.Content.ReadAsStringAsync().Result;
-                            Console.WriteLine(
-                                $"Помилка для проєкту {project.Name}: {response.StatusCode} - {error}");
-                            projectResponses.Add($"Помилка: {response.StatusCode} - {error}");
-                            break;
-                        }
+                        allResponses.Add(new { Project = project.Name, Response = responseJson });
+                        _requestsSentToday++;
                     }
-
-                    allResponses.Add(new { Project = project.Name, Responses = projectResponses });
+                    else
+                    {
+                        var error = response.Content.ReadAsStringAsync().Result;
+                        Console.WriteLine($"Помилка для {project.Name}: {response.StatusCode} - {error}");
+                        allResponses.Add(new { Project = project.Name, Error = $"Помилка: {response.StatusCode} - {error}" });
+                        break;
+                    }
                 }
 
-                var jsonResult = JsonSerializer.Serialize(allResponses, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(outputJsonPath, jsonResult);
+                // 3) Записуємо всі зібрані відповіді у outputJsonPath
+                var resultJson = JsonSerializer.Serialize(allResponses, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(outputJsonPath, resultJson);
 
                 return $"Обробка завершена. Результати збережено в {outputJsonPath}";
             }
@@ -267,8 +160,195 @@ namespace diplom
                 return $"Загальна помилка: {ex.Message}";
             }
         }
+
+        public string AnalyzeBrowserUrls(string browserUrlsJsonPath, string outputJsonPath)
+        {
+            const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
+            try
+            {
+                if (!CanSendRequest())
+                {
+                    Console.WriteLine("Ліміт запитів на сьогодні перевищено.");
+                    return "Ліміт запитів на сьогодні перевищено.";
+                }
+
+                // 1) Зчитуємо і десеріалізуємо усі записи
+                var allTextEntries = JsonSerializer.Deserialize<List<UrlData>>(
+                    File.ReadAllText(browserUrlsJsonPath)
+                );
+
+                var allResponses = new List<object>();
+
+                foreach (var entry in allTextEntries)
+                {
+                    // Пропускаємо, якщо текст порожній
+                    if (string.IsNullOrWhiteSpace(entry.Text))
+                    {
+                        allResponses.Add(new { Url = entry.Url, Error = "Text is empty" });
+                        continue;
+                    }
+
+                    // 2) Формуємо повідомлення для AI
+                    var userMessage = new StringBuilder()
+                        .AppendLine($"Аналіз веб-сторінки")
+                        .AppendLine($"URL: {entry.Url}")
+                        .AppendLine($"Заголовок: {entry.PageTitle}")
+                        .AppendLine()
+                        .AppendLine(entry.Text)
+                        .ToString();
+
+                    var payload = new
+                    {
+                        model = "command-r-plus-08-2024",
+                        messages = new[]
+                        {
+                    new { role = "user", content = userMessage }
+                }
+                    };
+                    var jsonPayload = JsonSerializer.Serialize(payload);
+
+                    // 3) Лог запису запиту
+                    var logEntry = new
+                    {
+                        Time = DateTime.Now.ToString("o"),
+                        Url = entry.Url,
+                        Payload = JsonDocument.Parse(jsonPayload).RootElement
+                    };
+                    File.AppendAllText(
+                        testJsonPath,
+                        JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true })
+                        + Environment.NewLine
+                    );
+
+                    // 4) Надсилаємо запит
+                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                    var response = _client.PostAsync(Url, content).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseJson = response.Content.ReadAsStringAsync().Result;
+                        Console.WriteLine($"Response for {entry.Url}: {responseJson}");
+                        allResponses.Add(new { Url = entry.Url, Response = responseJson });
+                        _requestsSentToday++;
+                    }
+                    else
+                    {
+                        var error = response.Content.ReadAsStringAsync().Result;
+                        Console.WriteLine($"Помилка для {entry.Url}: {response.StatusCode} - {error}");
+                        allResponses.Add(new { Url = entry.Url, Error = $"{response.StatusCode} - {error}" });
+                        break;  // або continue, залежно від вашої логіки
+                    }
+                }
+
+                // 5) Запис результатів у файл
+                var resultJson = JsonSerializer.Serialize(allResponses, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(outputJsonPath, resultJson);
+
+                return $"Обробка завершена. Результати збережено в {outputJsonPath}";
+            }
+            catch (Exception ex)
+            {
+                return $"Загальна помилка: {ex.Message}";
+            }
+        }
+
+        public string CompareProjectWebpageSimilarities(string projectsAnalysisPath, string webpagesAnalysisPath, string outputJsonPath)
+        {
+            const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
+
+            if (!CanSendRequest())
+                return "Ліміт запитів на сьогодні перевищено.";
+
+            // 1) десеріалізуємо обидва файли
+            var projects = JsonSerializer.Deserialize<List<ProjectAnalysis>>(
+                File.ReadAllText(projectsAnalysisPath)
+            );
+            var pages = JsonSerializer.Deserialize<List<UrlAnalysis>>(
+                File.ReadAllText(webpagesAnalysisPath)
+            );
+
+            var results = new List<SimilarityResult>();
+
+            foreach (var proj in projects)
+            {
+                foreach (var page in pages)
+                {
+                    // Формуємо текст запиту
+                    var userMessage = new StringBuilder()
+                        .AppendLine("Порівняй тематику двох текстів і дай відповідь лише “Схожість виявлено” або “Схожість не виявлено”.")
+                        .AppendLine()
+                        .AppendLine("Текст проекту:")
+                        .AppendLine(proj.Response)
+                        .AppendLine()
+                        .AppendLine("Текст веб-сторінки:")
+                        .AppendLine(page.Response)
+                        .ToString();
+
+                    var payload = new
+                    {
+                        model = "command-r-plus-08-2024",
+                        messages = new[]
+                        {
+                    new { role = "user", content = userMessage }
+                }
+                    };
+                    var jsonPayload = JsonSerializer.Serialize(payload);
+
+                    // Лог запиту
+                    var logEntry = new
+                    {
+                        Time = DateTime.Now.ToString("o"),
+                        Project = proj.Project,
+                        Url = page.Url,
+                        Payload = JsonDocument.Parse(jsonPayload).RootElement
+                    };
+                    File.AppendAllText(
+                        testJsonPath,
+                        JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true })
+                        + Environment.NewLine
+                    );
+
+                    // 2) Надсилаємо до AI
+                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                    var resp = _client.PostAsync(Url, content).Result;
+
+                    string similarity;
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        var body = resp.Content.ReadAsStringAsync().Result.Trim();
+                        // Відповідь очікуємо коротку, типу "Схожість виявлено"
+                        similarity = body.Replace("\"", "");
+                        _requestsSentToday++;
+                    }
+                    else
+                    {
+                        similarity = $"Error {resp.StatusCode}";
+                    }
+
+                    // 3) Зберігаємо результат
+                    results.Add(new SimilarityResult
+                    {
+                        Project = proj.Project,
+                        Url = page.Url,
+                        Similarity = similarity
+                    });
+
+                    // Якщо хочете не перевищити ліміт — можна break тут
+                }
+            }
+
+            // 4) Записуємо всі поєднання у вихідний файл
+            var outJson = JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(outputJsonPath, outJson);
+
+            return $"Порівняння завершено. Результати в {outputJsonPath}";
+        }
+
     }
 }
+
+
+
 
 
 

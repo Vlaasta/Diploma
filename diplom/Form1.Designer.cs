@@ -877,7 +877,7 @@ namespace diplom
             this.label12.Size = new System.Drawing.Size(180, 180);
             // this.label9.TabIndex = 19;
             this.label12.BackColor = Color.FromArgb(2, 14, 25);
-            this.label12.Text = "Автоматично вимикати таймер після ... хв неактивності";
+            this.label12.Text = "Автоматично вимикати таймер за неактивності протягом:";
             this.Controls.Add(this.label12);
 
             this.label13 = new System.Windows.Forms.Label();

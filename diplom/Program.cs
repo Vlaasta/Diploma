@@ -9,6 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
+
 
 namespace diplom
 {
@@ -50,6 +53,10 @@ namespace diplom
 
         [DllImport("user32.dll")]
         static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
+
+        // Розкодовує всі \uXXXX, \n, \t тощо
+        public static string DecodeEscapes(string input) =>
+            Regex.Unescape(input);
 
         public static uint GetIdleTime()
         {
@@ -289,22 +296,45 @@ namespace diplom
             formThread.Start();
 
             // Введіть ваш API ключ
-            string apiKey = "cWDJpW_L6doSjPSVL3FpdAcSS0aDE0WloOcJyTnT1_4"; // Замініть на ваш реальний API ключ
+              string apiKey = "Palmi92v7dC5q2FIMoVG4PX3GtkIa5dQZJzHc9zZ"; // Замініть на ваш реальний API ключ
 
             // Шлях до JSON файлу з проектами
-            string projectsJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json";
+            // string projectsJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json";
+
+            // string projectsJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
 
             // Шлях для збереження результатів аналізу
-            string outputJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\projectsAnalysis.json";
+            // string outputJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\projectsAnalysis.json";
+            // string outputJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\webpagesAnalysis.json";
+
+            // string projectsAnalysisPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\projectsAnalysis.json";
+            // string webpagesAnalysisPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\webpagesAnalysis.json";
+            // string outputJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\analysisResults.json";
 
             // Створюємо об'єкт DeepSeekClient
-            PoeClient deepSeekClient = new PoeClient(apiKey, "Claude-3-Sonnet");
+            //  CohereClient deepSeekClient = new CohereClient(apiKey);
+
+            /*  string resultMessage = deepSeekClient.CompareProjectWebpageSimilarities(
+                  projectsAnalysisPath,
+                  webpagesAnalysisPath,
+                  outputJsonPath
+              );
+
+              // 4) Виводимо результат у консоль
+              Console.WriteLine(resultMessage);*/
 
             // Викликаємо метод аналізу файлів
-            string analysisResult = deepSeekClient.AnalyzeFiles(projectsJsonPath, outputJsonPath);
+            //string analysisResult = deepSeekClient.AnalyzeFiles(projectsJsonPath, outputJsonPath);
+
+            //string analysisResult = deepSeekClient.AnalyzeBrowserUrls(projectsJsonPath, outputJsonPath);
 
             // Виводимо результат аналізу
-            Console.WriteLine(analysisResult);
+            // Console.WriteLine(analysisResult);
+
+            // Reader для підтримки декількох JSON-об’єктів підряд
+            JsonProcessing.ExtractAndDecodeJsonContents(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json");
+
+            //JsonProcessing.ExtractAndDecodeJsonContents(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\analysisResults.json");
 
             // Асинхронний запуск основного циклу
             Task.Run(MainLoopAsync).Wait();

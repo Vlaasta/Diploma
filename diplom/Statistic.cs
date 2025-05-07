@@ -145,6 +145,34 @@ namespace diplom
             return FillMissingDays(timerData, startOfLastMonth, endOfLastMonth);
         }
 
+        public List<TimerData> FillMissingHours(List<TimerData> data)
+        {
+            var groupedByHour = data
+                .GroupBy(d => TimeSpan.Parse(d.Time).Hours)
+                .ToDictionary(g => g.Key, g => g.First());
+
+            var today = DateTime.Today;
+            var filled = new List<TimerData>();
+
+            for (int hour = 0; hour < 24; hour++)
+            {
+                if (groupedByHour.ContainsKey(hour))
+                {
+                    filled.Add(groupedByHour[hour]);
+                }
+                else
+                {
+                    filled.Add(new TimerData
+                    {
+                        Date = today.ToString("dd.MM.yyyy"),
+                        Time = TimeSpan.FromHours(hour).ToString(@"hh\:mm\:ss")
+                    });
+                }
+            }
+
+            return filled;
+        }
+
         // Метод для обчислення загального часу
         public string CalculateTotalTime<T>(List<T> data, string timePropertyName)
         {

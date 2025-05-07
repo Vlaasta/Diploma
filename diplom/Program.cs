@@ -261,7 +261,7 @@ namespace diplom
         }
 
 
-        private static void IfUserActive()
+      /*  private static void IfUserActive()
         {
             uint idleTime = GetIdleTime();
             int currentNonActiveTime = Form1.GetNonActiveTime();
@@ -274,7 +274,7 @@ namespace diplom
             {
                 Console.WriteLine("Користувач неактивний більше" + currentNonActiveTime);
             }
-        }
+        }*/
 
 
         [STAThread]
@@ -296,7 +296,7 @@ namespace diplom
             formThread.Start();
 
             // Введіть ваш API ключ
-              string apiKey = "Palmi92v7dC5q2FIMoVG4PX3GtkIa5dQZJzHc9zZ"; // Замініть на ваш реальний API ключ
+            //  string apiKey = "Palmi92v7dC5q2FIMoVG4PX3GtkIa5dQZJzHc9zZ"; // Замініть на ваш реальний API ключ
 
             // Шлях до JSON файлу з проектами
             // string projectsJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json";
@@ -332,7 +332,7 @@ namespace diplom
             // Console.WriteLine(analysisResult);
 
             // Reader для підтримки декількох JSON-об’єктів підряд
-            JsonProcessing.ExtractAndDecodeJsonContents(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json");
+           // JsonProcessing.ExtractAndDecodeJsonContents(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json");
 
             //JsonProcessing.ExtractAndDecodeJsonContents(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\analysisResults.json");
 

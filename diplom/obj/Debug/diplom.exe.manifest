@@ -66,14 +66,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="diplom.exe" size="268760">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="diplom.exe" size="271320">
       <assemblyIdentity name="diplom" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>45kXEn34cIImogYO0Tziq5myjQFgPn/GqcYBFK12im4=</dsig:DigestValue>
+        <dsig:DigestValue>r2qah3z8RUWnAU+8oSesSzeGvOSo9bYvb/4vu+1Fugc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

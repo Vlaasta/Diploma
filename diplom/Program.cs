@@ -103,68 +103,90 @@ namespace diplom
             string activeWindowTitle = GetActiveWindowTitle();
 
             var activeProject = projects.FirstOrDefault(project =>
-                activeWindowTitle.IndexOf(Path.GetFileNameWithoutExtension(project.Path), StringComparison.OrdinalIgnoreCase) >= 0);
+                activeWindowTitle.IndexOf(
+                    Path.GetFileNameWithoutExtension(project.Path),
+                    StringComparison.OrdinalIgnoreCase
+                ) >= 0);
 
             if (activeProject != null)
             {
+                // 1) Якщо переключаємося з одного проєкту на інший — зупиняємо старий
                 if (currentActiveProject != activeProject.Name)
                 {
                     if (timer.IsRunning)
                     {
-                        lastElapsedTime = timer.GetAccumulatedTime(); // Зберігаємо накопичений час перед зупинкою
-                        Console.WriteLine($"Зупинка таймера для попереднього проєкту: {currentActiveProject}, збережено час: {lastElapsedTime}");
+                        // а) фіксуємо накопичений час перед паузою
+                        lastElapsedTime = timer.GetAccumulatedTime();
+                        Console.WriteLine(
+                            $"Зупинка таймера для попереднього проєкту: {currentActiveProject}, збережено час: {lastElapsedTime}"
+                        );
+
+                        // б) зберігаємо кінець сесії
+                        JsonProcessing.SaveSessionStop();
+
+                        // в) ставимо таймер на паузу
                         timer.Pause();
                     }
 
+                    // 2) Якщо зараз таймер не запущений — готуємо нову сесію
                     if (!timer.IsRunning)
                     {
-                        // Логіка для передачі часу з label1.Text
-                        if (GetLabel1TextDelegate != null)
+                        // б) відновлюємо час із UI (label1.Text) або з lastElapsedTime
+                        if (GetLabel1TextDelegate != null &&
+                            TimeSpan.TryParseExact(
+                                GetLabel1TextDelegate.Invoke(),
+                                @"hh\:mm\:ss",
+                                null,
+                                out TimeSpan lastElapsed))
                         {
-                            string label1Text = GetLabel1TextDelegate.Invoke(); // Отримуємо текст з label1
-                            if (TimeSpan.TryParseExact(label1Text, @"hh\:mm\:ss", null, out TimeSpan lastElapsed))
-                            {
-                                timer.SetElapsedTime(lastElapsed); // Використовуємо отриманий час
-                            }
-                            else
-                            {
-                                timer.SetElapsedTime(TimeSpan.Zero); // Якщо текст некоректний, починаємо з 0
-                            }
+                            timer.SetElapsedTime(lastElapsed);
                         }
                         else
                         {
-                            timer.SetElapsedTime(TimeSpan.Zero); // Якщо делегат не налаштований, починаємо з 0
+                            timer.SetElapsedTime(TimeSpan.Zero);
                         }
 
-                        Console.WriteLine($"Запуск таймера для проєкту: {activeProject.Name}, продовження з часу: {lastElapsedTime}");
+                        Console.WriteLine(
+                            $"Запуск таймера для проєкту: {activeProject.Name}, продовження з часу: {lastElapsedTime}"
+                        );
+
+                        // в) зберігаємо початок нової сесії
+                        JsonProcessing.SaveSessionStart();
+
+                        // г) запускаємо таймер
                         timer.Start();
                         currentActiveProject = activeProject.Name;
-                        // IfUserActive();
 
+                        // д) підписуємося на кожне оновлення часу для живого JSON-апдейту
                         timer.OnTimeUpdated += (elapsed) =>
                         {
                             onTimeUpdated(elapsed);
-
                             if (ShouldSaveTimeToJson)
-                            {
                                 JsonProcessing.SaveCurrentDayTime(elapsed);
-                            }
                         };
                     }
                 }
             }
             else
             {
+                // 3) Якщо активне вікно більше не належить жодному з проєктів — зупиняємо сесію
                 if (timer.IsRunning)
                 {
-                    lastElapsedTime = timer.GetAccumulatedTime(); // Зберігаємо перед зупинкою
-                    Console.WriteLine($"Зупинка таймера для проєкту: {currentActiveProject}, збережено час: {lastElapsedTime}");
+                    lastElapsedTime = timer.GetAccumulatedTime();
+                    Console.WriteLine(
+                        $"Зупинка таймера для проєкту: {currentActiveProject}, збережено час: {lastElapsedTime}"
+                    );
+
+                    // зберігаємо кінець сесії
+                    JsonProcessing.SaveSessionStop();
+
                     timer.Pause();
                     currentActiveProject = null;
                 }
                 Console.WriteLine("Активне вікно не відповідає жодному з проєктів.");
             }
         }
+
 
         public static List<Project> LoadProjects()
         {
@@ -294,6 +316,7 @@ namespace diplom
             formThread.SetApartmentState(ApartmentState.STA);
             formThread.IsBackground = true;
             formThread.Start();
+            
 
             // Введіть ваш API ключ
             //  string apiKey = "Palmi92v7dC5q2FIMoVG4PX3GtkIa5dQZJzHc9zZ"; // Замініть на ваш реальний API ключ

@@ -44,7 +44,7 @@ namespace diplom
         // Завантажуємо час з файлу при запуску програми
         TimeSpan lastElapsedTime = LoadLastElapsedTimeFromFile();
 
-        private ViewMode currentViewMode = ViewMode.Month;
+        private ViewMode currentViewMode = ViewMode.Day;
 
         public enum ViewMode
         {
@@ -66,6 +66,7 @@ namespace diplom
         public static bool notificationsOnOff;
         public static int TextBoxValue;
 
+       // private List<TimerData> timerData;
 
         public Form1()
         {
@@ -83,6 +84,7 @@ namespace diplom
             GetLabel1Text = () => label2.Text;
             Program.GetLabel1TextDelegate = this.GetLabel1Text;
 
+            //timerData = new TimerData(); 
 
             handButton = new HandButton();
             handButton.OnTimeUpdated += HandButton_OnTimeUpdated;
@@ -111,6 +113,7 @@ namespace diplom
             ButtonsToShow();
 
             JsonProcessing.LoadSettings();
+
         }
 
         private void GetTimeAmount()
@@ -193,6 +196,7 @@ namespace diplom
 
                     try
                     {
+                        JsonProcessing.SaveSessionStart(); 
                         JsonProcessing.SaveCurrentDayTime(elapsed);
                     }
                     catch (Exception ex)
@@ -246,40 +250,7 @@ namespace diplom
             InitializeComponentMain();
             StatisticsMainMenu();
 
-            var freshData = statistic.LoadTimerData();
-
-            // Універсальна фільтрація для поточного тижня
-            var filteredData = statistic.FilterDataForCurrentWeek(
-                freshData,
-                item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)
-            );
-
-            // Заповнення пропущених днів
-            var (startOfWeek, endOfWeek) = statistic.GetCurrentWeekRange();
-            var filledData = statistic.FillMissingDays(
-                filteredData,
-                startOfWeek,
-                endOfWeek
-            );
-
-            // Отримання X і Y точок з універсальними функціями
-            var xPoints = filledData
-                .Select(item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture))
-                .ToList();
-
-            var yPoints = filledData
-                .Select(item => (int)TimeSpan.Parse(item.Time).TotalSeconds)
-                .ToList();
-
-            // Побудова графіка
-            buildChart(xPoints, yPoints);
-
-            // Обчислення загального часу
-            string totalTime = statistic.CalculateTotalTime(filledData, "Time");
-
-            // Виведення результатів
-            label9.Text = "Усього витрачено на роботу:  " + totalTime;
-            label10.Text = "Статистика за останній тиждень";
+            CurrentDay();
         }
 
         public (DateTime StartOfWeek, DateTime EndOfWeek) GetWeekRangeWithOffset(int offset)
@@ -292,33 +263,120 @@ namespace diplom
         }
 
         private void CurrentDay()
-        {
-            // 1) Прибираємо старий графік
+        {           
             RemoveChart();
 
-            // Завантажили всі дані
-            var data = statistic.LoadUrlData();
+            DateTime selectedDate = DateTime.Today.AddDays(currentDayOffset);
 
-            // Обрана дата з урахуванням currentDayOffset
-            var selectedDate = DateTime.Today.AddDays(currentDayOffset);
+            switch (typeOfStatictics)
+            {
+                case "за проєктами":
 
-            // Малюємо графік саме за selectedDate
-            buildDailyChart(data, selectedDate);
+                     var timerData = JsonProcessing.LoadData();
 
-            // Фільтруємо для підрахунку суми
-            var dayData = data
-                .Where(d => d.Timestamp.Date == selectedDate.Date)
-                .ToList();
+                     string dateKey = selectedDate.ToString("dd.MM.yyyy");
 
-            // Підрахунок загального часу
-            string totalTime = statistic.CalculateTotalTime<UrlData>(
-                dayData,
-                nameof(UrlData.TimeSpent)
-            );
-            label9.Text = $"Усього витрачено за на роботу: {totalTime}";
-            label10.Text = $"Статистика за день {selectedDate:dd.MM.yyyy}"; 
+                     // 3) Шукаємо записи саме для цієї дати
+                     var todayRecord = timerData
+                         .FirstOrDefault(d => d.Date == dateKey);
+
+                     // 4) Якщо знайдено — беремо його Sessions, інакше порожній список
+                     var sessions = todayRecord?.Sessions
+                                    ?? new List<Session>();
+
+                     // 5) Нарешті — будуємо графік
+                     buildDailyChart(sessions, selectedDate);
+
+                     // ---- Ось додайте це: в label9 показати todayRecord.Time ----
+                     label9.Text = $"Усього витрачено на роботу: {todayRecord.Time}";
+                     label10.Text = $"Статистика за день {selectedDate:dd.MM.yyyy}";
+                    // MessageBox.Show("LOX");
+                    
+                    break;
+
+                case "за браузером":
+
+                    var data = statistic.LoadUrlData();
+
+                    // Малюємо графік саме за selectedDate
+                    buildDailyChart(data, selectedDate);
+
+                    // Фільтруємо для підрахунку суми
+                    var dayData = data
+                        .Where(d => d.Timestamp.Date == selectedDate.Date)
+                        .ToList();
+
+                    // Підрахунок загального часу
+                    string totalTime = statistic.CalculateTotalTime<UrlData>(
+                        dayData,
+                        nameof(UrlData.TimeSpent)
+                    );
+                    label9.Text = $"Усього витрачено на роботу: {totalTime}";
+                    label10.Text = $"Статистика за день {selectedDate:dd.MM.yyyy}";
+                    break;
+
+                case "за браузером та проєктами":
+                    // 1) Підготуйте дати й ключ
+                    DateTime selDate = DateTime.Today.AddDays(currentDayOffset);
+                    string dateKeyy = selDate.ToString("dd.MM.yyyy");
+
+                    // 2) Завантажте дані проєктів і відфільтруйте по даті
+                    var allTimerData = JsonProcessing.LoadData();
+                    var recProj = allTimerData.FirstOrDefault(d => d.Date == dateKeyy);
+                    var sessionss = recProj?.Sessions ?? new List<Session>();
+
+                    // 3) Завантажте URL-дані і відфільтруйте по даті
+                    var allUrlData = statistic.LoadUrlData();
+                    var dayUrlData = allUrlData
+                        .Where(d => d.Timestamp.Date == selDate.Date)
+                        .ToList();
+
+                    // 4) Агрегуйте обидві колекції в списки "хвилин по годинах"
+                    var hours = Enumerable.Range(0, 24).ToList();
+
+                    var projMinutes = hours.Select(h =>
+                    {
+                        double sec = 0;
+                        foreach (var s in sessionss)
+                        {
+                            if (!DateTime.TryParseExact(s.Start, "HH:mm:ss", CultureInfo.InvariantCulture,
+                                                        DateTimeStyles.None, out var t1)) continue;
+                            if (!DateTime.TryParseExact(s.Stop, "HH:mm:ss", CultureInfo.InvariantCulture,
+                                                        DateTimeStyles.None, out var t2)) continue;
+                            var dt1 = selDate.Date.Add(t1.TimeOfDay);
+                            var dt2 = selDate.Date.Add(t2.TimeOfDay);
+                            if (dt2 < dt1) dt2 = dt2.AddDays(1);
+
+                            var periodStart = selDate.Date.AddHours(h);
+                            var periodEnd = selDate.Date.AddHours(h + 1);
+                            var a = dt1 > periodStart ? dt1 : periodStart;
+                            var b = dt2 < periodEnd ? dt2 : periodEnd;
+                            if (b > a) sec += (b - a).TotalSeconds;
+                        }
+                        return sec / 60.0;
+                    }).ToList();
+
+                    var browserMinutes = hours.Select(h =>
+                        dayUrlData.Where(d => d.Timestamp.Hour == h)
+                                  .Sum(d => d.TimeSpent)
+                        / 60.0
+                    ).ToList();
+
+                    // 5) Викликаєте свій метод:
+                    BuildCombinedPlot(projMinutes, browserMinutes, selDate);
+                    break;
+
+                default:
+                    // якщо раптом typeOfStatictics некоректний — покажіть якийсь дефолт
+                    break;
+            }
         }
 
+        private string HumanizeSeconds(double totalSeconds)
+        {
+            var ts = TimeSpan.FromSeconds(totalSeconds);
+            return $"{ts.Hours} годин {ts.Minutes} хвилин {ts.Seconds} секунд";
+        }
 
         private void CurrentWeek()
         {
@@ -590,6 +648,8 @@ namespace diplom
         {
             if (!handButton.IsRunning)
             {
+                JsonProcessing.SaveSessionStart();
+
                 if (TimeSpan.TryParseExact(label2.Text, @"hh\:mm\:ss", null, out TimeSpan lastElapsed))
                 {
                     handButton.StartWithTime(lastElapsed); // Виклик правильного методу
@@ -608,6 +668,7 @@ namespace diplom
                 try
                 {
                     var accumulatedTime = handButton.GetAccumulatedTime();
+                    JsonProcessing.SaveSessionStop();
                     JsonProcessing.SaveCurrentDayTime(accumulatedTime); // Використання GetAccumulatedTime
                 }
                 catch (Exception ex)

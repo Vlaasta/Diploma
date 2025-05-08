@@ -174,6 +174,52 @@ namespace diplom
             SaveData(data);
         }
 
+        public static void SaveSessionStart()
+        {
+            var data = LoadData();
+            string today = DateTime.Now.ToString("dd.MM.yyyy");
+
+            var todayData = data.Find(d => d.Date == today)
+                            ?? new TimerData { Date = today };
+
+            // Якщо вже є відкрита сесія (Stop == null) — нічого не робимо
+            var last = todayData.Sessions.LastOrDefault();
+            if (last != null && last.Stop == null)
+            {
+                // сесія вже відкрита
+                return;
+            }
+
+            // Інакше — додаємо нову
+            todayData.Sessions.Add(new Session
+            {
+                Start = DateTime.Now.ToString("HH:mm:ss"),
+                Stop = null
+            });
+
+            if (!data.Contains(todayData))
+                data.Add(todayData);
+
+            SaveData(data);
+        }
+
+
+        public static void SaveSessionStop()
+        {
+            var data = LoadData();
+            string today = DateTime.Now.ToString("dd.MM.yyyy");
+            var todayData = data.Find(d => d.Date == today);
+            if (todayData == null) return;
+
+            // Закриваємо останню відкриту сесію
+            var lastSession = todayData.Sessions.LastOrDefault(s => s.Stop == null);
+            if (lastSession != null)
+            {
+                lastSession.Stop = DateTime.Now.ToString("HH:mm:ss");
+                SaveData(data);
+            }
+        }
+
         public static void AddProject(string filePath)
         {
             // Зчитуємо поточний список проєктів

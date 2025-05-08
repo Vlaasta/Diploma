@@ -7,6 +7,6 @@ namespace diplom
     {
         public string Date { get; set; } // Дата у форматі "dd.MM.yyyy"
         public string Time { get; set; } // Час у форматі "hh:mm:ss"
-
+        public List<Session> Sessions { get; set; } = new List<Session>();
     }
 }

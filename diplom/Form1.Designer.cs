@@ -8,6 +8,7 @@ using OxyPlot.WindowsForms;
 using OxyPlot.Axes;
 using System.Linq;
 using OxyPlot.Annotations;
+using System.Globalization;
 
 namespace diplom
 {
@@ -693,6 +694,166 @@ namespace diplom
             }
         }
 
+        private void buildChart2(List<DateTime> xPoints, List<int> yPoints)
+        {
+            var plotView = new PlotView
+            {
+                Dock = DockStyle.None,
+                Size = new Size(600, 400),
+                Location = new Point(225, 150)
+            };
+
+            var plotModel = new PlotModel
+            {
+                PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25),
+                PlotAreaBorderThickness = new OxyThickness(1)
+            };
+
+            var lineSeries = new LineSeries
+            {
+                Title = "Час (секунди)",
+                MarkerType = MarkerType.Circle,
+                Color = OxyColor.FromRgb(159, 183, 213)
+            };
+
+            for (int i = 0; i < xPoints.Count; i++)
+            {
+                // Перетворення DateTime в double
+                var dateAsDouble = DateTimeAxis.ToDouble(xPoints[i]);
+                lineSeries.Points.Add(new DataPoint(dateAsDouble, yPoints[i]));
+            }
+
+            plotModel.Series.Add(lineSeries);
+
+            // Ось X
+            var axisX = new DateTimeAxis
+            {
+                Position = AxisPosition.Bottom,
+                Title = "Час доби",
+                StringFormat = "HH:mm",                    // години:хвилини
+                IntervalType = DateTimeIntervalType.Hours,  // основні мітки через годину
+                MajorStep = 1,                           // 1 година
+                MinorIntervalType = DateTimeIntervalType.Minutes,
+                MinorStep = 15,                          // кожні 15 хв
+                IsZoomEnabled = false,
+                // …інші налаштування кольорів та сітки з вашого прикладу…
+            };
+
+            // Ось Y
+            var axisY = new LinearAxis
+            {
+                Position = AxisPosition.Left,
+                Title = "Секунди",
+                TitleColor = OxyColor.FromRgb(159, 183, 213),
+                TextColor = OxyColor.FromRgb(159, 183, 213),
+                MajorGridlineColor = OxyColor.FromRgb(159, 183, 213),
+                MinorGridlineColor = OxyColor.FromRgb(81, 99, 119),
+                MajorGridlineThickness = 1,
+                MinorGridlineThickness = 0.5,
+                MajorStep = 100, // Крок основних ліній
+                MinorStep = 20, // Крок допоміжних ліній
+                IsZoomEnabled = false,
+                AxislineColor = OxyColor.FromRgb(159, 183, 213),
+                TicklineColor = OxyColor.FromRgb(159, 183, 213),
+            };
+
+            var MinimumY = yPoints.Min() - 2;  // Мінімум на основі даних
+            var MaximumY = yPoints.Max() + 2;  // Максимум на основі даних
+
+            var MinimumX = DateTimeAxis.ToDouble(xPoints.Min().AddDays(-2)); // Мінімальна дата на основі даних
+            var MaximumX = DateTimeAxis.ToDouble(xPoints.Max().AddDays(+2)); // Максимальна дата на основі даних
+
+            plotModel.Axes.Add(axisX);
+            plotModel.Axes.Add(axisY);
+
+            // Побудова сітки окремо (не прив'язано до основних серій)
+            for (double x = MinimumX; x <= MaximumX; x += (MaximumX - MinimumX) / 10)
+            {
+                var gridLine = new LineAnnotation
+                {
+                    Type = LineAnnotationType.Vertical,
+                    X = x,
+                    Color = OxyColor.FromRgb(81, 99, 119), // Колір сітки
+                    LineStyle = LineStyle.Solid,
+                    StrokeThickness = 1.5  // Товща лінія для кращої видимості
+                };
+                plotModel.Annotations.Add(gridLine);
+            }
+
+            // Додавання власної сітки
+            for (double y = MinimumY; y <= MaximumY; y += axisY.MinorStep) // Використовуємо MinorStep для допоміжних ліній
+            {
+                var gridLine = new LineAnnotation
+                {
+                    Type = LineAnnotationType.Horizontal,
+                    Y = y,
+                    Color = OxyColor.FromRgb(81, 99, 119), // Колір сітки
+                    LineStyle = y % axisY.MajorStep == 0 ? LineStyle.Solid : LineStyle.Dot, // Основна — суцільна, допоміжна — пунктирна
+                    StrokeThickness = y % axisY.MajorStep == 0 ? 1.5 : 0.5
+                };
+                plotModel.Annotations.Add(gridLine);
+            }
+
+            plotView.Model = plotModel;
+
+            this.Controls.Add(plotView);
+
+            this.label9 = new System.Windows.Forms.Label();
+            this.label9.AutoSize = true;
+            this.label9.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label9.Location = new System.Drawing.Point(290, 570);
+            this.label9.Name = "label9";
+            this.label9.Font = new Font("Arial", 16, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.label9.Size = new System.Drawing.Size(180, 180);
+            this.label9.BackColor = Color.FromArgb(2, 14, 25);
+            this.label9.Text = "label9";
+            this.Controls.Add(this.label9);
+
+            if (CheckBox1Active == true)
+            {
+                this.label9.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.label9.BackColor = Color.FromArgb(2, 14, 25);
+                plotModel.PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25);
+                lineSeries.Color = OxyColor.FromRgb(159, 183, 213);
+
+                axisX.TitleColor = OxyColor.FromRgb(159, 183, 213);
+                axisX.TextColor = OxyColor.FromRgb(159, 183, 213);
+                axisX.MajorGridlineColor = OxyColor.FromRgb(159, 183, 213);
+                axisX.MinorGridlineColor = OxyColor.FromRgb(159, 183, 213);
+                axisX.AxislineColor = OxyColor.FromRgb(159, 183, 213);
+                axisX.TicklineColor = OxyColor.FromRgb(159, 183, 213);
+
+                axisY.TitleColor = OxyColor.FromRgb(159, 183, 213);
+                axisY.TextColor = OxyColor.FromRgb(159, 183, 213);
+                axisY.MajorGridlineColor = OxyColor.FromRgb(159, 183, 213);
+                axisY.MinorGridlineColor = OxyColor.FromRgb(159, 183, 213);
+                axisY.AxislineColor = OxyColor.FromRgb(159, 183, 213);
+                axisY.TicklineColor = OxyColor.FromRgb(159, 183, 213);
+            }
+
+            if (CheckBox2Active == true)
+            {
+                this.label9.ForeColor = Color.FromArgb(82, 82, 82);
+                this.label9.BackColor = Color.FromArgb(212, 220, 225);
+
+                plotModel.PlotAreaBorderColor = OxyColor.FromRgb(212, 220, 225);
+                lineSeries.Color = OxyColor.FromRgb(82, 82, 82);
+
+                axisX.TitleColor = OxyColor.FromRgb(82, 82, 82);
+                axisX.TextColor = OxyColor.FromRgb(82, 82, 82);
+                axisX.MajorGridlineColor = OxyColor.FromRgb(82, 82, 82);
+                axisX.MinorGridlineColor = OxyColor.FromRgb(82, 82, 82);
+                axisX.AxislineColor = OxyColor.FromRgb(82, 82, 82);
+                axisX.TicklineColor = OxyColor.FromRgb(82, 82, 82);
+
+                axisY.TitleColor = OxyColor.FromRgb(82, 82, 82);
+                axisY.TextColor = OxyColor.FromRgb(82, 82, 82);
+                axisY.MajorGridlineColor = OxyColor.FromRgb(82, 82, 82);
+                axisY.MinorGridlineColor = OxyColor.FromRgb(82, 82, 82);
+                axisY.AxislineColor = OxyColor.FromRgb(82, 82, 82);
+                axisY.TicklineColor = OxyColor.FromRgb(82, 82, 82);
+            }
+        }
         private void buildDailyChart(List<UrlData> urlDataList, DateTime selectedDate)
         {
             // 1) Фільтрація за сьогоднішньою датою
@@ -828,11 +989,254 @@ namespace diplom
             this.Controls.Add(this.label9);
         }
 
-        /*  private int GetSampleValue(int hour)
-          {
-              return (int)(10 * Math.Sin((Math.PI / 12) * (hour - 6)) + 10);
-          }*/
+        private void buildDailyChart(List<Session> sessions, DateTime selectedDate)
+        {
+            // Парсимо рядки Start/Stop у DateTime
+            var today = selectedDate.Date;
+            var parsed = sessions
+                .Select(s =>
+                {
+                    if (!DateTime.TryParseExact(s.Start, "HH:mm:ss", CultureInfo.InvariantCulture,
+                                                DateTimeStyles.None, out var t1)) return (Start: DateTime.MinValue, Stop: DateTime.MinValue);
+                    if (!DateTime.TryParseExact(s.Stop, "HH:mm:ss", CultureInfo.InvariantCulture,
+                                                DateTimeStyles.None, out var t2)) return (Start: DateTime.MinValue, Stop: DateTime.MinValue);
+                    var dt1 = today.Add(t1.TimeOfDay);
+                    var dt2 = today.Add(t2.TimeOfDay);
+                    if (dt2 < dt1) dt2 = dt2.AddDays(1);  // через північ
+            return (Start: dt1, Stop: dt2);
+                })
+                .Where(p => p.Start != DateTime.MinValue)
+                .OrderBy(p => p.Start)
+                .ToList();
 
+            // Підготувати PlotView / PlotModel
+            var plotView = new PlotView
+            {
+                Dock = DockStyle.None,
+                Size = new Size(600, 400),
+                Location = new Point(225, 150)
+            };
+            var plotModel = new PlotModel
+            {
+                PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25),
+                PlotAreaBorderThickness = new OxyThickness(1)
+            };
+
+            // Серія «зубчастого» графіку (X ‒ години як число, Y ‒ хвилини)
+            var series = new LineSeries
+            {
+                Title = "Час роботи (хв)",
+                MarkerType = MarkerType.Circle,
+                Color = OxyColor.FromRgb(159, 183, 213),
+                StrokeThickness = 2
+            };
+
+            // Починаємо у 00:00 з нуля
+            series.Points.Add(new DataPoint(0, 0));
+
+            foreach (var seg in parsed)
+            {
+                double startH = (seg.Start - today).TotalHours;
+                double stopH = (seg.Stop - today).TotalHours;
+                double elapsedMin = (seg.Stop - seg.Start).TotalSeconds / 60.0;
+
+                // 0 у момент старту
+                series.Points.Add(new DataPoint(startH, 0));
+                // пікова точка
+                series.Points.Add(new DataPoint(stopH, elapsedMin));
+                // і відразу спад до нуля
+                series.Points.Add(new DataPoint(stopH, 0));
+            }
+
+            // Останній нуль ― до кінця доби
+            series.Points.Add(new DataPoint(23.5, 0));
+
+            plotModel.Series.Add(series);
+
+            // Ось X — лінійна від −0.5 до 23.5, формат ‒ hh:mm
+            var axisX = new LinearAxis
+            {
+                Position = AxisPosition.Bottom,
+                Title = "Година доби",
+                Minimum = -0.5,
+                Maximum = 23.5,
+                MajorStep = 1,
+                MinorStep = 1,
+                IsZoomEnabled = false,
+                LabelFormatter = v => TimeSpan.FromHours(v).ToString(@"hh\:mm"),
+                Angle = -45,
+                TitleColor = OxyColor.FromRgb(159, 183, 213),
+                TextColor = OxyColor.FromRgb(159, 183, 213),
+                MajorGridlineColor = OxyColor.FromRgb(159, 183, 213),
+                MinorGridlineColor = OxyColor.FromRgb(159, 183, 213),
+                AxislineColor = OxyColor.FromRgb(159, 183, 213),
+                TicklineColor = OxyColor.FromRgb(159, 183, 213)
+            };
+            plotModel.Axes.Add(axisX);
+
+            // Ось Y — від 0 до максимуму + запас
+            double maxMin = series.Points.Max(p => p.Y);
+            double maxY = Math.Ceiling(maxMin + 1);
+            double majorY = Math.Max(1, Math.Ceiling(maxY / 10.0));
+            double minorY = majorY / 2.0;
+
+            var axisY = new LinearAxis
+            {
+                Position = AxisPosition.Left,
+                Title = "Час роботи (хв)",
+                Minimum = -1,
+                Maximum = maxY,
+                MajorStep = majorY,
+                MinorStep = minorY,
+                IsZoomEnabled = false,
+                TitleColor = OxyColor.FromRgb(159, 183, 213),
+                TextColor = OxyColor.FromRgb(159, 183, 213),
+                MajorGridlineColor = OxyColor.FromRgb(159, 183, 213),
+                MinorGridlineColor = OxyColor.FromRgb(81, 99, 119),
+                AxislineColor = OxyColor.FromRgb(159, 183, 213),
+                TicklineColor = OxyColor.FromRgb(159, 183, 213)
+            };
+            plotModel.Axes.Add(axisY);
+
+            // Додаткова сітка: вертикальні лінії на кожну годину
+            for (int h = 0; h < 24; h++)
+            {
+                plotModel.Annotations.Add(new LineAnnotation
+                {
+                    Type = LineAnnotationType.Vertical,
+                    X = h,
+                    Color = OxyColor.FromRgb(81, 99, 119),
+                    StrokeThickness = 1.5,
+                    LineStyle = LineStyle.Solid
+                });
+            }
+            // Горизонтальні лінії за дрібним кроком
+            for (double y = 0; y <= maxY; y += minorY)
+            {
+                plotModel.Annotations.Add(new LineAnnotation
+                {
+                    Type = LineAnnotationType.Horizontal,
+                    Y = y,
+                    Color = OxyColor.FromRgb(81, 99, 119),
+                    StrokeThickness = (y % majorY == 0) ? 1.5 : 0.5,
+                    LineStyle = (y % majorY == 0) ? LineStyle.Solid : LineStyle.Dot
+                });
+            }
+
+            // Додаємо PlotView на форму
+            plotView.Model = plotModel;
+            this.Controls.Add(plotView);
+
+            // Ваша label9
+            this.label9 = new System.Windows.Forms.Label();
+            this.label9.AutoSize = true;
+            this.label9.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label9.Location = new System.Drawing.Point(290, 570);
+            this.label9.Name = "label9";
+            this.label9.Font = new Font("Arial", 16, FontStyle.Regular); // Arial, 16 пт, курсив
+            this.label9.Size = new System.Drawing.Size(180, 180);
+            this.label9.BackColor = Color.FromArgb(2, 14, 25);
+            this.label9.Text = "label9";
+            this.Controls.Add(this.label9);
+        }
+
+        private void BuildCombinedPlot(
+            List<double> projMinutes,
+            List<double> browserMinutes,
+            DateTime selectedDate)
+        {
+            // Список годин 0..23
+            var hours = Enumerable.Range(0, 24).ToList();
+
+            // 1) Налаштовуємо модель
+            var model = new PlotModel
+            {
+                PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25),
+                PlotAreaBorderThickness = new OxyThickness(1)
+            };
+
+            // 2) Серія «Проєкти»
+            var seriesProj = new LineSeries
+            {
+                Title = "Проєкти",
+                MarkerType = MarkerType.Circle,
+                Color = OxyColor.FromRgb(159, 183, 213),
+                StrokeThickness = 2
+            };
+            for (int i = 0; i < 24; i++)
+                seriesProj.Points.Add(new DataPoint(hours[i], projMinutes[i]));
+            model.Series.Add(seriesProj);
+
+            // 3) Серія «Браузер»
+            var seriesBrowser = new LineSeries
+            {
+                Title = "Браузер",
+                MarkerType = MarkerType.Square,
+                Color = OxyColor.FromRgb(213, 159, 159),
+                StrokeThickness = 2
+            };
+            for (int i = 0; i < 24; i++)
+                seriesBrowser.Points.Add(new DataPoint(hours[i], browserMinutes[i]));
+            model.Series.Add(seriesBrowser);
+
+            // 4) Ось X — години доби
+            model.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Bottom,
+                Title = "Година доби",
+                Minimum = -0.5,
+                Maximum = 23.5,
+                MajorStep = 1,
+                MinorStep = 1,
+                LabelFormatter = v => TimeSpan.FromHours(v).ToString(@"hh\:mm"),
+                Angle = -45,
+                TitleColor = OxyColor.FromRgb(159, 183, 213),
+                TextColor = OxyColor.FromRgb(159, 183, 213),
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.None,
+                MajorGridlineColor = OxyColor.FromRgb(81, 99, 119),
+                IsZoomEnabled = false
+            });
+
+            // 5) Ось Y — хвилини
+            double maxVal = Math.Max(projMinutes.Max(), browserMinutes.Max());
+            double maxY = Math.Ceiling(maxVal + 1);
+            double stepY = Math.Max(1, Math.Ceiling(maxY / 10.0));
+            model.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Left,
+                Title = "Хвилини",
+                Minimum = 0,
+                Maximum = maxY,
+                MajorStep = stepY,
+                MinorStep = stepY / 2,
+                TitleColor = OxyColor.FromRgb(159, 183, 213),
+                TextColor = OxyColor.FromRgb(159, 183, 213),
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(81, 99, 119),
+                MinorGridlineColor = OxyColor.FromRgb(81, 99, 119),
+                IsZoomEnabled = false
+            });
+
+            // 6) Додаємо PlotView на форму
+            var plotView = new PlotView
+            {
+                Dock = DockStyle.None,
+                Size = new Size(600, 400),
+                Location = new Point(225, 150),
+                Model = model
+            };
+            this.Controls.Add(plotView);
+
+            // 7) Оновлюємо label9 і label10
+            // Переводимо назад у секунди та форматуємо "X годин Y хвилин Z секунд"
+            double totalProjSeconds = projMinutes.Sum() * 60;
+            double totalBrowserSeconds = browserMinutes.Sum() * 60;
+            label9.Text = $"Проєкти: {HumanizeSeconds(totalProjSeconds)}\n" +
+                           $"Браузер: {HumanizeSeconds(totalBrowserSeconds)}";
+            label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
+        }
 
         private void RemoveChart()
         {
@@ -867,11 +1271,9 @@ namespace diplom
             comboBox.Size = new Size(150, 30);
             comboBox.ItemHeight = 30; 
             comboBox.Font = new Font("Segoe UI", 12);
-            this.Controls.Add(comboBox);
 
             ComboBox secondcomboBox = new ComboBox();
             secondcomboBox.BackColor = Color.FromArgb(186, 192, 196);
-           // secondcomboBox.BackColor = Color.LightBlue;
             secondcomboBox.Items.Add("За проєктами");
             secondcomboBox.Items.Add("За активністю в браузері");
             secondcomboBox.Items.Add("За проєктами + активності в браузері");
@@ -882,15 +1284,13 @@ namespace diplom
             secondcomboBox.Font = new Font("Segoe UI", 12);
             secondcomboBox.ItemHeight = 30;
 
+            comboBox.SelectedItem = "За день";
+            secondcomboBox.SelectedItem = "За проєктами";
+
+            this.Controls.Add(comboBox);
             this.Controls.Add(secondcomboBox);
 
-           /* secondcomboBox.SelectedIndexChanged += (s, e) =>
-            {
-                string selected = secondcomboBox.SelectedItem?.ToString();
-                getTypeOfStatistics.ОбробитиКомбо(selected);
-            };*/
-
-             comboBox.SelectionChangeCommitted += (s, e) =>
+            comboBox.SelectionChangeCommitted += (s, e) =>
              {
                  string selected = comboBox.SelectedItem.ToString();
 
@@ -917,24 +1317,30 @@ namespace diplom
 
             secondcomboBox.SelectionChangeCommitted += (s, e) =>
             {
-                string selected = secondcomboBox.SelectedItem.ToString();
-
-                switch (selected)
+                switch (secondcomboBox.SelectedItem.ToString())
                 {
                     case "За проєктами":
-                        typeOfStatictics = "за проєктами"; 
+                        typeOfStatictics = "за проєктами";
                         break;
-                    case "За браузером та проєктами":
+                    case "За проєктами + активності в браузері":
                         typeOfStatictics = "за браузером та проєктами";
                         break;
-                    case "За браузером":
+                    case "За активністю в браузері":
                         typeOfStatictics = "за браузером";
+                       // MessageBox.Show(typeOfStatictics);
                         break;
+                }
+
+                switch (currentViewMode)
+                {
+                    case ViewMode.Day: CurrentDay(); break;
+                    case ViewMode.Week: CurrentWeek(); break;
+                    case ViewMode.Month: CurrentMonth(); break;
                 }
             };
 
-             this.button11 = CreateButton("button11", "<", new Point(200, 200), new Size(41, 41), this.button11_Click);
-             this.button12 = CreateButton("button12", ">", new Point(850, 200), new Size(41, 41), this.button12_Click);
+            this.button11 = CreateButton("button11", "<", new Point(200, 200), new Size(41, 41), this.button11_Click);
+            this.button12 = CreateButton("button12", ">", new Point(850, 200), new Size(41, 41), this.button12_Click);
 
 
              /*this.button13 = CreateButton("button13", "Статистика за останній рік", new Point(770, 600), new Size(240, 41), this.button13_Click);
@@ -945,8 +1351,9 @@ namespace diplom
                : "Статистика активності в браузері";*/
             // this.button41 = CreateButton("button41", "Статистика з урахуванням активності в браузері", new Point(770, 670), new Size(240, 41), this.button41_Click);
 
-            this.label10 = CreateMainLabel("label10", "label10", new Point(250, 50), new Size(180, 180), new Font("Arial", 16, FontStyle.Regular));
+            this.label10 = CreateMainLabel("label10", "label10", new Point(450, 50), new Size(180, 180), new Font("Arial", 16, FontStyle.Regular));
 
+           // CurrentDay();
 
             if (CheckBox2Active == true)
             {

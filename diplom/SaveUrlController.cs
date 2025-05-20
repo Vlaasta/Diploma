@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
+
 
 namespace diplom
 {
     public class SaveUrlController
     {
-        //public static string LastReceivedUrl { get; private set; }
-
         public static async Task StartHttpServerAsync()
         {
             HttpListener listener = new HttpListener();
@@ -35,7 +30,7 @@ namespace diplom
                     {
                         string body = await reader.ReadToEndAsync();
                         Console.WriteLine("Отримано POST: " + body);
-                        SaveUrlToJson(body); // або зроби це теж async, якщо треба
+                        JsonProcessing.SaveUrlToJson(body); // або зроби це теж async, якщо треба
                     }
 
                     var response = context.Response;
@@ -61,28 +56,6 @@ namespace diplom
                 }
             }
         }
-
-        static void SaveUrlToJson(string jsonBody)
-        {
-            var data = JsonConvert.DeserializeObject<UrlData>(jsonBody);
-
-            string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
-
-            List<UrlData> urlList;
-            if (File.Exists(filePath))
-            {
-                var existingJson = File.ReadAllText(filePath);
-                urlList = JsonConvert.DeserializeObject<List<UrlData>>(existingJson) ?? new List<UrlData>();
-            }
-            else
-            {
-                urlList = new List<UrlData>();
-            }
-
-            urlList.Add(data);
-            File.WriteAllText(filePath, JsonConvert.SerializeObject(urlList, Formatting.Indented));
-        }
-
     }
 }
 

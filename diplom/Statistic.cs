@@ -10,30 +10,6 @@ namespace diplom
 {
     public class Statistic : Form
     {
-        private string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\timerAmounts.json";
-        private string filePath2 = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
-
-        // Метод для зчитування актуальних даних із JSON-файлу
-        public List<TimerData> LoadTimerData()
-        {
-            if (File.Exists(filePath))
-            {
-                string jsonContent = File.ReadAllText(filePath);
-                return JsonSerializer.Deserialize<List<TimerData>>(jsonContent) ?? new List<TimerData>();
-            }
-            return new List<TimerData>();
-        }
-
-        public List<UrlData> LoadUrlData()
-        {
-            if (File.Exists(filePath2))
-            {
-                string jsonContent = File.ReadAllText(filePath2);
-                return JsonSerializer.Deserialize<List<UrlData>>(jsonContent) ?? new List<UrlData>();
-            }
-            return new List<UrlData>();
-        }
-
         // Метод для визначення діапазону попереднього тижня
         public (DateTime startOfWeek, DateTime endOfWeek) GetPreviousWeekRange()
         {
@@ -312,7 +288,96 @@ namespace diplom
             return result;
         }
 
+        public (DateTime StartOfWeek, DateTime EndOfWeek) GetWeekRangeWithOffset(int offset)
+        {
+            var baseDate = DateTime.Today.AddDays(offset * 7);
+
+            // Якщо тиждень починається з понеділка:
+            int daysFromMonday = ((int)baseDate.DayOfWeek + 6) % 7;
+            var startOfWeek = baseDate.AddDays(-daysFromMonday).Date;
+            var endOfWeek = startOfWeek.AddDays(6);
+
+            return (startOfWeek, endOfWeek);
+        }
 
 
+        public (DateTime start, DateTime end) GetMonthRangeWithOffset(int offset)
+        {
+            DateTime today = DateTime.Today;
+            DateTime targetMonth = new DateTime(today.Year, today.Month, 1).AddMonths(offset);
+            DateTime start = targetMonth;
+            DateTime end = targetMonth.AddMonths(1).AddDays(-1);
+            return (start, end);
+        }
+
+
+        public List<TimerData> ProcessCombinedData()
+        {
+            var urlData = JsonProcessing.LoadUrlData(); // Дані з браузера
+            var timerData = JsonProcessing.LoadTimerData(); // Дані з трекера
+
+            // Перетворення в один формат
+            var browserConverted = urlData.Select(d => new
+            {
+                Date = d.Timestamp.Date,
+                Seconds = d.TimeSpent
+            });
+
+            var trackerConverted = timerData.Select(d =>
+            {
+                DateTime parsedDate;
+                var date = DateTime.TryParseExact(d.Date?.Trim(), "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate)
+                    ? parsedDate
+                    : DateTime.MinValue;
+
+                int seconds = TimeSpan.TryParse(d.Time?.Trim(), out var ts) ? (int)ts.TotalSeconds : 0;
+
+                return new
+                {
+                    Date = date,
+                    Seconds = seconds
+                };
+            });
+
+            return browserConverted
+                .Concat(trackerConverted)
+                .Where(x => x.Date != DateTime.MinValue) // Відкидаємо некоректні
+                .GroupBy(x => x.Date)
+                .Select(g => new TimerData
+                {
+                    Date = g.Key.ToString("dd.MM.yyyy"),
+                    Time = TimeSpan.FromSeconds(g.Sum(x => x.Seconds)).ToString()
+                })
+                .ToList();
+        }
+
+
+        public List<TimerData> ProcessProjectData()
+        {
+            var freshData = JsonProcessing.LoadTimerData(); // Завантаження JSON-даних проєктів
+
+            return freshData;
+        }
+
+
+        public List<TimerData> ProcessBrowserData()
+        {
+            var freshData = JsonProcessing.LoadUrlData(); // Завантаження JSON-даних з браузера
+
+            return freshData
+                .GroupBy(item => item.Timestamp.Date)
+                .Select(g => new TimerData
+                {
+                    Date = g.Key.ToString("dd.MM.yyyy"),
+                    Time = TimeSpan.FromSeconds(g.Sum(item => item.TimeSpent)).ToString()
+                })
+                .ToList();
+        }
+
+        public string HumanizeSeconds(double totalSeconds)
+        {
+            var ts = TimeSpan.FromSeconds(totalSeconds);
+            return $"{ts.Hours} годин {ts.Minutes} хвилин {ts.Seconds} секунд";
+        }
     }
 }

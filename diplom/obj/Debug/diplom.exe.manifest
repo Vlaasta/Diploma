@@ -66,14 +66,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="diplom.exe" size="281048">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="diplom.exe" size="242648">
       <assemblyIdentity name="diplom" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>MADIPVYeWXpGn2b5Bov6XL2zWOIryyAfvE55zHH8l6w=</dsig:DigestValue>
+        <dsig:DigestValue>k1IC84r8QY8Shn5le8ofAl7vORBzem3IoCzygMkO3mY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -1733,13 +1733,13 @@
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="diplom.exe.config" size="8228">
+  <file name="diplom.exe.config" size="8871">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>qAUJQfJugsVcv4Sf6ZcxNwy3oAwJ/amyPQJ+r6kRhlw=</dsig:DigestValue>
+      <dsig:DigestValue>/DVbNLdfvCXjv0PS47s23v2tQAtH5M5MPFV7KEe0p6A=</dsig:DigestValue>
     </hash>
   </file>
   <file name="License-LGPL.txt" size="26929">

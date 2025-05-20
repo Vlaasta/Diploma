@@ -5,19 +5,16 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Linq;
-using Newtonsoft.Json.Linq;
-using System.Text.RegularExpressions;
-
-//using System.Text.Json;
 
 namespace diplom
 {
     public static class JsonProcessing
     {
-        private static string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\timerAmounts.json"; // Шлях до JSON-файлу з статистикою
-        private static string fileSecondPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json"; // Шлях до JSON-файлу з проектами
-        private static string fileThirdPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\settings.json"; // Шлях до JSON-файлу з проектами
-        private static string fileFourthPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json"; // Шлях до JSON-файлу з проектами
+        private static string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\timerAmounts.json"; // Шлях до JSON-файлу з результатами таймеру
+        static string fileSecondPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json"; // Шлях до JSON-файлу з проектами
+        private static string fileThirdPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\settings.json"; // Шлях до JSON-файлу з настройками
+       // private static string fileFourthPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json"; // Шлях до JSON-файлу з запитами
+        public static string filePath2 = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json"; //Шлях до JSON-файлу з веб-сторінками
 
         private static string FindFile(string fileName)
         {
@@ -135,15 +132,24 @@ namespace diplom
         }
 
         // Зчитування даних з файлу
-        public static List<TimerData> LoadData()
+        public static List<TimerData> LoadTimerData()
         {
-            if (!File.Exists(filePath))
+            if (File.Exists(filePath))
             {
-                return new List<TimerData>();
+                string jsonContent = File.ReadAllText(filePath);
+                return JsonConvert.DeserializeObject<List<TimerData>>(jsonContent) ?? new List<TimerData>();
             }
+            return new List<TimerData>();
+        }
 
-            var json = File.ReadAllText(filePath);
-            return JsonConvert.DeserializeObject<List<TimerData>>(json) ?? new List<TimerData>();
+        public static List<UrlData> LoadUrlData()
+        {
+            if (File.Exists(filePath2))
+            {
+                string jsonContent = File.ReadAllText(filePath2);
+                return JsonConvert.DeserializeObject<List<UrlData>>(jsonContent) ?? new List<UrlData>();
+            }
+            return new List<UrlData>();
         }
 
         // Запис даних у файл
@@ -153,10 +159,10 @@ namespace diplom
             File.WriteAllText(filePath, json);
         }
 
-        // Збереження часу поточного дня
+          // Збереження часу поточного дня
         public static void SaveCurrentDayTime(TimeSpan elapsed)
         {
-            var data = LoadData();
+            var data = LoadTimerData();
             string today = DateTime.Now.ToString("dd.MM.yyyy");
 
             var todayData = data.Find(d => d.Date == today);
@@ -174,9 +180,33 @@ namespace diplom
             SaveData(data);
         }
 
+        public static void SaveUrlToJson(string jsonBody)
+        {
+            var data = JsonConvert.DeserializeObject<UrlData>(jsonBody);
+
+            // Конвертуємо UTC-дату у локальний час України
+            TimeZoneInfo ukrainianZone = TimeZoneInfo.FindSystemTimeZoneById("FLE Standard Time");
+            data.Timestamp = TimeZoneInfo.ConvertTimeFromUtc(data.Timestamp, ukrainianZone);
+
+            List<UrlData> urlList;
+            if (File.Exists(filePath2))
+            {
+                var existingJson = File.ReadAllText(filePath2);
+                urlList = JsonConvert.DeserializeObject<List<UrlData>>(existingJson) ?? new List<UrlData>();
+            }
+            else
+            {
+                urlList = new List<UrlData>();
+            }
+
+            urlList.Add(data);
+            File.WriteAllText(filePath2, JsonConvert.SerializeObject(urlList, Formatting.Indented));
+        }
+
+
         public static void SaveSessionStart()
         {
-            var data = LoadData();
+            var data = LoadTimerData();
             string today = DateTime.Now.ToString("dd.MM.yyyy");
 
             var todayData = data.Find(d => d.Date == today)
@@ -186,7 +216,6 @@ namespace diplom
             var last = todayData.Sessions.LastOrDefault();
             if (last != null && last.Stop == null)
             {
-                // сесія вже відкрита
                 return;
             }
 
@@ -206,7 +235,7 @@ namespace diplom
 
         public static void SaveSessionStop()
         {
-            var data = LoadData();
+            var data = LoadTimerData();
             string today = DateTime.Now.ToString("dd.MM.yyyy");
             var todayData = data.Find(d => d.Date == today);
             if (todayData == null) return;
@@ -222,36 +251,40 @@ namespace diplom
 
         public static void AddProject(string filePath)
         {
-            // Зчитуємо поточний список проєктів
             var projects = LoadProjects();
 
-            // Додаємо новий файл як проєкт
             projects.Add(new Project
             {
                 Path = filePath,
                 Name = Path.GetFileName(filePath),
                 Type = Path.GetExtension(filePath)
             });
-
-            // Зберігаємо оновлений список проєктів
             SaveProjects(projects);
         }
 
         public static void SaveSettings(Form1 form1)
         {
-            // Серіалізуємо об'єкт settings у JSON
             string json = JsonConvert.SerializeObject(Form1.settings, Formatting.Indented);
-
-            // Записуємо в файл
             File.WriteAllText(fileThirdPath, json);
         }
+
+        public static bool WasFileModifiedToday(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                DateTime lastWriteDate = File.GetLastWriteTime(filePath).Date;
+                return lastWriteDate == DateTime.Today;
+            }
+
+            return false;
+        } 
 
         public static void LoadSettings()
         {
             if (File.Exists(fileThirdPath))
             {
                 string json = File.ReadAllText(fileThirdPath); // Читаємо файл в рядок
-                                                               // Десеріалізуємо JSON в об'єкт типу DataSettings
+                                                                // Десеріалізуємо JSON в об'єкт типу DataSettings
                 Form1.settings = JsonConvert.DeserializeObject<DataSettings>(json) ?? new DataSettings();
 
                 if(Form1.settings.InactivityAmount == 5)
@@ -289,14 +322,14 @@ namespace diplom
                 {
                     Form1.notificationsOnOff = true;
                     Form1.CheckBox4Active = true;
-                    Form1.NotificationsOn();
-
+                    // Form1.NotificationsOn();
                 }
                 if (Form1.settings.NotificatonOnOff == false)
                 {
                     Form1.notificationsOnOff = false;
                     Form1.CheckBox4Active = false;
                 }
+                Notifications.NotificationsEnabled = Form1.notificationsOnOff;
                 if (Form1.settings.TextBoxValue != 0)
                 {
                     Form1.nonActiveTime = Form1.settings.TextBoxValue;
@@ -305,42 +338,6 @@ namespace diplom
                     Form1.CheckBox5Active = false;
                 }
             }
-        }
-
-        public static void ExtractAndDecodeJsonContents(string filePath)
-        {
-            // Reader для підтримки декількох JSON-об’єктів підряд
-            using (var sr = new StreamReader(filePath))
-            using (var reader = new JsonTextReader(sr) { SupportMultipleContent = true })
-            {
-                var serializer = new JsonSerializer();
-                while (reader.Read())
-                {
-                    // Десеріалізуємо один JObject
-                    var root = serializer.Deserialize<JObject>(reader);
-                    if (root == null) continue;
-
-                    // Дістаємо масив messages → content
-                    var messages = root["Payload"]?["messages"]?.Children<JObject>();
-                    if (messages == null) continue;
-
-                    foreach (var msg in messages)
-                    {
-                        var content = (string)msg["content"];
-                        if (content == null) continue;
-
-                        // Розкодовуємо і виводимо
-                        Console.WriteLine(DecodeEscapes(content));
-                    }
-                }
-            }
-        }
-
-        // Допоміжний метод для розкодування \uXXXX та інших escape-послідовностей
-        private static string DecodeEscapes(string input)
-        {
-            // Regex.Unescape розкодовує стандартні JSON-escape-послідовності
-            return Regex.Unescape(input);
         }
     }
 }

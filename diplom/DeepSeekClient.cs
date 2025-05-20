@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq; 
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -18,6 +19,11 @@ namespace diplom
         private const int MaxRequestsPerDay = 1;
         private int _requestsSentToday = 0;
         private DateTime _lastRequestDate = DateTime.MinValue;
+        private static readonly string lastRunFilePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\lastRun.txt";
+
+        private static List<UrlData> todayUrls = new List<UrlData>();
+        private static List<Project> todayProjects = new List<Project>();
+        public static List<string> sessionLog = new List<string>();
 
         public CohereClient(string apiKey)
         {
@@ -28,23 +34,35 @@ namespace diplom
                 new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        private bool CanSendRequest()
+        public static bool CanSendRequest()
         {
-            if (_lastRequestDate.Date != DateTime.Today)
+            try
             {
-                _lastRequestDate = DateTime.Today;
-                _requestsSentToday = 0;
+                DateTime lastRun = File.Exists(lastRunFilePath)
+                    ? DateTime.Parse(File.ReadAllText(lastRunFilePath))
+                    : DateTime.MinValue;
+                DateTime today = DateTime.Today;
+
+                Console.WriteLine($"LastRun: {lastRun:yyyy-MM-dd}, Today: {today:yyyy-MM-dd}");
+
+                if (lastRun < today && УмовиВиконання())
+                {
+                    RunDailyTask(); // запускаємо тільки один раз
+                    File.WriteAllText(lastRunFilePath, today.ToString("yyyy-MM-dd")); // зберігаємо дату
+                    return true;
+                }
             }
-            return _requestsSentToday < MaxRequestsPerDay;
+            catch (Exception ex)
+            {
+                Console.WriteLine("Помилка в CanSendRequest:");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+
+            return false;
         }
 
-        private List<Project> LoadProjects(string filePath)
-        {
-            var json = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<List<Project>>(json);
-        }
-
-        public string ExtractTextFromDocx(string filePath)
+        private string ExtractTextFromDocx(string filePath)
         {
             var text = new StringBuilder();
             try
@@ -68,21 +86,13 @@ namespace diplom
             return text.ToString();
         }
 
-        public string AnalyzeFiles(string projectsJsonPath, string outputJsonPath)
+        private string AnalyzeFiles(string outputJsonPath)
         {
-            const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
-            // 1) Очистимо файл з запитами на початку кожного запуску
-           // File.WriteAllText(testJsonPath, string.Empty);
+           // const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
 
             try
             {
-                if (!CanSendRequest())
-                {
-                    Console.WriteLine("Ліміт запитів на сьогодні перевищено.");
-                    return "Ліміт запитів на сьогодні перевищено.";
-                }
-
-                var projects = LoadProjects(projectsJsonPath);
+                var projects = JsonProcessing.LoadProjects();
                 var allResponses = new List<object>();
 
                 foreach (var project in projects)
@@ -100,8 +110,6 @@ namespace diplom
                         allResponses.Add(new { Project = project.Name, Error = "Файл порожній або нечитабельний" });
                         continue;
                     }
-
-                    // Формуємо одне велике повідомлення
                     var userMessage = $"Аналіз проєкту: {Path.GetFileName(project.Path)}\n\n{fileText}";
 
                     var payload = new
@@ -112,22 +120,14 @@ namespace diplom
                             new { role = "user", content = userMessage }
                         }
                     };
-
-                    // Серіалізуємо payload
                     var jsonPayload = JsonSerializer.Serialize(payload);
-
-                    // 2) Записуємо запит у test.json
                     var logEntry = new
                     {
                         Time = DateTime.Now.ToString("o"),
                         Project = project.Name,
                         Payload = JsonDocument.Parse(jsonPayload).RootElement
                     };
-                    File.AppendAllText(
-                        testJsonPath,
-                        JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true })
-                        + Environment.NewLine
-                    );
+                   // File.AppendAllText(testJsonPath, JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true }) + Environment.NewLine);
 
                     var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
                     var response = _client.PostAsync(Url, content).Result;
@@ -148,8 +148,6 @@ namespace diplom
                         break;
                     }
                 }
-
-                // 3) Записуємо всі зібрані відповіді у outputJsonPath
                 var resultJson = JsonSerializer.Serialize(allResponses, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(outputJsonPath, resultJson);
 
@@ -161,34 +159,22 @@ namespace diplom
             }
         }
 
-        public string AnalyzeBrowserUrls(string browserUrlsJsonPath, string outputJsonPath)
+        private string AnalyzeBrowserUrls(string outputJsonPath)
         {
-            const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
+           // const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
             try
             {
-                if (!CanSendRequest())
-                {
-                    Console.WriteLine("Ліміт запитів на сьогодні перевищено.");
-                    return "Ліміт запитів на сьогодні перевищено.";
-                }
-
-                // 1) Зчитуємо і десеріалізуємо усі записи
-                var allTextEntries = JsonSerializer.Deserialize<List<UrlData>>(
-                    File.ReadAllText(browserUrlsJsonPath)
-                );
-
+                string jsonContent = File.ReadAllText(JsonProcessing.filePath2);
+                var allTextEntries = JsonSerializer.Deserialize<List<UrlData>>(jsonContent);
                 var allResponses = new List<object>();
 
                 foreach (var entry in allTextEntries)
                 {
-                    // Пропускаємо, якщо текст порожній
                     if (string.IsNullOrWhiteSpace(entry.Text))
                     {
                         allResponses.Add(new { Url = entry.Url, Error = "Text is empty" });
                         continue;
                     }
-
-                    // 2) Формуємо повідомлення для AI
                     var userMessage = new StringBuilder()
                         .AppendLine($"Аналіз веб-сторінки")
                         .AppendLine($"URL: {entry.Url}")
@@ -201,26 +187,16 @@ namespace diplom
                     {
                         model = "command-r-plus-08-2024",
                         messages = new[]
-                        {
-                    new { role = "user", content = userMessage }
-                }
+                        {new { role = "user", content = userMessage }}
                     };
                     var jsonPayload = JsonSerializer.Serialize(payload);
-
-                    // 3) Лог запису запиту
                     var logEntry = new
                     {
                         Time = DateTime.Now.ToString("o"),
                         Url = entry.Url,
                         Payload = JsonDocument.Parse(jsonPayload).RootElement
                     };
-                    File.AppendAllText(
-                        testJsonPath,
-                        JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true })
-                        + Environment.NewLine
-                    );
-
-                    // 4) Надсилаємо запит
+                   // File.AppendAllText(testJsonPath, JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true }) + Environment.NewLine);
                     var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
                     var response = _client.PostAsync(Url, content).Result;
 
@@ -236,11 +212,9 @@ namespace diplom
                         var error = response.Content.ReadAsStringAsync().Result;
                         Console.WriteLine($"Помилка для {entry.Url}: {response.StatusCode} - {error}");
                         allResponses.Add(new { Url = entry.Url, Error = $"{response.StatusCode} - {error}" });
-                        break;  // або continue, залежно від вашої логіки
+                        break; 
                     }
                 }
-
-                // 5) Запис результатів у файл
                 var resultJson = JsonSerializer.Serialize(allResponses, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(outputJsonPath, resultJson);
 
@@ -252,14 +226,10 @@ namespace diplom
             }
         }
 
-        public string CompareProjectWebpageSimilarities(string projectsAnalysisPath, string webpagesAnalysisPath, string outputJsonPath)
+        private string CompareProjectWebpageSimilarities(string projectsAnalysisPath, string webpagesAnalysisPath, string outputJsonPath)
         {
-            const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
+           // const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
 
-            if (!CanSendRequest())
-                return "Ліміт запитів на сьогодні перевищено.";
-
-            // 1) десеріалізуємо обидва файли
             var projects = JsonSerializer.Deserialize<List<ProjectAnalysis>>(
                 File.ReadAllText(projectsAnalysisPath)
             );
@@ -302,13 +272,9 @@ namespace diplom
                         Url = page.Url,
                         Payload = JsonDocument.Parse(jsonPayload).RootElement
                     };
-                    File.AppendAllText(
-                        testJsonPath,
-                        JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true })
-                        + Environment.NewLine
-                    );
+                    // File.AppendAllText(testJsonPath, JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true }) + Environment.NewLine);
 
-                    // 2) Надсилаємо до AI
+                    // Надсилаємо до AI
                     var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
                     var resp = _client.PostAsync(Url, content).Result;
 
@@ -325,23 +291,103 @@ namespace diplom
                         similarity = $"Error {resp.StatusCode}";
                     }
 
-                    // 3) Зберігаємо результат
+                    // Зберігаємо результат
                     results.Add(new SimilarityResult
                     {
                         Project = proj.Project,
                         Url = page.Url,
                         Similarity = similarity
                     });
-
-                    // Якщо хочете не перевищити ліміт — можна break тут
                 }
             }
-
-            // 4) Записуємо всі поєднання у вихідний файл
             var outJson = JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(outputJsonPath, outJson);
 
             return $"Порівняння завершено. Результати в {outputJsonPath}";
+        }
+
+        private static bool УмовиВиконання()
+        {
+            DateTime today = DateTime.Today;
+
+            // Завантажуємо URL-дані
+            var urlDataList = JsonProcessing.LoadUrlData();
+            todayUrls = urlDataList
+                .Where(url => url.Timestamp.Date == today)
+                .ToList();
+
+            Console.WriteLine($"URL-дані на сьогодні ({today:yyyy-MM-dd}): {todayUrls.Count} записів");
+
+            // Завантажуємо проєкти
+            var projectsList = JsonProcessing.LoadProjects();
+            todayProjects = projectsList
+                .Where(project =>
+                    File.Exists(project.Path) &&
+                    File.GetLastWriteTime(project.Path).Date == today)
+                .ToList();
+
+            Console.WriteLine($"Проєкти на сьогодні ({today:yyyy-MM-dd}): {todayProjects.Count} записів");
+
+            bool result = todayUrls.Any() || todayProjects.Any();
+            Console.WriteLine($"Результат перевірки умов виконання: {result}");
+
+            return result;
+        }
+
+
+        public static void RunDailyTask()
+        {
+            try
+            {
+                string apiKey = "Palmi92v7dC5q2FIMoVG4PX3GtkIa5dQZJzHc9zZ";
+
+                string outputProjectsJson = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\projectsAnalysis.json";
+                string outputUrlsJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\webpagesAnalysis.json";
+
+                string projectsAnalysisPath = outputProjectsJson;
+                string webpagesAnalysisPath = outputUrlsJsonPath;
+                string outputJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\analysisResults.json";
+
+                Console.WriteLine("Ініціалізація клієнта...");
+                CohereClient deepSeekClient = new CohereClient(apiKey);
+
+                if (!JsonProcessing.WasFileModifiedToday(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\projectsAnalysis.json"))
+                {
+                    Console.WriteLine("Аналіз проєктів...");
+                    string projectAnalysisResult = deepSeekClient.AnalyzeFiles(outputProjectsJson);
+                    Console.WriteLine("Результат аналізу проєктів:");
+                    Console.WriteLine(projectAnalysisResult);
+                }
+
+                if (!JsonProcessing.WasFileModifiedToday(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\webpagesAnalysis.json"))
+                {
+                    Console.WriteLine("Аналіз вебсторінок...");
+                    string urlAnalysisResult = deepSeekClient.AnalyzeBrowserUrls(outputUrlsJsonPath);
+                    Console.WriteLine("Результат аналізу вебсторінок:");
+                    Console.WriteLine(urlAnalysisResult);
+                }
+                if (!JsonProcessing.WasFileModifiedToday(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\analysisResults.json"))
+                {
+                    Console.WriteLine("Порівняння схожості між проєктами та сторінками...");
+                    string resultMessage = deepSeekClient.CompareProjectWebpageSimilarities(
+                        projectsAnalysisPath, webpagesAnalysisPath, outputJsonPath);
+                    Console.WriteLine("Результат порівняння:");
+                    Console.WriteLine(resultMessage);
+                }
+            
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Помилка під час виконання RunDailyTask:");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine("Внутрішня помилка:");
+                    Console.WriteLine(ex.InnerException.Message);
+                    Console.WriteLine(ex.InnerException.StackTrace);
+                }
+            }
         }
 
     }

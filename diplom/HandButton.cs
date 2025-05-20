@@ -23,27 +23,27 @@ namespace diplom
         {
             if (!isRunning)
             {
-                startTime = DateTime.Now;   // Фіксуємо час початку
-                timer.Start();               // Запускаємо таймер
+                startTime = DateTime.Now;   
+                timer.Start();               
                 isRunning = true;
             }
         }
+
+        public void Pause()
+        {
+            if (isRunning)
+            {
+                timer.Stop();             
+                totalTime += DateTime.Now - startTime; 
+                isRunning = false;
+            }
+        }
+
 
         // Публічна властивість для перевірки статусу таймера
         public bool IsRunning
         {
             get { return isRunning; }
-        }
-
-        // Метод для призупинення таймера
-        public void Pause()
-        {
-            if (isRunning)
-            {
-                timer.Stop();              // Зупиняємо таймер
-                totalTime += DateTime.Now - startTime;  // Додаємо час, що пройшов
-                isRunning = false;
-            }
         }
 
         // Обробник події Elapsed (кожну секунду)

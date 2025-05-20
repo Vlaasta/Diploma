@@ -4,39 +4,34 @@ using System.Windows.Forms;
 
 namespace diplom
 {
-    internal class Notifications : Form
+    public static class Notifications
     {
-        private NotifyIcon notifyIcon;
-       // public bool notificationState = false;
+        private static NotifyIcon notifyIcon;
+        public static bool NotificationsEnabled { get; set; } = true;
 
-        public Notifications()
+        public static void Show(string message)
         {
-            InitializeNotification();
-        }
+            if (!NotificationsEnabled)
+                return;
 
-        private void InitializeNotification()
-        {
-            notifyIcon = new NotifyIcon
+            if (notifyIcon == null)
             {
-                Icon = SystemIcons.Information,
-                BalloonTipTitle = "Нове сповіщення",
-                BalloonTipText = "Дякую що запустив мене, сонечко!",
-                BalloonTipIcon = ToolTipIcon.Info,
-                Visible = true // Поставити видимість в кінці
-            };
+                notifyIcon = new NotifyIcon
+                {
+                    Icon = SystemIcons.Information,
+                    BalloonTipTitle = "Нове сповіщення",
+                    BalloonTipIcon = ToolTipIcon.Info,
+                    Visible = true
+                };
+            }
 
-            notifyIcon.ShowBalloonTip(3000); // Тривалість
+            notifyIcon.BalloonTipText = message;
+            notifyIcon.ShowBalloonTip(3000);
         }
 
-        public void ShowNotification()
+        public static void Dispose()
         {
-            InitializeNotification(); // Виклик приватного методу
-
-        }
-
-        public void GetNotificationState()
-        {
-
+            notifyIcon?.Dispose();
         }
     }
 }

@@ -29,6 +29,7 @@ namespace diplom
         public static bool CheckBox5Active;
         public static bool CheckBox6Active;
         public static bool CheckBox7Active;
+        private Panel activePanel; 
 
         private bool isBrowserStats = false; // Початково: показує браузерну статистику
 
@@ -46,12 +47,7 @@ namespace diplom
 
         private ViewMode currentViewMode = ViewMode.Day;
 
-        public enum ViewMode
-        {
-            Month,
-            Week,
-            Day
-        }
+        public enum ViewMode {Month, Week, Day}
 
         private int currentMonthOffset = 0;
         private int currentWeekOffset = 0;
@@ -59,14 +55,11 @@ namespace diplom
 
 
         public static DataSettings settings;
-        // public int nonActiveTime = 5;
         public static int nonActiveTime;
         public static string themeColor;
         public static bool autoStart;
         public static bool notificationsOnOff;
         public static int TextBoxValue;
-
-       // private List<TimerData> timerData;
 
         public Form1()
         {
@@ -82,9 +75,7 @@ namespace diplom
             Instance = this;
 
             GetLabel1Text = () => label2.Text;
-            Program.GetLabel1TextDelegate = this.GetLabel1Text;
-
-            //timerData = new TimerData(); 
+            ActivityMonitoring.GetLabel1TextDelegate = this.GetLabel1Text;
 
             handButton = new HandButton();
             handButton.OnTimeUpdated += HandButton_OnTimeUpdated;
@@ -111,15 +102,15 @@ namespace diplom
 
             LabelsToShow();
             ButtonsToShow();
+            GetTimeAmount();
 
             JsonProcessing.LoadSettings();
-
+           
         }
 
         private void GetTimeAmount()
         {
-            string json = File.ReadAllText(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\timerAmounts.json");
-            var timerDataList = JsonConvert.DeserializeObject<List<TimerData>>(json);
+            var timerDataList = JsonProcessing.LoadTimerData();
 
             // Отримуємо поточну дату
             string todayDate = DateTime.Now.ToString("dd.MM.yyyy");
@@ -143,36 +134,22 @@ namespace diplom
         {
             try
             {
-                // Шлях до файлу
-                string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\timerAmounts.json";
+                var records = JsonProcessing.LoadTimerData(); 
 
-                // Перевіряємо, чи існує файл
-                if (File.Exists(filePath))
+                string currentDate = DateTime.Now.ToString("dd.MM.yyyy");
+
+                var todayRecord = records.FirstOrDefault(r => r.Date == currentDate);
+
+                if (todayRecord != null &&
+                    TimeSpan.TryParseExact(todayRecord.Time, @"hh\:mm\:ss", null, out TimeSpan lastElapsedTime))
                 {
-                    // Зчитуємо вміст файлу
-                    string json = File.ReadAllText(filePath);
-
-                    // Десеріалізація JSON в список об'єктів
-                    var records = JsonConvert.DeserializeObject<List<TimerData>>(json);
-
-                    // Отримуємо поточну дату в форматі, що зберігається в JSON
-                    string currentDate = DateTime.Now.ToString("dd.MM.yyyy");
-
-                    // Шукаємо запис за сьогоднішньою датою
-                    var todayRecord = records.FirstOrDefault(r => r.Date == currentDate);
-
-                    if (todayRecord != null && TimeSpan.TryParseExact(todayRecord.Time, @"hh\:mm\:ss", null, out TimeSpan lastElapsedTime))
-                    {
-                        return lastElapsedTime;
-                    }
+                    return lastElapsedTime;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Помилка при завантаженні часу: {ex.Message}", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            // Якщо не вдалося, повертаємо 0
             return TimeSpan.Zero;
         }
 
@@ -223,20 +200,15 @@ namespace diplom
 
         private void loadValues()
         {
-            // Завантажуємо проєкти через існуючий метод
             var projects = JsonProcessing.LoadProjects();
-
-            // Список ваших Label (вказуєте всі необхідні)
             var projectsNames = new List<Label> { label3, label4, label5 };
             var projectsPath = new List<Label> { label6, label7, label8 };
 
-            // Прив'язка значень Name до Label
             for (int i = 0; i < projectsNames.Count && i < projects.Count; i++)
             {
                 projectsNames[i].Text = projects[i].Name;
             }
 
-            // Прив'язка значень Name до Label
             for (int i = 0; i < projectsPath.Count && i < projects.Count; i++)
             {
                 projectsPath[i].Text = projects[i].Path;
@@ -245,21 +217,11 @@ namespace diplom
 
         private void button7_Click(object sender, EventArgs e) //графік поточного тижня
         {
-            // Очищення всіх елементів управління з форми
             this.Controls.Clear();
             InitializeComponentMain();
             StatisticsMainMenu();
-
+            SetActivePanel(panel2);
             CurrentDay();
-        }
-
-        public (DateTime StartOfWeek, DateTime EndOfWeek) GetWeekRangeWithOffset(int offset)
-        {
-            DateTime today = DateTime.Today.AddDays(offset * 7); // зміщення на тиждень вперед/назад
-            int diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
-            DateTime startOfWeek = today.AddDays(-1 * diff).Date;
-            DateTime endOfWeek = startOfWeek.AddDays(6);
-            return (startOfWeek, endOfWeek);
         }
 
         private void CurrentDay()
@@ -271,111 +233,134 @@ namespace diplom
             switch (typeOfStatictics)
             {
                 case "за проєктами":
+                    {
+                        var _tmpData = JsonProcessing.LoadTimerData();
+                        string _tmpDateKey = selectedDate.ToString("dd.MM.yyyy");
+                        var _tmpRecord = _tmpData.FirstOrDefault(d => d.Date == _tmpDateKey);
+                        var _tmpSessions = _tmpRecord?.Sessions ?? new List<Session>();
 
-                     var timerData = JsonProcessing.LoadData();
+                        buildDailyChart<Session>(_tmpSessions, selectedDate, session =>
+                        {
+                            if (DateTime.TryParseExact(session.Start, "HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var startTime)
+                                && DateTime.TryParseExact(session.Stop, "HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var endTime))
+                            {
+                                var start = selectedDate.Date.Add(startTime.TimeOfDay);
+                                var stop = selectedDate.Date.Add(endTime.TimeOfDay);
+                                if (stop < start) stop = stop.AddDays(1); // нічний перехід
+                                return (start, stop);
+                            }
+                            return null;
+                        });
 
-                     string dateKey = selectedDate.ToString("dd.MM.yyyy");
+                        if (_tmpRecord != null
+                            && TimeSpan.TryParseExact(_tmpRecord.Time, @"hh\:mm\:ss", CultureInfo.InvariantCulture, out var _tmpTotal))
+                        {
+                            label9.Text = $"Усього витрачено на роботу: {_tmpTotal.Hours} год. {_tmpTotal.Minutes} хв. {_tmpTotal.Seconds} сек.";
+                        }
+                        else
+                        {
+                            label9.Text = "Усього витрачено на роботу: 0 год. 0 хв. 0 сек.";
+                        }
 
-                     // 3) Шукаємо записи саме для цієї дати
-                     var todayRecord = timerData
-                         .FirstOrDefault(d => d.Date == dateKey);
-
-                     // 4) Якщо знайдено — беремо його Sessions, інакше порожній список
-                     var sessions = todayRecord?.Sessions
-                                    ?? new List<Session>();
-
-                     // 5) Нарешті — будуємо графік
-                     buildDailyChart(sessions, selectedDate);
-
-                     // ---- Ось додайте це: в label9 показати todayRecord.Time ----
-                     label9.Text = $"Усього витрачено на роботу: {todayRecord.Time}";
-                     label10.Text = $"Статистика за день {selectedDate:dd.MM.yyyy}";
-                    // MessageBox.Show("LOX");
-                    
-                    break;
+                        label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
+                        break;
+                    }
 
                 case "за браузером":
+                    {
+                        var _tmpData = JsonProcessing.LoadUrlData();
 
-                    var data = statistic.LoadUrlData();
+                        buildDailyChart<UrlData>(_tmpData, selectedDate, record =>
+                        {
+                            var start = record.Timestamp;
+                            var stop = start.Add(TimeSpan.FromSeconds(record.TimeSpent)); 
+                            return (start, stop);
+                        });
 
-                    // Малюємо графік саме за selectedDate
-                    buildDailyChart(data, selectedDate);
+                        var _tmpDayData = _tmpData
+                            .Where(d => d.Timestamp.Date == selectedDate.Date)
+                            .ToList();
 
-                    // Фільтруємо для підрахунку суми
-                    var dayData = data
-                        .Where(d => d.Timestamp.Date == selectedDate.Date)
-                        .ToList();
+                        string _tmpTotalTime = statistic.CalculateTotalTime<UrlData>(
+                            _tmpDayData,
+                            nameof(UrlData.TimeSpent)
+                        );
 
-                    // Підрахунок загального часу
-                    string totalTime = statistic.CalculateTotalTime<UrlData>(
-                        dayData,
-                        nameof(UrlData.TimeSpent)
-                    );
-                    label9.Text = $"Усього витрачено на роботу: {totalTime}";
-                    label10.Text = $"Статистика за день {selectedDate:dd.MM.yyyy}";
-                    break;
+                        label9.Text = $"Усього витрачено на роботу: {_tmpTotalTime}";
+                        label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
+                        break;
+                    }
 
                 case "за браузером та проєктами":
-                    // 1) Підготуйте дати й ключ
-                    DateTime selDate = DateTime.Today.AddDays(currentDayOffset);
-                    string dateKeyy = selDate.ToString("dd.MM.yyyy");
+                    // 1) Обрана дата
+                    var selectedDatee = DateTime.Today.AddDays(currentDayOffset);
+                    var dateKeyy = selectedDate.ToString("dd.MM.yyyy");
 
-                    // 2) Завантажте дані проєктів і відфільтруйте по даті
-                    var allTimerData = JsonProcessing.LoadData();
+                    // 2) Дані по проєктах:
+                    var allTimerData = JsonProcessing.LoadTimerData();
                     var recProj = allTimerData.FirstOrDefault(d => d.Date == dateKeyy);
                     var sessionss = recProj?.Sessions ?? new List<Session>();
 
-                    // 3) Завантажте URL-дані і відфільтруйте по даті
-                    var allUrlData = statistic.LoadUrlData();
-                    var dayUrlData = allUrlData
-                        .Where(d => d.Timestamp.Date == selDate.Date)
+                    // 3) Дані по браузеру:
+                    var allUrlData = JsonProcessing.LoadUrlData();
+                    var dayUrlData = allUrlData.Where(u => u.Timestamp.Date == selectedDate.Date).ToList();
+
+                    // 4) Розраховуємо хвилини по годинах 0..23 для кожного джерела
+                    var intervals = Enumerable.Range(0, 96); // 96 інтервалів по 15 хвилин
+
+                    var projMinutes = intervals
+                        .Select(i =>
+                        {
+                            double sec = 0;
+                            var segStart = selectedDatee.Date.AddMinutes(i * 15);
+                            var segEnd = segStart.AddMinutes(15);
+
+                            foreach (var s in sessionss)
+                            {
+                                if (!DateTime.TryParseExact(s.Start, "HH:mm:ss", null, DateTimeStyles.None, out var t1)) continue;
+                                if (!DateTime.TryParseExact(s.Stop, "HH:mm:ss", null, DateTimeStyles.None, out var t2)) continue;
+
+                                var dt1 = selectedDatee.Date.Add(t1.TimeOfDay);
+                                var dt2 = selectedDatee.Date.Add(t2.TimeOfDay);
+                                if (dt2 < dt1) dt2 = dt2.AddDays(1);
+
+                                var a = dt1 > segStart ? dt1 : segStart;
+                                var b = dt2 < segEnd ? dt2 : segEnd;
+
+                                if (b > a) sec += (b - a).TotalSeconds;
+                            }
+
+                            return sec / 60.0; // хвилини
+    })
                         .ToList();
 
-                    // 4) Агрегуйте обидві колекції в списки "хвилин по годинах"
-                    var hours = Enumerable.Range(0, 24).ToList();
-
-                    var projMinutes = hours.Select(h =>
-                    {
-                        double sec = 0;
-                        foreach (var s in sessionss)
+                    var browserMinutes = intervals
+                        .Select(i =>
                         {
-                            if (!DateTime.TryParseExact(s.Start, "HH:mm:ss", CultureInfo.InvariantCulture,
-                                                        DateTimeStyles.None, out var t1)) continue;
-                            if (!DateTime.TryParseExact(s.Stop, "HH:mm:ss", CultureInfo.InvariantCulture,
-                                                        DateTimeStyles.None, out var t2)) continue;
-                            var dt1 = selDate.Date.Add(t1.TimeOfDay);
-                            var dt2 = selDate.Date.Add(t2.TimeOfDay);
-                            if (dt2 < dt1) dt2 = dt2.AddDays(1);
+                            int hour = (i * 15) / 60;
+                            int minute = (i * 15) % 60;
+                            var segStart = selectedDatee.Date.AddHours(hour).AddMinutes(minute);
+                            var segEnd = segStart.AddMinutes(15);
 
-                            var periodStart = selDate.Date.AddHours(h);
-                            var periodEnd = selDate.Date.AddHours(h + 1);
-                            var a = dt1 > periodStart ? dt1 : periodStart;
-                            var b = dt2 < periodEnd ? dt2 : periodEnd;
-                            if (b > a) sec += (b - a).TotalSeconds;
-                        }
-                        return sec / 60.0;
-                    }).ToList();
+                            double totalSec = 0;
+                            foreach (var u in dayUrlData)
+                            {
+                                var timestamp = u.Timestamp;
+                                if (timestamp >= segStart && timestamp < segEnd)
+                                {
+                                    totalSec += u.TimeSpent;
+                                }
+                            }
+                            return totalSec / 60.0;
+                        })
+                        .ToList();
 
-                    var browserMinutes = hours.Select(h =>
-                        dayUrlData.Where(d => d.Timestamp.Hour == h)
-                                  .Sum(d => d.TimeSpent)
-                        / 60.0
-                    ).ToList();
-
-                    // 5) Викликаєте свій метод:
-                    BuildCombinedPlot(projMinutes, browserMinutes, selDate);
+                    BuildMergedPlotModel(projMinutes, browserMinutes, selectedDatee);
                     break;
 
                 default:
-                    // якщо раптом typeOfStatictics некоректний — покажіть якийсь дефолт
                     break;
             }
-        }
-
-        private string HumanizeSeconds(double totalSeconds)
-        {
-            var ts = TimeSpan.FromSeconds(totalSeconds);
-            return $"{ts.Hours} годин {ts.Minutes} хвилин {ts.Seconds} секунд";
         }
 
         private void CurrentWeek()
@@ -383,7 +368,7 @@ namespace diplom
             RemoveChart();
 
             // Отримання діапазону тижня з урахуванням зсуву
-            var weekRange = GetWeekRangeWithOffset(currentWeekOffset);
+            var weekRange = statistic.GetWeekRangeWithOffset(currentWeekOffset);
             var startOfWeek = weekRange.StartOfWeek;
             var endOfWeek = weekRange.EndOfWeek;
 
@@ -392,43 +377,51 @@ namespace diplom
             switch (typeOfStatictics)
             {
                 case "за проєктами":
-                    processedData = ProcessProjectData();
+                    processedData = statistic.ProcessProjectData();
                     break;
                 case "за браузером":
-                    processedData = ProcessBrowserData();
+                    processedData = statistic.ProcessBrowserData();
                     break;
                 case "за браузером та проєктами":
-                    processedData = ProcessCombinedData();
+                    processedData = statistic.ProcessCombinedData();
                     break;
                 default:
                     processedData = new List<TimerData>();
                     break;
             }
 
-            // Фільтрація і заповнення пропущених днів
             var filteredData = statistic.FilterDataForDateRange(
                 processedData, startOfWeek, endOfWeek,
-                item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                item =>
+                {
+                    DateTime parsedDate;
+                    return DateTime.TryParse(item.Date, out parsedDate) ? parsedDate : DateTime.MinValue;
+                }
             );
             var filledData = statistic.FillMissingDays(filteredData, startOfWeek, endOfWeek);
 
-            // Побудова графіка
-            var xPoints = filledData
-                .Select(d => DateTime.ParseExact(d.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture))
-                .ToList();
+            var xPoints = new List<DateTime>();
+            var yPoints = new List<int>();
 
-            var yPoints = filledData
-                .Select(d => (int)TimeSpan.Parse(d.Time).TotalSeconds)
-                .ToList();
+            foreach (var d in filledData)
+            {
+                try
+                {
+                    var date = DateTime.ParseExact(d.Date.Trim(), "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    var time = TimeSpan.Parse(d.Time.Trim());
+
+                    xPoints.Add(date);
+                    yPoints.Add((int)time.TotalSeconds);
+                }
+                catch {  }
+            }
 
             buildChart(xPoints, yPoints);
 
-            // Загальний час
             string totalTime = statistic.CalculateTotalTime(filledData, "Time");
             label9.Text = "Усього витрачено на роботу: " + totalTime;
-            label10.Text = $"Статистика за тиждень {startOfWeek:dd.MM.yyyy} - {endOfWeek:dd.MM.yyyy}";
+            label10.Text = $"Статистика за {startOfWeek:dd.MM.yyyy} - {endOfWeek:dd.MM.yyyy}";
         }
-
 
         private void CurrentMonth()
         {
@@ -439,102 +432,46 @@ namespace diplom
             switch (typeOfStatictics)
             {
                 case "за проєктами":
-                    processedData = ProcessProjectData();
+                    processedData = statistic.ProcessProjectData();
                     break;
                 case "за браузером":
-                    processedData = ProcessBrowserData();
+                    processedData = statistic.ProcessBrowserData();
                     break;
                 case "за браузером та проєктами":
-                    processedData = ProcessCombinedData();
+                    processedData = statistic.ProcessCombinedData();
                     break;
                 default:
                     processedData = new List<TimerData>();
                     break;
             }
 
-            var (startOfMonth, endOfMonth) = GetMonthRangeWithOffset(currentMonthOffset);
+            var (startOfMonth, endOfMonth) = statistic.GetMonthRangeWithOffset(currentMonthOffset);
 
             List<TimerData> filledData = statistic.FillMissingDays(processedData, startOfMonth, endOfMonth);
 
             var xPoints = statistic.GetXPoints(filledData);
             var yPoints = statistic.GetYPoints(filledData);
+
             buildChart(xPoints, yPoints);
 
             string totalTime = statistic.CalculateTotalTime(filledData, "Time");
             label9.Text = "Усього витрачено на роботу: " + totalTime;
+            var ukrCulture = new System.Globalization.CultureInfo("uk-UA");
 
             switch (typeOfStatictics)
             {
                 case "за проєктами":
                 case "за браузером":
-                    label10.Text = $"Статистика за {startOfMonth:MMMM yyyy}";
+                    label10.Text = "Статистика за " + startOfMonth.ToString("MMMM yyyy", ukrCulture);
                     break;
 
                 case "за браузером та проєктами":
-                    label10.Text = $"Статистика за {startOfMonth:MMMM yyyy} (обʼєднана)";
+                    label10.Text = "Статистика за " + startOfMonth.ToString("MMMM yyyy", ukrCulture) + " (обʼєднана)";
                     break;
             }
-        }//графік для попереднього тижня
-
-        private List<TimerData> ProcessProjectData()
-        {
-            var freshData = statistic.LoadTimerData(); // Завантаження JSON-даних проєктів
-            return statistic.FilterDataForLastMonth(freshData,
-                item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)); // Фільтрація по даті
         }
 
-        private List<TimerData> ProcessBrowserData()
-        {
-            var freshData = statistic.LoadUrlData(); // Завантаження JSON-даних з браузера
-            var result = statistic.FilterDataForLastMonth(freshData, item => item.Timestamp.Date); // Фільтрація
-
-            return result
-                .GroupBy(item => item.Timestamp.Date) // Групування по днях
-                .Select(g => new TimerData
-                {
-                    Date = g.Key.ToString("dd.MM.yyyy"), // Форматування дати
-            Time = TimeSpan.FromSeconds(g.Sum(item => item.TimeSpent)).ToString() // Підрахунок часу
-        })
-                .ToList();
-        }
-
-        private List<TimerData> ProcessCombinedData()
-        {
-            var urlData = statistic.LoadUrlData(); // Дані з браузера
-            var timerData = statistic.LoadTimerData(); // Дані з трекера
-
-            var (start, end) = statistic.GetLastMonthRange(); // Діапазон
-
-            var filteredUrl = statistic.FilterDataForDateRange(urlData, start, end, item => item.Timestamp.Date);
-            var filteredTimer = statistic.FilterDataForDateRange(timerData, start, end,
-                item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture));
-
-            return filteredUrl
-                .Select(d => new { Date = d.Timestamp.Date, Seconds = d.TimeSpent }) // Перетворення у спільний формат
-                .Concat(filteredTimer.Select(d => new
-                {
-                    Date = DateTime.ParseExact(d.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture),
-                    Seconds = (int)TimeSpan.Parse(d.Time).TotalSeconds
-                }))
-                .GroupBy(x => x.Date) // Групування по днях
-                .Select(g => new TimerData
-                {
-                    Date = g.Key.ToString("dd.MM.yyyy"),
-                    Time = TimeSpan.FromSeconds(g.Sum(x => x.Seconds)).ToString()
-                })
-                .ToList();
-        }
-
-        private (DateTime start, DateTime end) GetMonthRangeWithOffset(int offset)
-        {
-            DateTime today = DateTime.Today;
-            DateTime targetMonth = new DateTime(today.Year, today.Month, 1).AddMonths(offset);
-            DateTime start = targetMonth;
-            DateTime end = targetMonth.AddMonths(1).AddDays(-1);
-            return (start, end);
-        }
-
-        private void button11_Click(object sender, EventArgs e)
+        private void button11_Click(object sender, EventArgs e) //-1 в статистиці
         {
             switch (currentViewMode)
             {
@@ -553,7 +490,7 @@ namespace diplom
             }
         }
 
-        private void button12_Click(object sender, EventArgs e)
+        private void button12_Click(object sender, EventArgs e) //+1 в статистиці
         {
             switch (currentViewMode)
             {
@@ -684,13 +621,12 @@ namespace diplom
         {
             this.Controls.Clear();
             InitializeComponentMainMenu();
+            SetActivePanel(panel6);
             this.button3.Visible = false;
             GetTimeAmount();
             loadValues();
             LabelsToShow();
             ButtonsToShow();
-
-           // MessageBox.Show(Convert.ToString(isPersonChoose));
         }
 
         private void button3_Click(object sender, EventArgs e)//кнопка вверх
@@ -867,110 +803,6 @@ namespace diplom
             return nonActiveTime;
         }
 
-        private void button13_Click(object sender, EventArgs e)
-        {
-            this.Controls.Clear();
-            InitializeComponentMain();
-            AnnualStatistics();
-        }
-
-        private void button14_Click(object sender, EventArgs e)
-        {
-            this.Controls.Clear();
-            InitializeComponentMain();
-
-            BuildMonthlyChart(2024, 10);
-        }
-
-        private void button15_Click(object sender, EventArgs e)
-        {
-            this.Controls.Clear();
-            InitializeComponentMain();
-
-            BuildMonthlyChart(2024, 11);
-        }
-
-        private void button16_Click(object sender, EventArgs e)
-        {
-            this.Controls.Clear();
-            InitializeComponentMain();
-
-            BuildMonthlyChart(2024, 12);
-        }
-
-        private void button17_Click(object sender, EventArgs e)
-        {
-            this.Controls.Clear();
-            InitializeComponentMain();
-
-            BuildMonthlyChart(2024, 7);
-        }
-
-        private void button18_Click(object sender, EventArgs e)
-        {
-            this.Controls.Clear();
-            InitializeComponentMain();
-
-            BuildMonthlyChart(2024, 8);
-        }
-
-        private void button19_Click(object sender, EventArgs e)
-        {
-            this.Controls.Clear();
-            InitializeComponentMain();
-
-            BuildMonthlyChart(2024, 9);
-        }
-
-        private void button20_Click(object sender, EventArgs e)
-        {
-            this.Controls.Clear();
-            InitializeComponentMain();
-
-            BuildMonthlyChart(2024, 4);
-        }
-
-        private void button21_Click(object sender, EventArgs e)
-        {
-            this.Controls.Clear();
-            InitializeComponentMain();
-
-            BuildMonthlyChart(2024, 5);
-        }
-
-        private void button22_Click(object sender, EventArgs e)
-        {
-            this.Controls.Clear();
-            InitializeComponentMain();
-
-            BuildMonthlyChart(2024, 6);
-        }
-
-        private void button23_Click(object sender, EventArgs e)
-        {
-            this.Controls.Clear();
-            InitializeComponentMain();
-
-            BuildMonthlyChart(2024, 1);
-        }
-
-        private void button24_Click(object sender, EventArgs e)
-        {
-            this.Controls.Clear();
-            InitializeComponentMain();
-
-            BuildMonthlyChart(2024, 2);
-        }
-
-        private void button25_Click(object sender, EventArgs e)
-        {
-            this.Controls.Clear();
-            InitializeComponentMain();
-
-            BuildMonthlyChart(2024, 3);
-            ExitButton();
-        }
-
         private void button29_Click(object sender, EventArgs e)
         {
             this.Controls.Clear();
@@ -1107,254 +939,40 @@ namespace diplom
                 LoadBrowserDataIntoLabels();
             }
         }
-        private void button40_Click(object sender, EventArgs e)
-        {
-            // Очищення та ініціалізація
-            this.Controls.Clear();
-            InitializeComponentMain();
-            StatisticsMainMenu();
-
-            if (isBrowserStats)
-            {
-                typeOfStatictics = "за браузером";
-
-                string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
-                var data = statistic.LoadBrowserDataForCurrentWeek(filePath);
-
-                var timerDataList = data
-                    .GroupBy(d => d.Timestamp.Date)
-                    .Select(g => new TimerData
-                    {
-                        Date = g.Key.ToString("dd.MM.yyyy"),
-                        Time = TimeSpan.FromSeconds(g.Sum(d => d.TimeSpent)).ToString()
-                    })
-                    .ToList();
-
-                var (startOfWeek, endOfWeek) = statistic.GetCurrentWeekRange();
-
-                var filteredData = statistic.FilterDataForDateRange(
-                    timerDataList, startOfWeek, endOfWeek,
-                    item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)
-                );
-
-                var filledData = statistic.FillMissingDays(filteredData, startOfWeek, endOfWeek);
-
-                var xPoints = filledData
-                    .Select(d => DateTime.ParseExact(d.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture))
-                    .ToList();
-
-                var yPoints = filledData
-                    .Select(d => (int)TimeSpan.Parse(d.Time).TotalSeconds)
-                    .ToList();
-
-                buildChart(xPoints, yPoints);
-
-                string totalTime = statistic.CalculateTotalTime(data, "TimeSpent");
-                label9.Text = "Усього витрачено на роботу: " + totalTime;
-                label10.Text = "Статистика за поточний тиждень";
-            }
-            else
-            {
-                typeOfStatictics = "за проєктами";
-
-                var freshData = statistic.LoadTimerData();
-
-                var filteredData = statistic.FilterDataForCurrentWeek(
-                    freshData,
-                    item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)
-                );
-
-                var (startOfWeek, endOfWeek) = statistic.GetCurrentWeekRange();
-                var filledData = statistic.FillMissingDays(filteredData, startOfWeek, endOfWeek);
-
-                var xPoints = filledData
-                    .Select(item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture))
-                    .ToList();
-
-                var yPoints = filledData
-                    .Select(item => (int)TimeSpan.Parse(item.Time).TotalSeconds)
-                    .ToList();
-
-                buildChart(xPoints, yPoints);
-
-                string totalTime = statistic.CalculateTotalTime(filledData, "Time");
-                label9.Text = "Усього витрачено на роботу: " + totalTime;
-                label10.Text = "Статистика за останній тиждень";
-            }
-        }
-
-        private void button41_Click(object sender, EventArgs e)
+        private void button13_Click(object sender, EventArgs e) //дані в браузері
         {
             this.Controls.Clear();
             InitializeComponentMain();
-            StatisticsMainMenu();
-
-            typeOfStatictics = "за браузером та проєктами";
-
-            // 1. Завантаження даних
-            var urlData = statistic.LoadUrlData();
-            var timerData = statistic.LoadTimerData();
-
-            // 2. Діапазон поточного тижня
-            var (startOfWeek, endOfWeek) = statistic.GetCurrentWeekRange();
-            Console.WriteLine($"Період: {startOfWeek:dd.MM.yyyy} — {endOfWeek:dd.MM.yyyy}");
-
-            // 3. Фільтрація
-            var filteredUrlData = statistic.FilterDataForDateRange(
-                urlData,
-                startOfWeek,
-                endOfWeek,
-                item => item.Timestamp.Date
-            );
-
-            var filteredTimerData = statistic.FilterDataForDateRange(
-                timerData,
-                startOfWeek,
-                endOfWeek,
-                item => DateTime.ParseExact(item.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)
-            );
-
-            // 4. Обʼєднання по датах
-            var combined = filteredUrlData
-                .Select(d => new
-                {
-                    Date = d.Timestamp.Date,
-                    Seconds = d.TimeSpent
-                })
-                .Concat(filteredTimerData.Select(d => new
-                {
-                    Date = DateTime.ParseExact(d.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture),
-                    Seconds = (int)TimeSpan.Parse(d.Time).TotalSeconds
-                }))
-                .GroupBy(x => x.Date)
-                .Select(g => new TimerData
-                {
-                    Date = g.Key.ToString("dd.MM.yyyy"),
-                    Time = TimeSpan.FromSeconds(g.Sum(x => x.Seconds)).ToString()
-                })
-                .ToList();
-
-            // 5. Заповнення пропущених днів поточного тижня
-            var filledData = statistic.FillMissingDays(combined, startOfWeek, endOfWeek);
-
-            // 6. Побудова графіка
-            var xPoints = statistic.GetXPoints(filledData);
-            var yPoints = statistic.GetYPoints(filledData);
-            buildChart(xPoints, yPoints);
-
-            // 7. Вивід статистики
-            string totalTime = statistic.CalculateTotalTime(filledData, "Time");
-            label9.Text = "Усього витрачено на роботу:  " + totalTime;
-            label10.Text = "Статистика за поточний тиждень (обʼєднана)";
-
-        }
-
-
-        public void BuildMonthlyChart(int year, int month)
-        {
-            var freshData = statistic.LoadTimerData(); // Завантажуємо актуальні дані з JSON
-            // Фільтрація даних за конкретний місяць
-            var filteredData = statistic.GetDataForSpecificMonth(freshData, year, month);
-
-            // Визначення початку і кінця місяця
-            var startOfMonth = new DateTime(year, month, 1);
-            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-
-            // Заповнення пропущених днів
-            var filledData = statistic.FillMissingDays(filteredData, startOfMonth, endOfMonth);
-
-            // Отримання точок X і Y для графіка
-            var xPoints = statistic.GetXPoints(filledData);
-            var yPoints = statistic.GetYPoints(filledData);
-
-            // Побудова графіка
-            buildChart(xPoints, yPoints);
-
-            // Обчислення загального часу
-            string totalTime = statistic.CalculateTotalTime(filteredData, "Time");
-
-            // Виведення тексту в Label
-            label9.Text = $"Усього витрачено на роботу: {totalTime}";
+            BrowserInfo();
+            LoadBrowserDataIntoLabels();
             ExitButton();
+            label10.Text = "Дані активності в браузері"; 
         }
 
-        private void button26_Click(object sender, EventArgs e) //статистика на панелі
+        private void button14_Click(object sender, EventArgs e) //вихід з даних в браузері
         {
-            if (isPersonChoose == true)
-            {
-                /*checkBox5.CheckedChanged -= ValidateTextBox;
-                checkBox6.CheckedChanged -= ValidateTextBox;
-                checkBox7.CheckedChanged -= ValidateTextBox;
-                textBox1.Leave -= ValidateTextBox;*/
-            }
-
             this.Controls.Clear();
             InitializeComponentMain();
-            AnnualStatistics();
+            StatisticsMainMenu();
+            CurrentDay(); 
         }
 
         private void button27_Click(object sender, EventArgs e) //налаштування на панелі
         {
             this.Controls.Clear();
             InitializeComponentMain();
+            SetActivePanel(panel4);
             SettingsMenu();
-
-           /* if (isPersonChoose == true)
-            {
-                CheckBox5Active = false;
-                checkBox5.Checked = false;
-
-                // MessageBox.Show("DA");
-            }
-            else if (isPersonChoose == false)
-            {
-                CheckBox5Active = true;
-                checkBox5.Checked = true;
-            }*/
-
-          /*  if (textBoxText != null)
-            {
-                nonActiveTime = Convert.ToInt32(textBoxText);
-                CheckBox5Active = false;
-                checkBox5.Checked = false;
-                CheckBox6Active = false;
-                checkBox6.Checked = false;
-                CheckBox7Active = false;
-                checkBox7.Checked = false;
-            }*/
-
-           /* checkBox5.CheckedChanged += ValidateTextBox;
-            checkBox6.CheckedChanged += ValidateTextBox;
-            checkBox7.CheckedChanged += ValidateTextBox;
-            textBox1.Leave += ValidateTextBox;*/
-
-            // MessageBox.Show(isPersonChoose.ToString());
-
-            // textBox1.Text = Convert.ToString(nonActiveTime);
-
             textBox1.KeyPress += textBox1_KeyPress;
-            textBox1.TextChanged += textBox1_TextChanged;
-
-            //MessageBox.Show(Convert.ToString(nonActiveTime));
         }
 
-        private void button28_Click(object sender, EventArgs e)
+        private void button28_Click(object sender, EventArgs e) //про програму
         {
             this.Controls.Clear();
             InitializeComponentMain();
+            SetActivePanel(panel3);
             AboutProgram();
-        }
-
-        public static void NotificationsOn()
-        {
-            if (notificationsOnOff)
-            {
-                var notification = new Notifications();
-            }
-            //notification.ShowNotification(); // Викликає метод
-
-            //  MessageBox.Show("Fllf");
-        }
+        } 
 
         private void Label1_MouseEnter(object sender, EventArgs e)
         {
@@ -1491,44 +1109,6 @@ namespace diplom
             }
         }
 
-         private void textBox1_TextChanged(object sender, EventArgs e)
-         {
-             if (!(string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр") || Form1.settings.TextBoxValue != 0)
-             {
-                //textBox1.Text = Convert.ToString(Form1.settings.TextBoxValue);
-
-                textBoxText = textBox1.Text;
-
-                CheckBox5Active = false;
-                checkBox5.Checked = false;
-                CheckBox6Active = false;
-                checkBox6.Checked = false;
-                CheckBox7Active = false;
-                checkBox7.Checked = false;
-
-                if (int.TryParse(textBoxText, out int result))
-                {
-                    nonActiveTime = result;
-                    UpdateTextBoxValue(this, nonActiveTime);
-                }
-                // MessageBox.Show(Convert.ToString(nonActiveTime));
-            }
-
-            if (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр" || Form1.settings.TextBoxValue == 0)
-           // if (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр")
-            {
-                textBoxText = "Введіть лише число за допомогою цифр";
-                TextBoxValue = 0;
-
-                UpdateTextBoxValue(this, TextBoxValue);
-
-                CheckBox5Active = true;
-                checkBox5.Checked = true;
-                nonActiveTime = 5;
-            }
-
-         }
-
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -1539,47 +1119,31 @@ namespace diplom
 
         public static void UpdateInactivityAmount(Form1 form1, int newInactivityAmount)
         {
-            // Оновлюємо властивість в об'єкті settings
             Form1.settings.InactivityAmount = newInactivityAmount;
-
-            // Тепер зберігаємо оновлені налаштування у файл
             JsonProcessing.SaveSettings(form1); 
         }
 
         public static void UpdateColorTheme(Form1 form1, string newColorTheme)
         {
-            // Оновлюємо властивість в об'єкті settings
             Form1.settings.ColorTheme = newColorTheme;
-
-            // Тепер зберігаємо оновлені налаштування у файл
             JsonProcessing.SaveSettings(form1);
         }
 
         public static void UpdateAutostart(Form1 form1, bool newAutostart)
         {
-            // Оновлюємо властивість в об'єкті settings
             Form1.settings.Autostart = newAutostart;
-
-            // Тепер зберігаємо оновлені налаштування у файл
             JsonProcessing.SaveSettings(form1);
         }
 
         public static void UpdateNotificaton(Form1 form1, bool newNotificatonOnOff)
         {
-            // Оновлюємо властивість в об'єкті settings
             Form1.settings.NotificatonOnOff = newNotificatonOnOff;
-
-            // Тепер зберігаємо оновлені налаштування у файл
             JsonProcessing.SaveSettings(form1);
-            MessageBox.Show("UpdateNotificaton викликано!");
         }
 
         public static void UpdateTextBoxValue(Form1 form1, int newTextBoxValue)
         {
-            // Оновлюємо властивість в об'єкті settings
             Form1.settings.TextBoxValue = newTextBoxValue;
-
-            // Тепер зберігаємо оновлені налаштування у файл
             JsonProcessing.SaveSettings(form1);
         }
     }

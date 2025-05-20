@@ -26,7 +26,7 @@ namespace diplom
             formThread.IsBackground = true;
             formThread.Start();
 
-           // CohereClient.CanSendRequest();
+            CohereClient.CanSendRequest();
 
             // Асинхронний запуск основного циклу
             Task.Run(ActivityMonitoring.MainLoopAsync).Wait();

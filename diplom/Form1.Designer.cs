@@ -259,7 +259,7 @@ namespace diplom
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             this.button3.BackColor = Color.FromArgb(6, 40, 68);
-            this.button3.Font = new Font("Microsoft Sans Serif", 10);
+            this.button3.Font = new Font("Microsoft Sans Serif", 9);
 
             this.button4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.button4.Location = new System.Drawing.Point(801, 413);
@@ -310,7 +310,7 @@ namespace diplom
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             this.button10.BackColor = Color.FromArgb(6, 40, 68);
-            this.button10.Font = new Font("Microsoft Sans Serif", 10);
+            this.button10.Font = new Font("Microsoft Sans Serif", 9);
 
             // Налаштування для pictureBox1
             this.pictureBox1.Image = Properties.Resources.ClockForDarkTheme;

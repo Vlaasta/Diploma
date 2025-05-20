@@ -86,10 +86,44 @@ namespace diplom
             return text.ToString();
         }
 
+        private bool SendMessageToAI(string userMessage, out string aiResponse)
+        {
+            aiResponse = string.Empty;
+
+            try
+            {
+                var payload = new
+                {
+                    model = "command-r-plus-08-2024",
+                    messages = new[]
+                    { new { role = "user", content = userMessage } }
+                };
+
+                var jsonPayload = JsonSerializer.Serialize(payload);
+                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                var response = _client.PostAsync(Url, content).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    aiResponse = response.Content.ReadAsStringAsync().Result;
+                    return true;
+                }
+                else
+                {
+                    var error = response.Content.ReadAsStringAsync().Result;
+                    aiResponse = $"{response.StatusCode} - {error}";
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                aiResponse = $"Exception: {ex.Message}";
+                return false;
+            }
+        }
+
         private string AnalyzeFiles(string outputJsonPath)
         {
-           // const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
-
             try
             {
                 var projects = JsonProcessing.LoadProjects();
@@ -110,44 +144,25 @@ namespace diplom
                         allResponses.Add(new { Project = project.Name, Error = "Файл порожній або нечитабельний" });
                         continue;
                     }
+
                     var userMessage = $"Аналіз проєкту: {Path.GetFileName(project.Path)}\n\n{fileText}";
 
-                    var payload = new
-                    {
-                        model = "command-r-plus-08-2024",
-                        messages = new[]
-                        {
-                            new { role = "user", content = userMessage }
-                        }
-                    };
-                    var jsonPayload = JsonSerializer.Serialize(payload);
-                    var logEntry = new
-                    {
-                        Time = DateTime.Now.ToString("o"),
-                        Project = project.Name,
-                        Payload = JsonDocument.Parse(jsonPayload).RootElement
-                    };
-                   // File.AppendAllText(testJsonPath, JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true }) + Environment.NewLine);
+                    var success = SendMessageToAI(userMessage, out string aiResponse);
 
-                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-                    var response = _client.PostAsync(Url, content).Result;
-
-                    if (response.IsSuccessStatusCode)
+                    if (success)
                     {
-                        var responseJson = response.Content.ReadAsStringAsync().Result;
-                        Console.WriteLine($"Response for {project.Name}: {responseJson}");
-
-                        allResponses.Add(new { Project = project.Name, Response = responseJson });
+                        Console.WriteLine($"Response for {project.Name}: {aiResponse}");
+                        allResponses.Add(new { Project = project.Name, Response = aiResponse });
                         _requestsSentToday++;
                     }
                     else
                     {
-                        var error = response.Content.ReadAsStringAsync().Result;
-                        Console.WriteLine($"Помилка для {project.Name}: {response.StatusCode} - {error}");
-                        allResponses.Add(new { Project = project.Name, Error = $"Помилка: {response.StatusCode} - {error}" });
+                        Console.WriteLine($"Помилка при обробці проєкту {project.Name}: {aiResponse}");
+                        allResponses.Add(new { Project = project.Name, Error = aiResponse });
                         break;
                     }
                 }
+
                 var resultJson = JsonSerializer.Serialize(allResponses, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(outputJsonPath, resultJson);
 
@@ -161,7 +176,6 @@ namespace diplom
 
         private string AnalyzeBrowserUrls(string outputJsonPath)
         {
-           // const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
             try
             {
                 string jsonContent = File.ReadAllText(JsonProcessing.filePath2);
@@ -175,46 +189,24 @@ namespace diplom
                         allResponses.Add(new { Url = entry.Url, Error = "Text is empty" });
                         continue;
                     }
-                    var userMessage = new StringBuilder()
-                        .AppendLine($"Аналіз веб-сторінки")
-                        .AppendLine($"URL: {entry.Url}")
-                        .AppendLine($"Заголовок: {entry.PageTitle}")
-                        .AppendLine()
-                        .AppendLine(entry.Text)
-                        .ToString();
 
-                    var payload = new
-                    {
-                        model = "command-r-plus-08-2024",
-                        messages = new[]
-                        {new { role = "user", content = userMessage }}
-                    };
-                    var jsonPayload = JsonSerializer.Serialize(payload);
-                    var logEntry = new
-                    {
-                        Time = DateTime.Now.ToString("o"),
-                        Url = entry.Url,
-                        Payload = JsonDocument.Parse(jsonPayload).RootElement
-                    };
-                   // File.AppendAllText(testJsonPath, JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true }) + Environment.NewLine);
-                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-                    var response = _client.PostAsync(Url, content).Result;
+                    var userMessage = $"Аналіз веб-сторінки: {Path.GetFileName(entry.Url)}\n\n{entry.Text}";
+                    var responseSuccess = SendMessageToAI(userMessage, out string aiResponse);
 
-                    if (response.IsSuccessStatusCode)
+                    if (responseSuccess)
                     {
-                        var responseJson = response.Content.ReadAsStringAsync().Result;
-                        Console.WriteLine($"Response for {entry.Url}: {responseJson}");
-                        allResponses.Add(new { Url = entry.Url, Response = responseJson });
+                        Console.WriteLine($"Response for {entry.Url}: {aiResponse}");
+                        allResponses.Add(new { Url = entry.Url, Response = aiResponse });
                         _requestsSentToday++;
                     }
                     else
                     {
-                        var error = response.Content.ReadAsStringAsync().Result;
-                        Console.WriteLine($"Помилка для {entry.Url}: {response.StatusCode} - {error}");
-                        allResponses.Add(new { Url = entry.Url, Error = $"{response.StatusCode} - {error}" });
-                        break; 
+                        Console.WriteLine($"Помилка для {entry.Url}: {aiResponse}");
+                        allResponses.Add(new { Url = entry.Url, Error = aiResponse });
+                        continue; 
                     }
                 }
+
                 var resultJson = JsonSerializer.Serialize(allResponses, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(outputJsonPath, resultJson);
 
@@ -228,8 +220,6 @@ namespace diplom
 
         private string CompareProjectWebpageSimilarities(string projectsAnalysisPath, string webpagesAnalysisPath, string outputJsonPath)
         {
-           // const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
-
             var projects = JsonSerializer.Deserialize<List<ProjectAnalysis>>(
                 File.ReadAllText(projectsAnalysisPath)
             );
@@ -243,55 +233,15 @@ namespace diplom
             {
                 foreach (var page in pages)
                 {
-                    // Формуємо текст запиту
-                    var userMessage = new StringBuilder()
-                        .AppendLine("Порівняй тематику двох текстів і дай відповідь лише “Схожість виявлено” або “Схожість не виявлено”.")
-                        .AppendLine()
-                        .AppendLine("Текст проекту:")
-                        .AppendLine(proj.Response)
-                        .AppendLine()
-                        .AppendLine("Текст веб-сторінки:")
-                        .AppendLine(page.Response)
-                        .ToString();
+                    string userMessage = "Порівняй тематику двох текстів і дай відповідь лише “Схожість виявлено” або “Схожість не виявлено”.\n\n" + "Текст проекту:\n" + proj.Response + "\n\n" + "Текст веб-сторінки:\n" + page.Response;
 
-                    var payload = new
-                    {
-                        model = "command-r-plus-08-2024",
-                        messages = new[]
-                        {
-                    new { role = "user", content = userMessage }
-                }
-                    };
-                    var jsonPayload = JsonSerializer.Serialize(payload);
+                    bool success = SendMessageToAI(userMessage, out string aiResponse);
 
-                    // Лог запиту
-                    var logEntry = new
-                    {
-                        Time = DateTime.Now.ToString("o"),
-                        Project = proj.Project,
-                        Url = page.Url,
-                        Payload = JsonDocument.Parse(jsonPayload).RootElement
-                    };
-                    // File.AppendAllText(testJsonPath, JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true }) + Environment.NewLine);
+                    string similarity = success ? aiResponse.Trim().Replace("\"", "") : $"Error";
 
-                    // Надсилаємо до AI
-                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-                    var resp = _client.PostAsync(Url, content).Result;
-
-                    string similarity;
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        var body = resp.Content.ReadAsStringAsync().Result.Trim();
-                        // Відповідь очікуємо коротку, типу "Схожість виявлено"
-                        similarity = body.Replace("\"", "");
+                    if (success)
                         _requestsSentToday++;
-                    }
-                    else
-                    {
-                        similarity = $"Error {resp.StatusCode}";
-                    }
 
-                    // Зберігаємо результат
                     results.Add(new SimilarityResult
                     {
                         Project = proj.Project,
@@ -300,6 +250,7 @@ namespace diplom
                     });
                 }
             }
+
             var outJson = JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(outputJsonPath, outJson);
 

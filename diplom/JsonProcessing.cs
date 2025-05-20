@@ -131,6 +131,22 @@ namespace diplom
             }
         }
 
+        public static string SaveResultToFile(string path, object data)
+        {
+            try
+            {
+                string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+                File.WriteAllText(path, json);
+                return $"Обробка завершена. Результати збережено в {path}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Помилка збереження файлу:\n{ex.Message}", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return $"Помилка збереження: {ex.Message}";
+            }
+        }
+
+
         // Зчитування даних з файлу
         public static List<TimerData> LoadTimerData()
         {

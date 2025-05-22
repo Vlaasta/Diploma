@@ -19,7 +19,6 @@ namespace diplom
         private readonly object lockObject = new object();
 
         private Statistic statistic = new Statistic();
-        private bool isPreviousWeek = true;
         private string textBoxText = null;
 
         public static bool CheckBox1Active;
@@ -31,8 +30,6 @@ namespace diplom
         public static bool CheckBox7Active;
         private Panel activePanel; 
 
-        private bool isBrowserStats = false; // Початково: показує браузерну статистику
-
         private string typeOfStatictics = "за проєктами";
 
         private int currentOffset = 0;
@@ -42,7 +39,6 @@ namespace diplom
 
         private ToolTip toolTip;
 
-        // Завантажуємо час з файлу при запуску програми
         TimeSpan lastElapsedTime = LoadLastElapsedTimeFromFile();
 
         private ViewMode currentViewMode = ViewMode.Day;

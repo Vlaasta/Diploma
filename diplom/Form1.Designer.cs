@@ -1543,7 +1543,6 @@ namespace diplom
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Button button14;
 
-        private System.Windows.Forms.Button button26;
         private System.Windows.Forms.Button button27;
         private System.Windows.Forms.Button button28;
 

@@ -7,14 +7,14 @@
     <framework targetVersion="4.8" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="diplom.exe.manifest" size="104657">
+    <dependentAssembly dependencyType="install" codebase="diplom.exe.manifest" size="112935">
       <assemblyIdentity name="diplom.exe" version="1.0.0.1" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>bX76ie5X6sCfHLgMU18FTnvQHXwI2FSulUj6L3tGnEc=</dsig:DigestValue>
+        <dsig:DigestValue>vlsM4i2VqEZu7ArJwFb9Pawy9Sj6RNl/nbkZHxrKJqQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

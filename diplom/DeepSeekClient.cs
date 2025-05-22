@@ -5,9 +5,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json;
+using Newtonsoft.Json;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using ClosedXML.Excel;
+using UglyToad.PdfPig;
 
 namespace diplom
 {
@@ -20,10 +22,14 @@ namespace diplom
         private int _requestsSentToday = 0;
         private DateTime _lastRequestDate = DateTime.MinValue;
         private static readonly string lastRunFilePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\lastRun.txt";
-
-        private static List<UrlData> todayUrls = new List<UrlData>();
-        private static List<Project> todayProjects = new List<Project>();
         public static List<string> sessionLog = new List<string>();
+
+        static string apiKey = "Palmi92v7dC5q2FIMoVG4PX3GtkIa5dQZJzHc9zZ";
+
+        const string outputProjectsJson = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\projectsAnalysis.json";
+        const string outputUrlsJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\webpagesAnalysis.json";
+
+        public const string outputJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\analysisResults.json";
 
         public CohereClient(string apiKey)
         {
@@ -45,10 +51,11 @@ namespace diplom
 
                 Console.WriteLine($"LastRun: {lastRun:yyyy-MM-dd}, Today: {today:yyyy-MM-dd}");
 
-                if (lastRun < today && УмовиВиконання())
+                if (lastRun < today && JsonProcessing.IfWasModifiedToday())
                 {
-                    RunDailyTask(); // запускаємо тільки один раз
-                    File.WriteAllText(lastRunFilePath, today.ToString("yyyy-MM-dd")); // зберігаємо дату
+                    RunDailyTask();
+                   // JsonProcessing.FilterUrlsBySimilarity(outputJsonPath, JsonProcessing.todayUrls, JsonProcessing.filePath2, JsonProcessing.filePath3);
+                    File.WriteAllText(lastRunFilePath, today.ToString("yyyy-MM-dd")); 
                     return true;
                 }
             }
@@ -62,37 +69,119 @@ namespace diplom
             return false;
         }
 
-        private string ExtractTextFromDocx(string filePath)
+        private string ExtractTextFromFile(string filePath)
         {
+            string extension = Path.GetExtension(filePath).ToLower();
             var text = new StringBuilder();
+
+            string[] plainTextExtensions = { ".txt", ".log", ".md", ".json", ".xml", ".html", ".cs", ".cpp", ".js", ".ts", ".java", ".py",
+                                             ".yml", ".yaml", ".ini", ".sln", ".bat", ".sh", ".csv", ".config", ".props", ".targets" };
+
             try
             {
-                using (var wordDoc = WordprocessingDocument.Open(filePath, false))
+                switch (extension)
                 {
-                    var body = wordDoc.MainDocumentPart.Document.Body;
-                    foreach (var para in body.Elements<Paragraph>())
-                    {
-                        foreach (var run in para.Elements<Run>())
-                            foreach (var txt in run.Elements<Text>())
-                                text.Append(txt.Text);
-                        text.AppendLine();
-                    }
+                    case ".docx":
+                        using (var wordDoc = WordprocessingDocument.Open(filePath, false))
+                        {
+                            var body = wordDoc.MainDocumentPart.Document.Body;
+                            foreach (var para in body.Elements<Paragraph>())
+                            {
+                                foreach (var run in para.Elements<Run>())
+                                    foreach (var txt in run.Elements<Text>())
+                                        text.Append(txt.Text);
+                                text.AppendLine();
+                            }
+                        }
+                        return text.ToString();
+
+                    case ".xls":
+                    case ".xlsx":
+                        using (var workbook = new XLWorkbook(filePath))
+                        {
+                            foreach (var ws in workbook.Worksheets)
+                            {
+                                foreach (var row in ws.RowsUsed())
+                                {
+                                    foreach (var cell in row.CellsUsed())
+                                    {
+                                        text.Append(cell.GetValue<string>() + "\t");
+                                    }
+                                    text.AppendLine();
+                                }
+                            }
+                        }
+                        return text.ToString();
+
+                    case ".pdf":
+                        using (var document = PdfDocument.Open(filePath)) // PdfPig
+                        {
+                            foreach (var page in document.GetPages())
+                            {
+                                text.AppendLine(page.Text);
+                            }
+                        }
+                        return text.ToString();
+
+                    default:
+                        if (plainTextExtensions.Contains(extension))
+                        {
+                            return File.ReadAllText(filePath);
+                        }
+                        else
+                        {
+                            // Для невідомих типів — спроба прочитати як текст
+                            return File.ReadAllText(filePath);
+                        }
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Помилка при читанні {filePath}: {ex.Message}");
+                return string.Empty;
             }
-            return text.ToString();
-        }
+        } 
 
-        private string AnalyzeFiles(string outputJsonPath)
+        private bool SendMessageToAI(string userMessage, out string aiResponse)
         {
-           // const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
+            aiResponse = string.Empty;
 
             try
             {
-                var projects = JsonProcessing.LoadProjects();
+                var payload = new
+                {
+                    model = "command-r-plus-08-2024",
+                    messages = new[]
+                    { new { role = "user", content = userMessage } }
+                };
+
+                var jsonPayload = JsonConvert.SerializeObject(payload);
+                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                var response = _client.PostAsync(Url, content).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    aiResponse = response.Content.ReadAsStringAsync().Result;
+                    return true;
+                }
+                else
+                {
+                    var error = response.Content.ReadAsStringAsync().Result;
+                    aiResponse = $"{response.StatusCode} - {error}";
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                aiResponse = $"Exception: {ex.Message}";
+                return false;
+            }
+        }
+
+        private string AnalyzeFiles(string outputJsonPath, List<Project> projects)
+        {
+            try
+            {
                 var allResponses = new List<object>();
 
                 foreach (var project in projects)
@@ -104,51 +193,37 @@ namespace diplom
                         continue;
                     }
 
-                    var fileText = ExtractTextFromDocx(project.Path);
+                    var fileText = ExtractTextFromFile(project.Path);
                     if (string.IsNullOrWhiteSpace(fileText))
                     {
                         allResponses.Add(new { Project = project.Name, Error = "Файл порожній або нечитабельний" });
                         continue;
                     }
+
                     var userMessage = $"Аналіз проєкту: {Path.GetFileName(project.Path)}\n\n{fileText}";
 
-                    var payload = new
+                    var success = SendMessageToAI(userMessage, out string aiResponse);
+
+                    if (success)
                     {
-                        model = "command-r-plus-08-2024",
-                        messages = new[]
+                        Console.WriteLine($"Response for {project.Name}: {aiResponse}");
+                        allResponses.Add(new
                         {
-                            new { role = "user", content = userMessage }
-                        }
-                    };
-                    var jsonPayload = JsonSerializer.Serialize(payload);
-                    var logEntry = new
-                    {
-                        Time = DateTime.Now.ToString("o"),
-                        Project = project.Name,
-                        Payload = JsonDocument.Parse(jsonPayload).RootElement
-                    };
-                   // File.AppendAllText(testJsonPath, JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true }) + Environment.NewLine);
-
-                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-                    var response = _client.PostAsync(Url, content).Result;
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var responseJson = response.Content.ReadAsStringAsync().Result;
-                        Console.WriteLine($"Response for {project.Name}: {responseJson}");
-
-                        allResponses.Add(new { Project = project.Name, Response = responseJson });
+                            Project = project.Name,
+                            Response = aiResponse,
+                            AnalysisDate = DateTime.Now.ToString("dd.MM.yyyy")
+                        });
                         _requestsSentToday++;
                     }
                     else
                     {
-                        var error = response.Content.ReadAsStringAsync().Result;
-                        Console.WriteLine($"Помилка для {project.Name}: {response.StatusCode} - {error}");
-                        allResponses.Add(new { Project = project.Name, Error = $"Помилка: {response.StatusCode} - {error}" });
+                        Console.WriteLine($"Помилка при обробці проєкту {project.Name}: {aiResponse}");
+                        allResponses.Add(new { Project = project.Name, Error = aiResponse });
                         break;
                     }
                 }
-                var resultJson = JsonSerializer.Serialize(allResponses, new JsonSerializerOptions { WriteIndented = true });
+
+                var resultJson = JsonConvert.SerializeObject(allResponses, Formatting.Indented);
                 File.WriteAllText(outputJsonPath, resultJson);
 
                 return $"Обробка завершена. Результати збережено в {outputJsonPath}";
@@ -159,221 +234,351 @@ namespace diplom
             }
         }
 
-        private string AnalyzeBrowserUrls(string outputJsonPath)
+        private string AnalyzeBrowserUrls(string outputJsonPath, List<UrlData> urls)
         {
-           // const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
             try
             {
-                string jsonContent = File.ReadAllText(JsonProcessing.filePath2);
-                var allTextEntries = JsonSerializer.Deserialize<List<UrlData>>(jsonContent);
-                var allResponses = new List<object>();
+                Console.WriteLine("=== ПОЧАТОК АНАЛІЗУ URL ===");
+                Console.WriteLine($"📥 Шлях до JSON-файлу: {outputJsonPath}");
+                Console.WriteLine($"📌 Всього URL на вхід: {urls.Count}");
 
-                foreach (var entry in allTextEntries)
+                List<dynamic> allResponses;
+
+                // Завантажуємо існуючі результати або ініціалізуємо порожній список
+                if (File.Exists(outputJsonPath))
                 {
-                    if (string.IsNullOrWhiteSpace(entry.Text))
+                    Console.WriteLine("📂 JSON-файл існує. Завантаження вмісту...");
+                    var existingContent = File.ReadAllText(outputJsonPath).Trim();
+
+                    if (!string.IsNullOrWhiteSpace(existingContent))
                     {
-                        allResponses.Add(new { Url = entry.Url, Error = "Text is empty" });
-                        continue;
+                        try
+                        {
+                            allResponses = JsonConvert.DeserializeObject<List<dynamic>>(existingContent) ?? new List<dynamic>();
+                            Console.WriteLine($"✅ Завантажено {allResponses.Count} попередніх записів.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"❌ Помилка десеріалізації: {ex.Message}");
+                            allResponses = new List<dynamic>();
+                        }
                     }
-                    var userMessage = new StringBuilder()
-                        .AppendLine($"Аналіз веб-сторінки")
-                        .AppendLine($"URL: {entry.Url}")
-                        .AppendLine($"Заголовок: {entry.PageTitle}")
-                        .AppendLine()
-                        .AppendLine(entry.Text)
-                        .ToString();
+                    else
+                    {
+                        Console.WriteLine("⚠️ Файл порожній.");
+                        allResponses = new List<dynamic>();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("📄 JSON-файл ще не створено.");
+                    allResponses = new List<dynamic>();
+                }
 
-                    var payload = new
+                // URL, які вже аналізувалися
+                var analyzedUrls = new HashSet<string>(
+                    allResponses
+                    .Where(r => r.Response != null && r.Error == null)
+                    .Select(r => (string)r.Url)
+                );
+
+                Console.WriteLine($"🧾 Вже проаналізовано URL: {analyzedUrls.Count}");
+
+                var urlsToAnalyze = urls.Where(u => !analyzedUrls.Contains(u.Url)).ToList();
+                Console.WriteLine($"🔍 Нових URL для аналізу: {urlsToAnalyze.Count}");
+
+                // Розбиття по категоріях
+                // Визначити YouTube URL серед нових URL для аналізу
+                var youtubeUrls = urlsToAnalyze
+                    .Where(u => u.Url.Contains("youtube.com") || u.Url.Contains("youtu.be"))
+                    .ToList();
+
+                // Всі інші URL (окрім YouTube)
+                var otherUrls = urlsToAnalyze.Except(youtubeUrls).ToList();
+
+                // Для інших URL — розбиваємо по тексту
+                var urlsWithoutText = otherUrls.Where(u => string.IsNullOrWhiteSpace(u.Text)).ToList();
+                var urlsWithText = otherUrls.Where(u => !string.IsNullOrWhiteSpace(u.Text)).ToList();
+
+                Console.WriteLine($"YouTube URL (автоматичний запис): {youtubeUrls.Count}");
+                Console.WriteLine($"URL без тексту: {urlsWithoutText.Count}");
+                Console.WriteLine($"URL з текстом: {urlsWithText.Count}");
+
+                // YouTube: додаємо без AI, Response = PageTitle
+                foreach (var entry in youtubeUrls)
+                {
+                    allResponses.Add(new
                     {
-                        model = "command-r-plus-08-2024",
-                        messages = new[]
-                        {new { role = "user", content = userMessage }}
-                    };
-                    var jsonPayload = JsonSerializer.Serialize(payload);
-                    var logEntry = new
-                    {
-                        Time = DateTime.Now.ToString("o"),
                         Url = entry.Url,
-                        Payload = JsonDocument.Parse(jsonPayload).RootElement
-                    };
-                   // File.AppendAllText(testJsonPath, JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true }) + Environment.NewLine);
-                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-                    var response = _client.PostAsync(Url, content).Result;
+                        Response = entry.PageTitle,
+                        AnalysisDate = DateTime.Now.ToString("dd.MM.yyyy")
+                    });
 
-                    if (response.IsSuccessStatusCode)
+                    Console.WriteLine($"✔ YouTube URL додано без аналізу: {entry.Url} (PageTitle)");
+                }
+
+                // Інші URL без тексту — можеш або додати з PageTitle, або обробити інакше
+                foreach (var entry in urlsWithoutText)
+                {
+                    allResponses.Add(new
                     {
-                        var responseJson = response.Content.ReadAsStringAsync().Result;
-                        Console.WriteLine($"Response for {entry.Url}: {responseJson}");
-                        allResponses.Add(new { Url = entry.Url, Response = responseJson });
+                        Url = entry.Url,
+                        Response = entry.PageTitle,
+                        AnalysisDate = DateTime.Now.ToString("dd.MM.yyyy")
+                    });
+
+                    Console.WriteLine($"✔ URL без тексту додано без аналізу: {entry.Url} (PageTitle)");
+                }
+
+                // URL з текстом — аналіз через AI
+                foreach (var entry in urlsWithText)
+                {
+                    var userMessage = $"Аналіз веб-сторінки: {Path.GetFileName(entry.Url)}\n\n{entry.Text}";
+                    Console.WriteLine($"🤖 Аналізую текст для: {entry.Url}");
+                    var responseSuccess = SendMessageToAI(userMessage, out string aiResponse);
+                    Console.WriteLine($"✅ AI відповідь: {(responseSuccess ? "успішна" : "❌ помилка")}");
+                    Console.WriteLine($"=== AI Output ===\n{aiResponse}\n=================");
+
+                    if (responseSuccess)
+                    {
+                        allResponses.Add(new
+                        {
+                            Url = entry.Url,
+                            Response = aiResponse,
+                            AnalysisDate = DateTime.Now.ToString("dd.MM.yyyy")
+                        });
+
                         _requestsSentToday++;
                     }
                     else
                     {
-                        var error = response.Content.ReadAsStringAsync().Result;
-                        Console.WriteLine($"Помилка для {entry.Url}: {response.StatusCode} - {error}");
-                        allResponses.Add(new { Url = entry.Url, Error = $"{response.StatusCode} - {error}" });
-                        break; 
+                        allResponses.Add(new { Url = entry.Url, Error = aiResponse });
                     }
                 }
-                var resultJson = JsonSerializer.Serialize(allResponses, new JsonSerializerOptions { WriteIndented = true });
+
+                // Фінальна перевірка перед записом
+                Console.WriteLine($"💾 Загальна кількість записів до збереження: {allResponses.Count}");
+                var resultJson = JsonConvert.SerializeObject(allResponses, Formatting.Indented);
                 File.WriteAllText(outputJsonPath, resultJson);
+                Console.WriteLine($"✅ Результати збережено у файл: {outputJsonPath}");
 
                 return $"Обробка завершена. Результати збережено в {outputJsonPath}";
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"🔥 Виняток: {ex.Message}");
                 return $"Загальна помилка: {ex.Message}";
             }
         }
 
         private string CompareProjectWebpageSimilarities(string projectsAnalysisPath, string webpagesAnalysisPath, string outputJsonPath)
         {
-           // const string testJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json";
-
-            var projects = JsonSerializer.Deserialize<List<ProjectAnalysis>>(
-                File.ReadAllText(projectsAnalysisPath)
-            );
-            var pages = JsonSerializer.Deserialize<List<UrlAnalysis>>(
-                File.ReadAllText(webpagesAnalysisPath)
-            );
-
-            var results = new List<SimilarityResult>();
-
-            foreach (var proj in projects)
+            try
             {
-                foreach (var page in pages)
+                Console.WriteLine("Читання файлів...");
+                if (!File.Exists(projectsAnalysisPath) || !File.Exists(webpagesAnalysisPath))
+                    return "Файл(и) не знайдено.";
+
+                var projectsText = File.ReadAllText(projectsAnalysisPath);
+                var webpagesText = File.ReadAllText(webpagesAnalysisPath);
+
+                if (string.IsNullOrWhiteSpace(projectsText) || string.IsNullOrWhiteSpace(webpagesText))
+                    return "Один із файлів порожній.";
+
+                var projects = JsonConvert.DeserializeObject<List<ProjectAnalysis>>(projectsText);
+                var pages = JsonConvert.DeserializeObject<List<UrlAnalysis>>(webpagesText);
+
+                if (projects == null || pages == null)
+                    return "Помилка десеріалізації JSON.";
+
+                var completedPairs = new HashSet<string>();
+                var results = new List<SimilarityResult>();
+
+                if (File.Exists(outputJsonPath))
                 {
-                    // Формуємо текст запиту
-                    var userMessage = new StringBuilder()
-                        .AppendLine("Порівняй тематику двох текстів і дай відповідь лише “Схожість виявлено” або “Схожість не виявлено”.")
-                        .AppendLine()
-                        .AppendLine("Текст проекту:")
-                        .AppendLine(proj.Response)
-                        .AppendLine()
-                        .AppendLine("Текст веб-сторінки:")
-                        .AppendLine(page.Response)
-                        .ToString();
+                    var existingResultsText = File.ReadAllText(outputJsonPath);
+                    var existingResults = JsonConvert.DeserializeObject<List<SimilarityResult>>(existingResultsText) ?? new List<SimilarityResult>();
+                    foreach (var res in existingResults)
+                        completedPairs.Add($"{res.Project}||{res.Url}");
+                }
 
-                    var payload = new
+                foreach (var proj in projects)
+                {
+                    // === 1. Обробка YouTube URL ===
+                    var youtubePages = pages
+                        .Where(p => p.Url.Contains("youtube") && !string.IsNullOrWhiteSpace(p.Response))
+                        .Where(p => !completedPairs.Contains($"{proj.Project}||{p.Url}"))
+                        .ToList();
+
+                    if (youtubePages.Any() && !string.IsNullOrWhiteSpace(proj.Response))
                     {
-                        model = "command-r-plus-08-2024",
-                        messages = new[]
+                        Console.WriteLine($"YouTube аналіз ({youtubePages.Count} сторінок) для {proj.Project}");
+
+                        var sb = new StringBuilder();
+                        sb.AppendLine("Проаналізуй окремо кожну пару: проєкт + YouTube сторінка. Для кожної сторінки виведи результат у форматі:");
+                        sb.AppendLine("URL: [url] — [чи пов’язаний зміст із проєктом? Якщо так, коротке пояснення. Якщо ні — коротке пояснення]");
+                        sb.AppendLine($"\nОсь текст проєкту:\n{proj.Response}");
+
+                        int i = 1;
+                        foreach (var page in youtubePages)
                         {
-                    new { role = "user", content = userMessage }
-                }
-                    };
-                    var jsonPayload = JsonSerializer.Serialize(payload);
+                            sb.AppendLine($"\nСторінка {i}:");
+                            sb.AppendLine($"URL: {page.Url}");
+                            sb.AppendLine($"Текст: {page.Response}");
+                            i++;
+                        }
 
-                    // Лог запиту
-                    var logEntry = new
-                    {
-                        Time = DateTime.Now.ToString("o"),
-                        Project = proj.Project,
-                        Url = page.Url,
-                        Payload = JsonDocument.Parse(jsonPayload).RootElement
-                    };
-                    // File.AppendAllText(testJsonPath, JsonSerializer.Serialize(logEntry, new JsonSerializerOptions { WriteIndented = true }) + Environment.NewLine);
+                        bool success = SendMessageToAI(sb.ToString(), out string aiResponse);
+                        if (success)
+                        {
+                            _requestsSentToday++;
+                            var lines = aiResponse.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    // Надсилаємо до AI
-                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-                    var resp = _client.PostAsync(Url, content).Result;
+                            foreach (var page in youtubePages)
+                            {
+                                var key = $"{proj.Project}||{page.Url}";
+                                var line = lines.FirstOrDefault(l => l.Contains(page.Url));
+                                string result = line ?? "Не знайдено відповідь";
 
-                    string similarity;
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        var body = resp.Content.ReadAsStringAsync().Result.Trim();
-                        // Відповідь очікуємо коротку, типу "Схожість виявлено"
-                        similarity = body.Replace("\"", "");
-                        _requestsSentToday++;
+                                results.Add(new SimilarityResult
+                                {
+                                    Project = proj.Project,
+                                    Url = page.Url,
+                                    Similarity = result
+                                });
+
+                                completedPairs.Add(key);
+                            }
+                        }
+                        else
+                        {
+                            foreach (var page in youtubePages)
+                            {
+                                var key = $"{proj.Project}||{page.Url}";
+                                results.Add(new SimilarityResult
+                                {
+                                    Project = proj.Project,
+                                    Url = page.Url,
+                                    Similarity = "Error"
+                                });
+                                completedPairs.Add(key);
+                            }
+                        }
                     }
-                    else
-                    {
-                        similarity = $"Error {resp.StatusCode}";
-                    }
 
-                    // Зберігаємо результат
-                    results.Add(new SimilarityResult
+                    // === 2. Обробка решти сторінок (не YouTube) ===
+                    foreach (var page in pages)
                     {
-                        Project = proj.Project,
-                        Url = page.Url,
-                        Similarity = similarity
-                    });
+                        if (page.Url.Contains("youtube")) continue;
+                        if (string.IsNullOrWhiteSpace(proj.Response) || string.IsNullOrWhiteSpace(page.Response))
+                            continue;
+
+                        var key = $"{proj.Project}||{page.Url}";
+                        if (completedPairs.Contains(key))
+                        {
+                            Console.WriteLine($"Пропущено (вже оброблено): {proj.Project} + {page.Url}");
+                            continue;
+                        }
+
+                        string userMessage =
+                            "Ти отримуєш два фрагменти тексту. Проаналізуй, чи пов’язані вони між собою за змістом. " +
+                            "Виведи стислу відповідь, чи відповідає сторінка тематиці проєкту, і чому (1-2 речення).\n\n" +
+                            $"Текст проєкту:\n{proj.Response}\n\nТекст веб-сторінки:\n{page.Response}";
+
+                        Console.WriteLine($"Надсилання запиту для: {proj.Project} + {page.Url}");
+
+                        bool success = SendMessageToAI(userMessage, out string aiResponse);
+                        string similarity = success ? aiResponse.Trim().Replace("\"", "") : "Error";
+
+                        if (success)
+                            _requestsSentToday++;
+
+                        results.Add(new SimilarityResult
+                        {
+                            Project = proj.Project,
+                            Url = page.Url,
+                            Similarity = similarity
+                        });
+
+                        completedPairs.Add(key);
+                    }
                 }
+
+                // === Запис результатів ===
+                List<SimilarityResult> allResults = new List<SimilarityResult>();
+                if (File.Exists(outputJsonPath))
+                {
+                    var existing = JsonConvert.DeserializeObject<List<SimilarityResult>>(File.ReadAllText(outputJsonPath));
+                    if (existing != null)
+                        allResults.AddRange(existing);
+                }
+                allResults.AddRange(results);
+
+                Console.WriteLine("Запис результатів у файл...");
+                File.WriteAllText(outputJsonPath, JsonConvert.SerializeObject(allResults, Formatting.Indented));
+
+                return $"Порівняння завершено. Додано {results.Count} нових записів у {outputJsonPath}";
             }
-            var outJson = JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(outputJsonPath, outJson);
-
-            return $"Порівняння завершено. Результати в {outputJsonPath}";
+            catch (Exception ex)
+            {
+                return $"Сталася помилка: {ex.Message}\n\n{ex.StackTrace}";
+            }
         }
 
-        private static bool УмовиВиконання()
-        {
-            DateTime today = DateTime.Today;
-
-            // Завантажуємо URL-дані
-            var urlDataList = JsonProcessing.LoadUrlData();
-            todayUrls = urlDataList
-                .Where(url => url.Timestamp.Date == today)
-                .ToList();
-
-            Console.WriteLine($"URL-дані на сьогодні ({today:yyyy-MM-dd}): {todayUrls.Count} записів");
-
-            // Завантажуємо проєкти
-            var projectsList = JsonProcessing.LoadProjects();
-            todayProjects = projectsList
-                .Where(project =>
-                    File.Exists(project.Path) &&
-                    File.GetLastWriteTime(project.Path).Date == today)
-                .ToList();
-
-            Console.WriteLine($"Проєкти на сьогодні ({today:yyyy-MM-dd}): {todayProjects.Count} записів");
-
-            bool result = todayUrls.Any() || todayProjects.Any();
-            Console.WriteLine($"Результат перевірки умов виконання: {result}");
-
-            return result;
-        }
 
 
         public static void RunDailyTask()
         {
             try
             {
-                string apiKey = "Palmi92v7dC5q2FIMoVG4PX3GtkIa5dQZJzHc9zZ";
-
-                string outputProjectsJson = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\projectsAnalysis.json";
-                string outputUrlsJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\webpagesAnalysis.json";
-
                 string projectsAnalysisPath = outputProjectsJson;
                 string webpagesAnalysisPath = outputUrlsJsonPath;
-                string outputJsonPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\analysisResults.json";
 
                 Console.WriteLine("Ініціалізація клієнта...");
                 CohereClient deepSeekClient = new CohereClient(apiKey);
 
-                if (!JsonProcessing.WasFileModifiedToday(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\projectsAnalysis.json"))
+                var projects = JsonProcessing.todayProjects;
+                var projectsToAnalyze = new List<Project>();
+
+                foreach (var project in projects)
                 {
-                    Console.WriteLine("Аналіз проєктів...");
-                    string projectAnalysisResult = deepSeekClient.AnalyzeFiles(outputProjectsJson);
+                    if (!JsonProcessing.WasProjectAnalyzedToday(project.Name, outputProjectsJson))
+                    {
+                        Console.WriteLine($"Проєкт '{project.Name}' ще не аналізувався сьогодні. Додаємо до черги.");
+                        projectsToAnalyze.Add(project);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Пропускаємо вже проаналізований сьогодні проєкт: {project.Name}");
+                    }
+                }
+
+                if (projectsToAnalyze.Count > 0)
+                {
+                    Console.WriteLine("Аналізуємо нові проєкти...");
+                    string projectAnalysisResult = deepSeekClient.AnalyzeFiles(outputProjectsJson, projectsToAnalyze);
                     Console.WriteLine("Результат аналізу проєктів:");
                     Console.WriteLine(projectAnalysisResult);
                 }
+                else
+                {
+                    Console.WriteLine("Усі проєкти вже були проаналізовані сьогодні.");
+                }
 
-                if (!JsonProcessing.WasFileModifiedToday(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\webpagesAnalysis.json"))
-                {
-                    Console.WriteLine("Аналіз вебсторінок...");
-                    string urlAnalysisResult = deepSeekClient.AnalyzeBrowserUrls(outputUrlsJsonPath);
-                    Console.WriteLine("Результат аналізу вебсторінок:");
-                    Console.WriteLine(urlAnalysisResult);
-                }
-                if (!JsonProcessing.WasFileModifiedToday(@"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\analysisResults.json"))
-                {
-                    Console.WriteLine("Порівняння схожості між проєктами та сторінками...");
-                    string resultMessage = deepSeekClient.CompareProjectWebpageSimilarities(
-                        projectsAnalysisPath, webpagesAnalysisPath, outputJsonPath);
-                    Console.WriteLine("Результат порівняння:");
-                    Console.WriteLine(resultMessage);
-                }
+                var urls = JsonProcessing.todayUrls;
+
+                Console.WriteLine($"Всього URL сьогодні: {urls.Count}");
+
+                string urlAnalysisResult = deepSeekClient.AnalyzeBrowserUrls(outputUrlsJsonPath, urls);
+                Console.WriteLine("Результат аналізу URL:");
+                Console.WriteLine(urlAnalysisResult);
+
+
+               /* Console.WriteLine("Порівняння схожості між проєктами та сторінками...");
+                string resultMessage = deepSeekClient.CompareProjectWebpageSimilarities(projectsAnalysisPath, webpagesAnalysisPath, outputJsonPath);
+                Console.WriteLine("Результат порівняння:");
+                Console.WriteLine(resultMessage);*/
+                
             
             }
             catch (Exception ex)

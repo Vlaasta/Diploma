@@ -156,33 +156,67 @@ namespace diplom
                 Console.WriteLine("Активне вікно не відповідає жодному з проєктів.");
             }
         }
-
         public static async Task MainLoopAsync()
         {
             while (true)
             {
-                var projects = JsonProcessing.LoadProjects();
+                try
+                {
+                    Console.WriteLine("Завантажую проекти...");
+                    var projects = JsonProcessing.LoadProjects();
 
-                if (projects.Count == 0)
-                {
-                    Console.WriteLine("Немає проектів для перевірки.");
-                }
-                else
-                {
-                    //await CompareProjectsWithOpenProcessesAsync(projects);
-                    if (!BrowserMonitor.IsBrowserActive())
+                    if (projects.Count == 0)
                     {
-                        CheckActiveWindow(projects, elapsed =>
+                        Console.WriteLine("Немає проектів для перевірки.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Проекти знайдено, перевіряю активність браузера...");
+                        if (!BrowserMonitor.IsBrowserActive())
                         {
-                            Form1.Instance?.Invoke(new Action(() =>
+                            Console.WriteLine("Браузер не активний, перевіряю активне вікно...");
+                            CheckActiveWindow(projects, elapsed =>
                             {
-                                Form1.Instance?.HandButton_OnTimeUpdated(elapsed);
-                            }));
-                        });
+                                try
+                                {
+                                    if (Form1.Instance != null)
+                                    {
+                                        Form1.Instance.Invoke(new Action(() =>
+                                        {
+                                            try
+                                            {
+                                                Form1.Instance.HandButton_OnTimeUpdated(elapsed);
+                                                Console.WriteLine($"Оновлено таймер: {elapsed}");
+                                            }
+                                            catch (Exception exInner)
+                                            {
+                                                Console.WriteLine($"Помилка при оновленні таймера у формі: {exInner}");
+                                            }
+                                        }));
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Form1.Instance дорівнює null.");
+                                    }
+                                }
+                                catch (Exception exInvoke)
+                                {
+                                    Console.WriteLine($"Помилка при виклику Invoke: {exInvoke}");
+                                }
+                            });
+                        }
+                        else
+                        {
+                            Console.WriteLine("Браузер активний, таймер не запускаю.");
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Помилка в MainLoopAsync: {ex}");
+                }
 
-                await Task.Delay(1000); //пауза
+                await Task.Delay(1000); // пауза 1 секунда
             }
         }
     }

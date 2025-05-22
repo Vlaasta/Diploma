@@ -10,5 +10,6 @@ namespace diplom
     {
         public string Project { get; set; }
         public string Response { get; set; }
+        public string AnalysisDate { get; set; }
     }
 }

@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms; 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq; 
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.Concurrent;
+using System.Threading;
+
 
 namespace diplom
 {
@@ -13,25 +17,76 @@ namespace diplom
         private static string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\timerAmounts.json"; // Шлях до JSON-файлу з результатами таймеру
         static string fileSecondPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json"; // Шлях до JSON-файлу з проектами
         private static string fileThirdPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\settings.json"; // Шлях до JSON-файлу з настройками
-       // private static string fileFourthPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserAnalysis\test.json"; // Шлях до JSON-файлу з запитами
         public static string filePath2 = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json"; //Шлях до JSON-файлу з веб-сторінками
+        public static string filePath3 = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\unmatchedUrls.json";
+
+        private static readonly ConcurrentQueue<List<TimerData>> saveQueue = new ConcurrentQueue<List<TimerData>>();
+        private static bool isSaving = false;
+        private static readonly object saveLock = new object();
+
+        public static List<UrlData> todayUrls = new List<UrlData>();
+        public static List<Project> todayProjects = new List<Project>();
+        public static List<string> sessionLog = new List<string>();
+
+        public static void EnqueueSaveData(List<TimerData> data)
+        {
+            saveQueue.Enqueue(data);
+            ProcessQueue();
+        }
+
+        private static void ProcessQueue()
+        {
+            lock (saveLock)
+            {
+                if (isSaving) return;
+
+                isSaving = true;
+
+                while (saveQueue.TryDequeue(out List<TimerData> data))
+                {
+                    bool saved = false;
+                    int attempts = 0;
+
+                    while (!saved && attempts < 5)
+                    {
+                        try
+                        {
+                            string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+                            File.WriteAllText(filePath, json);
+                            saved = true;
+                        }
+                        catch (IOException)
+                        {
+                            attempts++;
+                            Thread.Sleep(100); 
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error saving data: " + ex.Message);
+                            break;
+                        }
+                    }
+                }
+
+                isSaving = false;
+            }
+        }
 
         private static string FindFile(string fileName)
         {
             var result = new List<string>();
 
-            // Використовуємо паралельний пошук на всіх дисках
             Parallel.ForEach(DriveInfo.GetDrives(), drive =>
             {
-                if (drive.IsReady) // Переконуємось, що диск доступний
+                if (drive.IsReady)
                 {
                     try
                     {
-                        Console.WriteLine($"Шукаємо на диску: {drive.Name}"); // Додано діагностичний вивід
+                        Console.WriteLine($"Шукаємо на диску: {drive.Name}");
                         var files = Directory.EnumerateFiles(drive.RootDirectory.FullName, fileName, SearchOption.AllDirectories);
                         foreach (var file in files)
                         {
-                            Console.WriteLine($"Знайдено файл: {file}"); // Виводимо знайдений файл
+                            Console.WriteLine($"Знайдено файл: {file}");
                             result.Add(file);
                         }
                     }
@@ -46,7 +101,6 @@ namespace diplom
                 }
             });
 
-            // Якщо були знайдені файли, повертаємо перший з них
             return result.FirstOrDefault();
         }
 
@@ -89,8 +143,6 @@ namespace diplom
             return projects;
         }
 
-
-
         // Запис проектів у файл
         public static void SaveProjects(List<Project> projects)
         {
@@ -131,7 +183,6 @@ namespace diplom
             }
         }
 
-        // Зчитування даних з файлу
         public static List<TimerData> LoadTimerData()
         {
             if (File.Exists(filePath))
@@ -152,39 +203,20 @@ namespace diplom
             return new List<UrlData>();
         }
 
-        // Запис даних у файл
         public static void SaveData(List<TimerData> data)
         {
             var json = JsonConvert.SerializeObject(data, Formatting.Indented);
             File.WriteAllText(filePath, json);
         }
 
-          // Збереження часу поточного дня
-        public static void SaveCurrentDayTime(TimeSpan elapsed)
-        {
-            var data = LoadTimerData();
-            string today = DateTime.Now.ToString("dd.MM.yyyy");
-
-            var todayData = data.Find(d => d.Date == today);
-
-            if (todayData == null)
-            {
-                todayData = new TimerData { Date = today, Time = elapsed.ToString(@"hh\:mm\:ss") };
-                data.Add(todayData);
-            }
-            else
-            {
-                todayData.Time = elapsed.ToString(@"hh\:mm\:ss");
-            }
-
-            SaveData(data);
-        }
-
         public static void SaveUrlToJson(string jsonBody)
         {
             var data = JsonConvert.DeserializeObject<UrlData>(jsonBody);
 
-            // Конвертуємо UTC-дату у локальний час України
+            //Не записуємо, якщо TimeSpent == 0
+            /*if (data.TimeSpent == 0)
+                return;*/
+
             TimeZoneInfo ukrainianZone = TimeZoneInfo.FindSystemTimeZoneById("FLE Standard Time");
             data.Timestamp = TimeZoneInfo.ConvertTimeFromUtc(data.Timestamp, ukrainianZone);
 
@@ -204,6 +236,26 @@ namespace diplom
         }
 
 
+        public static void SaveCurrentDayTime(TimeSpan elapsed)
+        {
+            var data = LoadTimerData();
+            string today = DateTime.Now.ToString("dd.MM.yyyy");
+
+            var todayData = data.Find(d => d.Date == today);
+
+            if (todayData == null)
+            {
+                todayData = new TimerData { Date = today, Time = elapsed.ToString(@"hh\:mm\:ss") };
+                data.Add(todayData);
+            }
+            else
+            {
+                todayData.Time = elapsed.ToString(@"hh\:mm\:ss");
+            }
+
+            EnqueueSaveData(data);
+        }
+
         public static void SaveSessionStart()
         {
             var data = LoadTimerData();
@@ -212,14 +264,12 @@ namespace diplom
             var todayData = data.Find(d => d.Date == today)
                             ?? new TimerData { Date = today };
 
-            // Якщо вже є відкрита сесія (Stop == null) — нічого не робимо
             var last = todayData.Sessions.LastOrDefault();
             if (last != null && last.Stop == null)
             {
                 return;
             }
 
-            // Інакше — додаємо нову
             todayData.Sessions.Add(new Session
             {
                 Start = DateTime.Now.ToString("HH:mm:ss"),
@@ -229,9 +279,8 @@ namespace diplom
             if (!data.Contains(todayData))
                 data.Add(todayData);
 
-            SaveData(data);
+            EnqueueSaveData(data);
         }
-
 
         public static void SaveSessionStop()
         {
@@ -240,12 +289,11 @@ namespace diplom
             var todayData = data.Find(d => d.Date == today);
             if (todayData == null) return;
 
-            // Закриваємо останню відкриту сесію
             var lastSession = todayData.Sessions.LastOrDefault(s => s.Stop == null);
             if (lastSession != null)
             {
                 lastSession.Stop = DateTime.Now.ToString("HH:mm:ss");
-                SaveData(data);
+                EnqueueSaveData(data);
             }
         }
 
@@ -277,7 +325,135 @@ namespace diplom
             }
 
             return false;
-        } 
+        }
+
+        public static bool WasProjectAnalyzedToday(string projectName, string analysisFilePath)
+        {
+            if (!File.Exists(analysisFilePath))
+                return false;
+
+            var json = File.ReadAllText(analysisFilePath);
+            var records = JsonConvert.DeserializeObject<JArray>(json);
+
+            string today = DateTime.Now.ToString("dd.MM.yyyy");
+
+            foreach (var record in records)
+            {
+                string name = record["Project"]?.ToString();
+                string date = record["AnalysisDate"]?.ToString();
+
+                if (name == projectName && date == today)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static bool WasUrlAnalyzedToday(string url, string analysisFilePath)
+        {
+            if (!File.Exists(analysisFilePath))
+                return false;
+
+            var json = File.ReadAllText(analysisFilePath).Trim();
+
+            if (string.IsNullOrEmpty(json))
+                return false;
+
+            JArray records;
+
+            try
+            {
+                records = JsonConvert.DeserializeObject<JArray>(json);
+            }
+            catch
+            {
+                Console.WriteLine("Некоректний JSON у файлі аналізу URL.");
+                return false;
+            }
+
+            if (records == null)
+                return false;
+
+            string today = DateTime.Now.ToString("dd.MM.yyyy");
+
+            foreach (var record in records)
+            {
+                string recordUrl = record["Url"]?.ToString();
+                string analysisDate = record["AnalysisDate"]?.ToString();
+
+                Console.WriteLine($"Перевіряємо URL '{url}' проти запису: Url='{recordUrl}', AnalysisDate='{analysisDate}'");
+
+                if (recordUrl == url && analysisDate == today)
+                {
+                    Console.WriteLine($"URL '{url}' вже проаналізовано сьогодні.");
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool IfWasModifiedToday()
+        {
+            var urlDataList = JsonProcessing.LoadUrlData();
+            foreach (var url in urlDataList)
+            {
+                Console.WriteLine($"URL: {url.Url} | Timestamp (UTC): {url.Timestamp} | Timestamp (Local): {url.Timestamp.ToLocalTime()} | Date (Local): {url.Timestamp.ToLocalTime().Date}");
+            }
+
+            DateTime today = DateTime.Today;
+
+            todayUrls = urlDataList
+                .Where(url => url.Timestamp.Date == today)
+                .ToList();
+
+            Console.WriteLine($"URL-дані на сьогодні ({today:yyyy-MM-dd}): {todayUrls.Count} записів");
+
+            var projectsList = JsonProcessing.LoadProjects();
+            todayProjects = projectsList
+                .Where(project =>
+                    File.Exists(project.Path) &&
+                    File.GetLastWriteTime(project.Path).Date == today)
+                .ToList();
+
+            Console.WriteLine($"Проєкти на сьогодні ({today:yyyy-MM-dd}): {todayProjects.Count} записів");
+
+            bool result = todayUrls.Any() && todayProjects.Any();
+            Console.WriteLine($"Результат перевірки умов виконання: {result}");
+
+            return result;
+        }
+
+        public static void FilterUrlsBySimilarity(
+            string comparisonResultsPath,     // шлях до файлу з результатами порівняння (analysisResults.json)
+            List<UrlData> allUrls,            // список усіх URL 
+            string matchedUrlsPath,           // файл для URL, які пройшли схожість
+            string unmatchedUrlsPath          // файл для URL, які не пройшли схожість
+        )
+        {
+            // Зчитуємо результати порівняння
+            var results = JsonConvert.DeserializeObject<List<SimilarityResult>>(
+                File.ReadAllText(comparisonResultsPath)
+            );
+
+            // Відбираємо URL, для яких є "Схожість виявлено"
+            var matchedUrlsSet = results
+                .Where(r => r.Similarity == "Схожість виявлено")
+                .Select(r => r.Url)
+                .Distinct()
+                .ToHashSet();
+
+            // Фільтруємо всі URL на співпалі (пройшли схожість) та неспівпалі
+            var matchedUrls = allUrls.Where(u => matchedUrlsSet.Contains(u.Url)).ToList();
+            var unmatchedUrls = allUrls.Where(u => !matchedUrlsSet.Contains(u.Url)).ToList();
+
+            // Записуємо відфільтровані списки у відповідні файли
+            File.WriteAllText(matchedUrlsPath, JsonConvert.SerializeObject(matchedUrls, Formatting.Indented));
+            File.WriteAllText(unmatchedUrlsPath, JsonConvert.SerializeObject(unmatchedUrls, Formatting.Indented));
+
+            Console.WriteLine($"URL-и з схожістю збережені в {matchedUrlsPath}");
+            Console.WriteLine($"URL-и без схожості збережені в {unmatchedUrlsPath}");
+        }
 
         public static void LoadSettings()
         {

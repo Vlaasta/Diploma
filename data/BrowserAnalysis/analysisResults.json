@@ -1,22 +1,32 @@
 [
   {
     "Project": "ФКНТ_2025_122_ Мельник В.В. (4).docx",
-    "Url": "https://www.youtube.com/watch?v=Ixi0sUpLVRc",
-    "Similarity": "{id:29742778-2a87-4932-acc2-c965352e20d3,message:{role:assistant,content:[{type:text,text:Схожість не виявлено.}]},finish_reason:COMPLETE,usage:{billed_units:{input_tokens:1831,output_tokens:7},tokens:{input_tokens:2032,output_tokens:7}}}"
+    "Url": "https://www.youtube.com/watch?v=VOmIplFAGeg",
+    "Similarity": "{\"id\":\"3e789451-80e7-4475-9ba0-ee2ddf85d3ae\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"Сторінка 1:\\nURL: https://www.youtube.com/watch?v=VOmIplFAGeg — Ні, зміст сторінки не пов'язаний із проєктом, оскільки це музичне відео гурту NewJeans, а не проєкт, про який йдеться в тексті.\\n\\nСторінка 2:\\nURL: https://www.youtube.com/watch?v=VOmIplFAGeg — Ні, зміст сторінки ідентичний до попередньої, тому також не пов'язаний із проєктом. Це музичне відео гурту NewJeans.\"}]},\"finish_reason\":\"COMPLETE\",\"usage\":{\"billed_units\":{\"input_tokens\":303,\"output_tokens\":126},\"tokens\":{\"input_tokens\":504,\"output_tokens\":126}}}"
   },
   {
     "Project": "ФКНТ_2025_122_ Мельник В.В. (4).docx",
-    "Url": "https://www.komarov.design/shvidki-klavishi-v-photoshop/",
-    "Similarity": "{id:da32623f-19d0-4579-9874-9c44214325da,message:{role:assistant,content:[{type:text,text:Схожість не виявлено.}]},finish_reason:COMPLETE,usage:{billed_units:{input_tokens:2284,output_tokens:7},tokens:{input_tokens:2485,output_tokens:7}}}"
+    "Url": "https://www.youtube.com/watch?v=VOmIplFAGeg",
+    "Similarity": "{\"id\":\"3e789451-80e7-4475-9ba0-ee2ddf85d3ae\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"Сторінка 1:\\nURL: https://www.youtube.com/watch?v=VOmIplFAGeg — Ні, зміст сторінки не пов'язаний із проєктом, оскільки це музичне відео гурту NewJeans, а не проєкт, про який йдеться в тексті.\\n\\nСторінка 2:\\nURL: https://www.youtube.com/watch?v=VOmIplFAGeg — Ні, зміст сторінки ідентичний до попередньої, тому також не пов'язаний із проєктом. Це музичне відео гурту NewJeans.\"}]},\"finish_reason\":\"COMPLETE\",\"usage\":{\"billed_units\":{\"input_tokens\":303,\"output_tokens\":126},\"tokens\":{\"input_tokens\":504,\"output_tokens\":126}}}"
+  },
+  {
+    "Project": "ФКНТ_2025_122_ Мельник В.В. (4).docx",
+    "Url": "https://chatgpt.com/c/682f1f4b-946c-8009-8f87-87e30a1ed9fa",
+    "Similarity": "{id:becb501e-4fd6-41d2-9ea5-19c10550d14c,message:{role:assistant,content:[{type:text,text:Ні, текст веб-сторінки не пов'язаний із темою проєкту. Сторінка здається порожньою або містить лише заголовок \\Фільтрація часу 0\\, що не надає достатньої інформації для аналізу та встановлення зв'язку з проєктом.}]},finish_reason:COMPLETE,usage:{billed_units:{input_tokens:193,output_tokens:55},tokens:{input_tokens:394,output_tokens:55}}}"
   },
   {
     "Project": "ФКНТ_2025_122_ Мельник В.В. (4).docx",
     "Url": "https://support.toggl.com/en/articles/4338240-frequently-asked-questions-toggl-track-toggl-plan-and-toggl-hire",
-    "Similarity": "{id:010fb55f-5062-4d90-9fb1-82640b0dcb87,message:{role:assistant,content:[{type:text,text:Схожість виявлено.}]},finish_reason:COMPLETE,usage:{billed_units:{input_tokens:1988,output_tokens:6},tokens:{input_tokens:2189,output_tokens:6}}}"
+    "Similarity": "{id:785810c6-7962-4340-8150-287ae33a7d1b,message:{role:assistant,content:[{type:text,text:Ні, текст веб-сторінки не пов'язаний із темою проєкту. Сторінка містить загальні запитання та відповіді щодо різних продуктів Toggl, що не відповідає запиту про аналіз файлу.}]},finish_reason:COMPLETE,usage:{billed_units:{input_tokens:210,output_tokens:44},tokens:{input_tokens:411,output_tokens:44}}}"
   },
   {
     "Project": "ФКНТ_2025_122_ Мельник В.В. (4).docx",
     "Url": "https://studfile.net/preview/5057021/",
-    "Similarity": "{id:0dbe47ef-6177-4752-9443-c5c9081bfd28,message:{role:assistant,content:[{type:text,text:Схожість виявлено.}]},finish_reason:COMPLETE,usage:{billed_units:{input_tokens:1866,output_tokens:6},tokens:{input_tokens:2067,output_tokens:6}}}"
+    "Similarity": "{id:0f2facb0-ed47-48e9-9951-a9a248c92f33,message:{role:assistant,content:[{type:text,text:Ні, сторінка не відповідає тематиці проєкту. Текст веб-сторінки здається навчальним матеріалом з основ Visual Studio, що не пов'язано з попереднім запитом про аналіз файлу.}]},finish_reason:COMPLETE,usage:{billed_units:{input_tokens:195,output_tokens:44},tokens:{input_tokens:396,output_tokens:44}}}"
+  },
+  {
+    "Project": "ФКНТ_2025_122_ Мельник В.В. (4).docx",
+    "Url": "https://www.komarov.design/shvidki-klavishi-v-photoshop/",
+    "Similarity": "{id:29c5ef24-9095-4f5b-9731-967b7aa41d46,message:{role:assistant,content:[{type:text,text:Ні, ця веб-сторінка не пов’язана з темою проєкту. Веб-сайт присвячений графічному дизайну та містить поради та скорочення для роботи з програмою Photoshop, на відміну від запиту про аналіз файлу, який не був наданий.}]},finish_reason:COMPLETE,usage:{billed_units:{input_tokens:1231,output_tokens:56},tokens:{input_tokens:1432,output_tokens:56}}}"
   }
 ]

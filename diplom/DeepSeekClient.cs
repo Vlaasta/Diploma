@@ -54,7 +54,7 @@ namespace diplom
                 if (lastRun < today && JsonProcessing.IfWasModifiedToday())
                 {
                     RunDailyTask();
-                   // JsonProcessing.FilterUrlsBySimilarity(outputJsonPath, JsonProcessing.todayUrls, JsonProcessing.filePath2, JsonProcessing.filePath3);
+                    JsonProcessing.FilterUrlsBySimilarity(outputJsonPath, JsonProcessing.todayUrls, JsonProcessing.filePath2, JsonProcessing.filePath3);
                     File.WriteAllText(lastRunFilePath, today.ToString("yyyy-MM-dd")); 
                     return true;
                 }
@@ -481,8 +481,8 @@ namespace diplom
                         }
 
                         string userMessage =
-                            "Ти отримуєш два фрагменти тексту. Проаналізуй, чи пов’язані вони між собою за змістом. " +
-                            "Виведи стислу відповідь, чи відповідає сторінка тематиці проєкту, і чому (1-2 речення).\n\n" +
+                            "Ти отримуєш два фрагменти тексту. Твоя задача — виявити, чи пов’язані вони тематично або технологічно. Не порівнюй лише цілі текстів (наприклад, “навчання” і “розробка”), а аналізуй їхній зміст, терміни, мову, платформу, тип ПЗ, які згадуються. Якщо вони стосуються однієї галузі або одна тема може бути джерелом знань для іншої — вважай це схожістю.\n\n" +
+                      "Вивід повинен складатися лише з одного речення: 'Схожість виявлено' або 'Схожість не виявлено'.\n\n"+
                             $"Текст проєкту:\n{proj.Response}\n\nТекст веб-сторінки:\n{page.Response}";
 
                         Console.WriteLine($"Надсилання запиту для: {proj.Project} + {page.Url}");
@@ -574,10 +574,10 @@ namespace diplom
                 Console.WriteLine(urlAnalysisResult);
 
 
-               /* Console.WriteLine("Порівняння схожості між проєктами та сторінками...");
+                Console.WriteLine("Порівняння схожості між проєктами та сторінками...");
                 string resultMessage = deepSeekClient.CompareProjectWebpageSimilarities(projectsAnalysisPath, webpagesAnalysisPath, outputJsonPath);
                 Console.WriteLine("Результат порівняння:");
-                Console.WriteLine(resultMessage);*/
+                Console.WriteLine(resultMessage);
                 
             
             }

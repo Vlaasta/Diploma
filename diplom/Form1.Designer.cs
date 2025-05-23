@@ -223,109 +223,25 @@ namespace diplom
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
             this.SuspendLayout();
 
-            this.button1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button1.Location = new System.Drawing.Point(280, 327);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(515, 37);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Додати проєкт";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            this.button1.BackColor = Color.FromArgb(6, 40, 68);
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.Font = new Font("Microsoft Sans Serif", 12);
+            this.button1 = CreateButton("button1", "Додати проєкт", new Point(280, 327), new Size(515, 37), this.button1_Click);
+            this.button2 = CreateButton("button2", "Запустити таймер", new Point(438, 250), new Size(200, 38), this.button2_Click);
+            this.button3 = CreateButton("button3", "Вверх", new Point(224, 413), new Size(50, 37), this.button3_Click);
+            this.button4 = CreateButton("button4", "-", new Point(801, 413), new Size(50, 37), this.button4_Click);
+            this.button5 = CreateButton("button5", "-", new Point(801, 456), new Size(50, 37), this.button5_Click);
+            this.button6 = CreateButton("button6", "-", new Point(801, 499), new Size(50, 37), this.button6_Click);
+            this.button10 = CreateButton("button10", "Вниз", new Point(224, 499), new Size(50, 37), this.button10_Click);
 
-            this.button2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button2.Location = new System.Drawing.Point(438, 250);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(200, 38);
-            this.button2.TabIndex = 20;
-            this.button2.Text = "Запустити таймер";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            this.button2.BackColor = Color.FromArgb(6, 40, 68);
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.FlatAppearance.BorderSize = 0;
-            this.button2.Font = new Font("Microsoft Sans Serif", 12);
-
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.FlatAppearance.BorderSize = 0;
-            this.button3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button3.Location = new System.Drawing.Point(224, 413);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(50, 37);
-            this.button3.Text = "Вверх";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            this.button3.BackColor = Color.FromArgb(6, 40, 68);
-            this.button3.Font = new Font("Microsoft Sans Serif", 10);
-
-            this.button4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button4.Location = new System.Drawing.Point(801, 413);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(50, 37);
-            this.button4.TabIndex = 22;
-            this.button4.Text = "-";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            this.button4.BackColor = Color.FromArgb(6, 40, 68);
-            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button4.FlatAppearance.BorderSize = 0;
-            this.button4.Font = new Font("Microsoft Sans Serif", 16);
-
-            this.button5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button5.Location = new System.Drawing.Point(801, 456);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(50, 37);
-            this.button5.TabIndex = 23;
-            this.button5.Text = "-";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.BackColor = Color.FromArgb(6, 40, 68);
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button5.FlatAppearance.BorderSize = 0;
-            this.button5.Font = new Font("Microsoft Sans Serif", 16);
-
-            this.button6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button6.Location = new System.Drawing.Point(801, 499);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(50, 37);
-            this.button6.TabIndex = 24;
-            this.button6.Text = "-";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.BackColor = Color.FromArgb(6, 40, 68);
-            this.button6.Click += new System.EventHandler(this.button6_Click);
-            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.FlatAppearance.BorderSize = 0;
-            this.button6.Font = new Font("Microsoft Sans Serif", 16);
-
-            this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button10.FlatAppearance.BorderSize = 0;
-            this.button10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button10.Location = new System.Drawing.Point(224, 499);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(50, 37);
-            this.button10.Text = "Вниз";
-            this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
-            this.button10.BackColor = Color.FromArgb(6, 40, 68);
-            this.button10.Font = new Font("Microsoft Sans Serif", 10);
-
-            // Налаштування для pictureBox1
             this.pictureBox1.Image = Properties.Resources.ClockForDarkTheme;
             this.ConfigurePictureBox(pictureBox1, new Point(456, 58), new Size(164, 163), backColor: Color.Transparent);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabStop = false;
 
-            // Налаштування для pictureBox2 - pictureBox5 (з однаковим стилем)
             var commonBackColor = Color.FromArgb(6, 40, 68);
             this.ConfigurePictureBox(pictureBox2, new Point(280, 370), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage"), backColor: commonBackColor);
             this.ConfigurePictureBox(pictureBox3, new Point(280, 413), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox3.BackgroundImage"), backColor: commonBackColor);
             this.ConfigurePictureBox(pictureBox4, new Point(280, 456), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox4.BackgroundImage"), backColor: commonBackColor);
             this.ConfigurePictureBox(pictureBox5, new Point(280, 499), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox5.BackgroundImage"), backColor: commonBackColor);
 
-            // Налаштування для pictureBox6 - pictureBox8 (з однаковим стилем)
             this.ConfigurePictureBox(pictureBox6, new Point(540, 413), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox6.BackgroundImage"), backColor: commonBackColor);
             this.ConfigurePictureBox(pictureBox7, new Point(540, 456), new Size(255, 37), backColor: commonBackColor);
             this.ConfigurePictureBox(pictureBox8, new Point(540, 499), new Size(255, 37), backColor: commonBackColor);
@@ -434,13 +350,6 @@ namespace diplom
             // 
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(900,650);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.button10);
            
             this.Controls.Add(this.pictureBox6);
             this.Controls.Add(this.pictureBox7);

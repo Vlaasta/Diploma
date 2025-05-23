@@ -425,34 +425,57 @@ namespace diplom
         }
 
         public static void FilterUrlsBySimilarity(
-            string comparisonResultsPath,     // шлях до файлу з результатами порівняння (analysisResults.json)
-            List<UrlData> allUrls,            // список усіх URL 
-            string matchedUrlsPath,           // файл для URL, які пройшли схожість
-            string unmatchedUrlsPath          // файл для URL, які не пройшли схожість
-        )
+      string comparisonResultsPath,
+      List<UrlData> allUrls,
+      string matchedUrlsPath,
+      string unmatchedUrlsPath
+  )
         {
-            // Зчитуємо результати порівняння
-            var results = JsonConvert.DeserializeObject<List<SimilarityResult>>(
-                File.ReadAllText(comparisonResultsPath)
-            );
+            Console.WriteLine($"Зчитування файлу: {comparisonResultsPath}");
 
-            // Відбираємо URL, для яких є "Схожість виявлено"
+            var fileContent = File.ReadAllText(comparisonResultsPath);
+            Console.WriteLine("Зміст файлу:");
+            Console.WriteLine(fileContent);
+
+            var results = JsonConvert.DeserializeObject<List<SimilarityResult>>(fileContent);
+
+            if (results == null)
+            {
+                Console.WriteLine("Не вдалося десеріалізувати results — null.");
+                return;
+            }
+
+            Console.WriteLine($"Усього записів у results: {results.Count}");
+
             var matchedUrlsSet = results
-                .Where(r => r.Similarity == "Схожість виявлено")
+                .Where(r => r.Similarity != null && r.Similarity.Contains("Схожість виявлено"))
                 .Select(r => r.Url)
                 .Distinct()
                 .ToHashSet();
 
-            // Фільтруємо всі URL на співпалі (пройшли схожість) та неспівпалі
+            Console.WriteLine("URL-и з \"Схожість виявлено\":");
+            foreach (var url in matchedUrlsSet)
+            {
+                Console.WriteLine($"  ✅ {url}");
+            }
+
+            Console.WriteLine($"Усього вхідних URL-ів (allUrls): {allUrls.Count}");
+
             var matchedUrls = allUrls.Where(u => matchedUrlsSet.Contains(u.Url)).ToList();
             var unmatchedUrls = allUrls.Where(u => !matchedUrlsSet.Contains(u.Url)).ToList();
 
-            // Записуємо відфільтровані списки у відповідні файли
+            Console.WriteLine($"URL-ів з подібністю знайдено: {matchedUrls.Count}");
+            Console.WriteLine($"URL-ів без подібності: {unmatchedUrls.Count}");
+
+            Console.WriteLine("Збереження matchedUrls у файл:");
+            Console.WriteLine(matchedUrlsPath);
             File.WriteAllText(matchedUrlsPath, JsonConvert.SerializeObject(matchedUrls, Formatting.Indented));
+
+            Console.WriteLine("Збереження unmatchedUrls у файл:");
+            Console.WriteLine(unmatchedUrlsPath);
             File.WriteAllText(unmatchedUrlsPath, JsonConvert.SerializeObject(unmatchedUrls, Formatting.Indented));
 
-            Console.WriteLine($"URL-и з схожістю збережені в {matchedUrlsPath}");
-            Console.WriteLine($"URL-и без схожості збережені в {unmatchedUrlsPath}");
+            Console.WriteLine("Завершено.");
         }
 
         public static void LoadSettings()

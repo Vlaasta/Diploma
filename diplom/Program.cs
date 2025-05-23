@@ -25,7 +25,7 @@ namespace diplom
             formThread.IsBackground = true;
             formThread.Start();
 
-             CohereClient.CanSendRequest();
+            //CohereClient.CanSendRequest();
            // JsonProcessing.IfWasModifiedToday();
             //CohereClient.RunDailyTask();
 

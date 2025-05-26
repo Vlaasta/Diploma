@@ -101,7 +101,7 @@ namespace diplom
             GetTimeAmount();
 
             JsonProcessing.LoadSettings();
-           
+            //ProperColorTheme();
         }
 
         private void GetTimeAmount()
@@ -216,6 +216,7 @@ namespace diplom
             this.Controls.Clear();
             InitializeComponentMain();
             StatisticsMainMenu();
+            //ProperColorTheme();
             SetActivePanel(panel2);
             CurrentDay();
         }
@@ -617,6 +618,7 @@ namespace diplom
         {
             this.Controls.Clear();
             InitializeComponentMainMenu();
+            //ProperColorTheme();
             SetActivePanel(panel6);
             this.button3.Visible = false;
             GetTimeAmount();

@@ -83,7 +83,6 @@ namespace diplom
             this.button7.Location = new System.Drawing.Point(-8, 0);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(200, 45);
-            this.button7.TabIndex = 21;
             this.button7.Text = "Статистика";
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
@@ -134,7 +133,6 @@ namespace diplom
             this.button8.Location = new System.Drawing.Point(-8, 0);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(200, 45);
-            this.button8.TabIndex = 22;
             this.button8.Text = "Головне меню";
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
@@ -158,6 +156,7 @@ namespace diplom
                 this.button7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
                 this.button27.ForeColor = System.Drawing.SystemColors.ActiveCaption;
                 this.button8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.button28.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             }
 
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
@@ -177,14 +176,14 @@ namespace diplom
 
         private void SetActivePanel(Panel panel)
         {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
             if (activePanel != null)
             {
-                activePanel.BackColor = Form1.settings.ColorTheme == "light"
-                    ? Color.FromArgb(171, 176, 180)
-                    : Color.FromArgb(4, 26, 44);
+                activePanel.BackColor = !isDarkTheme ? Color.FromArgb(171, 176, 180) : Color.FromArgb(4, 26, 44);
             }
 
-            panel.BackColor = Color.FromArgb(30, 60, 90); // або інший колір, який тобі подобається
+            panel.BackColor = isDarkTheme ? Color.FromArgb(30, 60, 90) : Color.FromArgb(145, 150, 153); 
             activePanel = panel;
         }
 
@@ -193,6 +192,8 @@ namespace diplom
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             InitializeComponentMain();
             // this.panel2 = new System.Windows.Forms.Panel();
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
             this.button3 = new System.Windows.Forms.Button(); //кнопка "вверх"
             this.button10 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -210,6 +211,7 @@ namespace diplom
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
 
             // this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -231,33 +233,34 @@ namespace diplom
             this.button6 = CreateButton("button6", "-", new Point(801, 499), new Size(50, 37), this.button6_Click);
             this.button10 = CreateButton("button10", "Вниз", new Point(224, 499), new Size(50, 37), this.button10_Click);
 
-            this.pictureBox1.Image = Properties.Resources.ClockForDarkTheme;
-            this.ConfigurePictureBox(pictureBox1, new Point(456, 58), new Size(164, 163), backColor: Color.Transparent);
+            this.pictureBox1.Image = isDarkTheme ? Properties.Resources.ClockForDarkTheme : Properties.Resources.ClockForLightTheme;
+            this.ConfigurePictureBox(pictureBox1, new Point(456, 58), new Size(164, 164));
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabStop = false;
 
             var commonBackColor = Color.FromArgb(6, 40, 68);
-            this.ConfigurePictureBox(pictureBox2, new Point(280, 370), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox3, new Point(280, 413), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox3.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox4, new Point(280, 456), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox4.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox5, new Point(280, 499), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox5.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox2, new Point(280, 370), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox3, new Point(280, 413), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox3.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox4, new Point(280, 456), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox4.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox5, new Point(280, 499), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox5.BackgroundImage"));
 
-            this.ConfigurePictureBox(pictureBox6, new Point(540, 413), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox6.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox7, new Point(540, 456), new Size(255, 37), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox8, new Point(540, 499), new Size(255, 37), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox9, new Point(540, 370), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox6, new Point(540, 413), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox6.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox7, new Point(540, 456), new Size(255, 37));
+            this.ConfigurePictureBox(pictureBox8, new Point(540, 499), new Size(255, 37));
+            this.ConfigurePictureBox(pictureBox9, new Point(540, 370), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage"));
 
-            this.label2 = ConfigureLabel(new Point(507, 128), new Size(65, 26), "00:00:00", backColor: Color.FromArgb(186, 192, 196));
-            this.label2.ForeColor = Color.FromArgb(0, 0, 0);
+            this.label2 = ConfigureLabel(new Point(507, 128), new Size(65, 26), "00:00:00");
+            label2.BackColor = Color.FromArgb(186, 192, 196);
+            label2.ForeColor = Color.FromArgb(0, 0, 0);
 
-            this.label1 = ConfigureLabel(new Point(380, 380), new Size(65, 16), "Назва", backColor: Color.FromArgb(6, 40, 68));
-            this.label9 = ConfigureLabel(new Point(640, 380), new Size(65, 16), "Шлях", backColor: Color.FromArgb(6, 40, 68));
-            this.label7 = ConfigureLabel(new Point(540, 456), new Size(pictureBox7.Width, pictureBox7.Height), "label7", backColor: Color.FromArgb(6, 40, 68));
-            this.label3 = ConfigureLabel(new Point(280, 413), new Size(pictureBox3.Width, pictureBox3.Height), "label3", image: (Image)resources.GetObject("label3.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label4 = ConfigureLabel(new Point(280, 456), new Size(pictureBox4.Width, pictureBox4.Height), "label4", image: (Image)resources.GetObject("label4.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label5 = ConfigureLabel(new Point(280, 499), new Size(pictureBox5.Width, pictureBox5.Height), "label5", image: (Image)resources.GetObject("label5.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label6 = ConfigureLabel(new Point(540, 413), new Size(pictureBox6.Width, pictureBox6.Height), "label6", image: (Image)resources.GetObject("label6.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label8 = ConfigureLabel(new Point(540, 499), new Size(pictureBox8.Width, pictureBox8.Height), "label8", image: (Image)resources.GetObject("label8.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label1 = ConfigureLabel(new Point(380, 380), new Size(65, 16), "Назва");
+            this.label9 = ConfigureLabel(new Point(640, 380), new Size(65, 16), "Шлях");
+            this.label7 = ConfigureLabel(new Point(540, 456), new Size(pictureBox7.Width, pictureBox7.Height), "label7");
+            this.label3 = ConfigureLabel(new Point(280, 413), new Size(pictureBox3.Width, pictureBox3.Height), "label3", image: (Image)resources.GetObject("label3.Image"));
+            this.label4 = ConfigureLabel(new Point(280, 456), new Size(pictureBox4.Width, pictureBox4.Height), "label4", image: (Image)resources.GetObject("label4.Image"));
+            this.label5 = ConfigureLabel(new Point(280, 499), new Size(pictureBox5.Width, pictureBox5.Height), "label5", image: (Image)resources.GetObject("label5.Image"));
+            this.label6 = ConfigureLabel(new Point(540, 413), new Size(pictureBox6.Width, pictureBox6.Height), "label6", image: (Image)resources.GetObject("label6.Image"));
+            this.label8 = ConfigureLabel(new Point(540, 499), new Size(pictureBox8.Width, pictureBox8.Height), "label8", image: (Image)resources.GetObject("label8.Image"));
 
             this.label2.Font = new Font("Microsoft Sans Serif", 10);
             this.label1.Font = new Font("Microsoft Sans Serif", 12);
@@ -269,88 +272,9 @@ namespace diplom
             this.label5.Font = new Font("Microsoft Sans Serif", 9);
             this.label8.Font = new Font("Microsoft Sans Serif", 9);
 
-            if (CheckBox2Active == true || Form1.settings.ColorTheme == "light")
-            {
-                this.button10.BackColor = Color.FromArgb(182, 192, 196);
-                this.button10.ForeColor = Color.FromArgb(82, 82, 82);
-
-                for (int i = 1; i <= 6; i++)
-                {
-                    Control button = this.Controls["button" + i];
-                    button.BackColor = Color.FromArgb(182, 192, 196);
-                    button.ForeColor = Color.FromArgb(82, 82, 82);
-                }
-
-                pictureBox1.Image = Properties.Resources.ClockForLightTheme;
-
-                for (int i = 2; i <= 8; i++)
-                {
-                    Control pictureBox = this.Controls["pictureBox" + i];
-                    pictureBox.BackColor = Color.FromArgb(182, 192, 196);
-                }
-
-                for (int i = 1; i <= 8; i++)
-                {
-                    Control label = this.Controls["label" + i];
-                    label.BackColor = Color.FromArgb(182, 192, 196);
-                    label.ForeColor = Color.FromArgb(82, 82, 82);
-                }
-            }
-
-            if (CheckBox1Active == true || Form1.settings.ColorTheme == "dark")
-            {
-                this.button10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.button10.BackColor = Color.FromArgb(6, 40, 68);
-
-                for (int i = 1; i <= 6; i++)
-                {
-                    Control button = this.Controls["button" + i];
-                    if (button != null)
-                    {
-                        button.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                        button.BackColor = Color.FromArgb(6, 40, 68);
-                    }
-                }
-
-                this.pictureBox1.Image = Properties.Resources.ClockForDarkTheme;
-
-                for (int i = 1; i <= 8; i++)
-                {
-                    Control pictureBox = this.Controls["pictureBox" + i];
-                    if (pictureBox != null)
-                    {
-                        pictureBox.BackColor = Color.FromArgb(6, 40, 68);
-                    }
-                }
-
-                if (label1 != null)
-                {
-                    label1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                    label1.BackColor = Color.FromArgb(6, 40, 68);
-                }
-
-                if (label2 != null)
-                {
-                    label2.BackColor = Color.FromArgb(186, 192, 196);
-                }
-
-                for (int i = 3; i <= 8; i++)
-                {
-                    Control label = this.Controls["label" + i];
-                    if (label != null)
-                    {
-                        label.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                        label.BackColor = Color.FromArgb(6, 40, 68);
-                    }
-                }
-
-            }
-            // 
-            // Form1
-            // 
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(900,650);
-           
+
             this.Controls.Add(this.pictureBox6);
             this.Controls.Add(this.pictureBox7);
             this.Controls.Add(this.pictureBox8);
@@ -376,7 +300,7 @@ namespace diplom
             this.PerformLayout();
         }
 
-        private System.Windows.Forms.Label ConfigureLabel(Point location, Size size, string text, Image image = null, Color? backColor = null, Color? foreColor = null)
+        private System.Windows.Forms.Label ConfigureLabel2(Point location, Size size, string text, Image image = null)
         {
             var label = new System.Windows.Forms.Label();
             label.Location = location;
@@ -386,31 +310,57 @@ namespace diplom
             {
                 label.Image = image;
             }
-            label.BackColor = backColor ?? Color.Transparent;
+
+            label.BackColor = Color.FromArgb(186, 192, 196);
+            label.ForeColor = Color.FromArgb(0, 0, 0);
+
+            label.TextAlign = ContentAlignment.MiddleLeft;
+            this.Controls.Add(label);
+            return label;
+        }
+
+        private System.Windows.Forms.Label ConfigureLabel(Point location, Size size, string text, Image image = null)
+        {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
+            var label = new System.Windows.Forms.Label();
+            label.Location = location;
+            label.Size = size;
+            label.Text = text;
+            if (image != null)
+            {
+                label.Image = image;
+            }
+            label.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
             if (label != label2)
             {
-                label.ForeColor = foreColor ?? System.Drawing.SystemColors.ActiveCaption;
+                label.ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82);
             }
+
             label.AutoEllipsis = true;  // Додає "..." якщо текст не влізе
             label.TextAlign = ContentAlignment.MiddleLeft;
             this.Controls.Add(label);
             return label;
         }
 
-        private void ConfigurePictureBox(PictureBox pictureBox, Point location, Size size, Image backgroundImage = null, Color? backColor = null)
+        private void ConfigurePictureBox(PictureBox pictureBox, Point location, Size size, Image backgroundImage = null)
         {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
             pictureBox.Location = location;
             pictureBox.Size = size;
             if (backgroundImage != null)
             {
-                pictureBox.BackgroundImage = backgroundImage;
+                pictureBox.BackgroundImage = backgroundImage ;
             }
-            pictureBox.BackColor = backColor ?? Color.Transparent;
+            pictureBox.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
             pictureBox.TabStop = false;
         }
 
         private PlotView CreatePlotView()
         {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
             var plotView = new PlotView
             {
                 Dock = DockStyle.None,
@@ -420,7 +370,7 @@ namespace diplom
 
             var plotModel = new PlotModel
             {
-                PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25),
+                PlotAreaBorderColor = isDarkTheme ? OxyColor.FromRgb(2, 14, 25) : OxyColor.FromRgb(212, 220, 225),
                 PlotAreaBorderThickness = new OxyThickness(1)
             };
 
@@ -431,15 +381,17 @@ namespace diplom
 
         private void StyleAxis(Axis axis)
         {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark"; 
+
             var mainColor = OxyColor.FromRgb(159, 183, 213);
             var minorColor = OxyColor.FromRgb(81, 99, 119);
 
-            axis.TitleColor = mainColor;
-            axis.TextColor = mainColor;
-            axis.TicklineColor = mainColor;
-            axis.AxislineColor = mainColor;
-            axis.MajorGridlineColor = mainColor;
-            axis.MinorGridlineColor = minorColor;
+            axis.TitleColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82);
+            axis.TextColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82);
+            axis.TicklineColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82);
+            axis.AxislineColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82);
+            axis.MajorGridlineColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82);
+            axis.MinorGridlineColor = isDarkTheme ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82);
             axis.MajorGridlineThickness = 1;
             axis.MinorGridlineThickness = 0.5;
             axis.IsZoomEnabled = false;
@@ -454,7 +406,7 @@ namespace diplom
             {
                 Title = "Час роботи (сек)",
                 MarkerType = MarkerType.Circle,
-                Color = OxyColor.FromRgb(159, 183, 213)
+                Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82)
             };
 
             for (int i = 0; i < xPoints.Count; i++)
@@ -524,7 +476,7 @@ namespace diplom
                 {
                     Type = LineAnnotationType.Horizontal,
                     Y = y,
-                    Color = OxyColor.FromRgb(81, 99, 119),
+                    Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82),
                     LineStyle = y % axisY.MajorStep == 0 ? LineStyle.Solid : LineStyle.Dot,
                     StrokeThickness = y % axisY.MajorStep == 0 ? 1.5 : 0.5
                 };
@@ -553,7 +505,7 @@ namespace diplom
             {
                 Title = "Час роботи (хв)",
                 MarkerType = MarkerType.Circle,
-                Color = OxyColor.FromRgb(159, 183, 213),
+                Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
                 StrokeThickness = 2
             };
 
@@ -612,7 +564,7 @@ namespace diplom
                 {
                     Type = LineAnnotationType.Vertical,
                     X = h,
-                    Color = OxyColor.FromRgb(81, 99, 119),
+                    Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82),
                     StrokeThickness = 1.5,
                     LineStyle = LineStyle.Solid
                 });
@@ -623,7 +575,7 @@ namespace diplom
                 {
                     Type = LineAnnotationType.Horizontal,
                     Y = y,
-                    Color = OxyColor.FromRgb(81, 99, 119),
+                    Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82),
                     StrokeThickness = (y % majorY == 0) ? 1.5 : 0.5,
                     LineStyle = (y % majorY == 0) ? LineStyle.Solid : LineStyle.Dot
                 });
@@ -637,11 +589,12 @@ namespace diplom
 
         private void BuildMergedPlotModel(List<double> projMinutes, List<double> browserMinutes, DateTime selectedDate)
         {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark"; 
             var merged = projMinutes.Zip(browserMinutes, (p, b) => p + b).ToList();
 
             var model = new PlotModel
             {
-                PlotAreaBorderColor = OxyColor.FromRgb(2, 14, 25),
+                PlotAreaBorderColor = isDarkTheme ? OxyColor.FromRgb(2, 14, 25) : OxyColor.FromRgb(82, 82, 82),
                 PlotAreaBorderThickness = new OxyThickness(1)
             };
 
@@ -649,7 +602,7 @@ namespace diplom
             {
                 Title = "Загальний час (хв)",
                 MarkerType = MarkerType.Circle,
-                Color = OxyColor.FromRgb(159, 183, 213),
+                Color = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
                 StrokeThickness = 2,
                 TrackerFormatString = "Значення: {4:0.00} хв"
             };
@@ -676,11 +629,11 @@ namespace diplom
                     return time.ToString(@"hh\:mm");
                 },
                 Angle = -45,
-                TitleColor = OxyColor.FromRgb(159, 183, 213),
-                TextColor = OxyColor.FromRgb(159, 183, 213),
+                TitleColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
+                TextColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
                 MajorGridlineStyle = LineStyle.Solid,
                 MinorGridlineStyle = LineStyle.None,
-                MajorGridlineColor = OxyColor.FromRgb(81, 99, 119),
+                MajorGridlineColor = isDarkTheme ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82),
                 IsZoomEnabled = false
             });
 
@@ -694,12 +647,12 @@ namespace diplom
                 Maximum = maxY,
                 MajorStep = stepY,
                 MinorStep = stepY / 2,
-                TitleColor = OxyColor.FromRgb(159, 183, 213),
-                TextColor = OxyColor.FromRgb(159, 183, 213),
+                TitleColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
+                TextColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
                 MajorGridlineStyle = LineStyle.Solid,
                 MinorGridlineStyle = LineStyle.Dot,
-                MajorGridlineColor = OxyColor.FromRgb(81, 99, 119),
-                MinorGridlineColor = OxyColor.FromRgb(81, 99, 119),
+                MajorGridlineColor = isDarkTheme ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82),
+                MinorGridlineColor = isDarkTheme ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82),
                 IsZoomEnabled = false
             });
 
@@ -844,32 +797,21 @@ namespace diplom
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 
             this.button14 = CreateButton("button14", "Повернутися назад", new Point(420, 540), new Size(240, 41), this.button14_Click);
-
             this.PerformLayout();
-
-            if (CheckBox1Active == true)
-            {
-                this.button14.BackColor = Color.FromArgb(6, 40, 68);
-                this.button14.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            }
-
-            if (CheckBox2Active == true)
-            {
-                this.button14.BackColor = Color.FromArgb(171, 176, 180);
-                this.button14.ForeColor = Color.FromArgb(82, 82, 82);
-            }
         }
 
         private System.Windows.Forms.Button CreateButton(string name, string text, Point location, Size size, EventHandler clickHandler)
         {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
             var button = new System.Windows.Forms.Button
             {
                 Name = name,
                 Text = text,
                 Location = location,
                 Size = size,
-                ForeColor = System.Drawing.SystemColors.ActiveCaption,
-                BackColor = System.Drawing.Color.FromArgb(6, 40, 68),
+                ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82),
+                BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196),
                 FlatStyle = System.Windows.Forms.FlatStyle.Flat,
                 UseVisualStyleBackColor = true
             };
@@ -883,6 +825,7 @@ namespace diplom
         {
             // Обчислюємо X так, щоб центр мітки збігався з centerX
             int labelX = centerX - size.Width / 2;
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
 
             var label = new Label
             {
@@ -891,7 +834,9 @@ namespace diplom
                 Location = new Point(labelX, y),
                 Size = size,
                 Font = font,
-                TextAlign = ContentAlignment.MiddleCenter
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82),
+                BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225)
             };
             this.Controls.Add(label);
 
@@ -900,10 +845,13 @@ namespace diplom
 
         private Label CreateSettingsLabel(Point location, string name, string text, int fontSize = 10, bool isTitle = false)
         {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
             var label = new Label
             {
                 AutoSize = true,
-                ForeColor = System.Drawing.SystemColors.ActiveCaption,
+                ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82),
+                BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225),
                 Location = location,
                 Name = name,
                 Font = new Font("Arial", fontSize, FontStyle.Regular),
@@ -911,25 +859,25 @@ namespace diplom
                 Text = text,
                 TextAlign = ContentAlignment.MiddleLeft
             };
-            if (!isTitle)
-                label.BackColor = Color.FromArgb(2, 14, 25);
 
             this.Controls.Add(label);
             return label;
         }
 
-        private CheckBox CreateCheckBox(Point location, string name, string text, bool hasDarkBackground = false)
+        private CheckBox CreateCheckBox(Point location, string name, string text)
         {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
             var checkBox = new CheckBox
             {
                 AutoSize = true,
-                ForeColor = System.Drawing.SystemColors.ActiveCaption,
+                ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82),
                 Location = location,
                 Name = name,
                 Font = new Font("Arial", 10, FontStyle.Regular),
                 Size = new Size(180, 180),
                 Text = text,
-                BackColor = hasDarkBackground ? Color.FromArgb(2, 14, 25) : Color.Transparent
+                BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225)
             };
 
             this.Controls.Add(checkBox);
@@ -940,38 +888,47 @@ namespace diplom
 
         private void SettingsMenu()
         {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             Label label11 = CreateSettingsLabel(new Point(250, 100), "label11", "Колір теми:");
             Label label12 = CreateSettingsLabel(new Point(250, 350), "label12", "Автоматично вимикати таймер за неактивності протягом:");
             Label label13 = CreateSettingsLabel(new Point(250, 450), "label13", "Якщо вас не задовільнило жодне значення, введіть власне значення в наступне поле:");
             Label label10 = CreateMainLabel("label10", "Налаштування роботи програми", 550, 30, new Size(500, 30), new Font("Arial", 16, FontStyle.Regular));
-            label10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
 
             CheckBox checkBox1 = CreateCheckBox(new Point(250, 150), "checkBox1", "Темна тема");
             CheckBox checkBox2 = CreateCheckBox(new Point(450, 150), "checkBox2", "Світла тема");
-            CheckBox checkBox3 = CreateCheckBox(new Point(250, 200), "checkBox3", "Автозапуск програми", true);
-            CheckBox checkBox4 = CreateCheckBox(new Point(250, 250), "checkBox4", "Дозволити програмі надсилати сповіщення:", true);
-            CheckBox checkBox5 = CreateCheckBox(new Point(250, 400), "checkBox5", "5 хв", true);
-            CheckBox checkBox6 = CreateCheckBox(new Point(450, 400), "checkBox6", "10 хв", true);
-            CheckBox checkBox7 = CreateCheckBox(new Point(650, 400), "checkBox7", "15 хв", true);
-            CheckBox checkBox8 = CreateCheckBox(new Point(250, 300), "checkBox8", "Відстежувати активність в браузері", true);
-           // CheckBox checkBox9 = CreateCheckBox(new Point(250, 500), "checkBox9", " активність в браузері", true);
+            CheckBox checkBox3 = CreateCheckBox(new Point(250, 200), "checkBox3", "Автозапуск програми");
+            CheckBox checkBox4 = CreateCheckBox(new Point(250, 250), "checkBox4", "Дозволити програмі надсилати сповіщення:");
+            CheckBox checkBox5 = CreateCheckBox(new Point(250, 400), "checkBox5", "5 хв");
+            CheckBox checkBox6 = CreateCheckBox(new Point(450, 400), "checkBox6", "10 хв");
+            CheckBox checkBox7 = CreateCheckBox(new Point(650, 400), "checkBox7", "15 хв");
+            CheckBox checkBox8 = CreateCheckBox(new Point(250, 300), "checkBox8", "Відстежувати активність в браузері");
 
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox1.Location = new Point(250, 500); 
             this.textBox1.AutoSize = false;
             this.textBox1.Size = new Size(250, 20);
-            this.textBox1.BackColor = Color.FromArgb(6, 40, 68); 
-            this.textBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.textBox1.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196); 
+            this.textBox1.ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82);
             this.textBox1.Font = new Font("Arial", 9, FontStyle.Regular);
             this.textBox1.Text = "Введіть лише число за допомогою цифр";
             this.textBox1.BorderStyle = BorderStyle.None;
             this.Controls.Add(textBox1);
 
-           // ProperColorTheme();
             JsonProcessing.LoadSettings();
 
-            // Подія для ручного зняття вибору
+            if (isDarkTheme)
+            {
+                checkBox1.Checked = true;
+                checkBox2.Checked = false;
+            }
+            else
+            {
+                checkBox2.Checked = true;
+                checkBox1.Checked = false;
+            }
+
             checkBox7.CheckedChanged += (sender, e) =>
             {
                 if (checkBox7.Checked &&
@@ -982,7 +939,6 @@ namespace diplom
                     CheckBox7Active = true;
 
                     nonActiveTime = 15;
-                    //checkBox7.CheckedChanged += ValidateTextBox;
 
                     UpdateInactivityAmount(this, nonActiveTime);
                 }
@@ -1003,7 +959,6 @@ namespace diplom
                     CheckBox6Active = true;
 
                     nonActiveTime = 10;
-                    //checkBox6.CheckedChanged += ValidateTextBox;
                     UpdateInactivityAmount(this, nonActiveTime);
                 }
             };
@@ -1045,7 +1000,49 @@ namespace diplom
 
                     UpdateColorTheme(this, themeColor);
 
-                   // ProperColorTheme();
+                    BackColor = Color.FromArgb(2, 14, 25);
+                    panel1.BackColor = Color.FromArgb(4, 26, 44);
+                    button7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    button8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    button27.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    button28.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+
+                    checkBox1.BackColor = Color.FromArgb(2, 14, 25);
+                    checkBox2.BackColor = Color.FromArgb(2, 14, 25);
+                    checkBox3.BackColor = Color.FromArgb(2, 14, 25);
+                    checkBox4.BackColor = Color.FromArgb(2, 14, 25);
+                    checkBox5.BackColor = Color.FromArgb(2, 14, 25);
+                    checkBox6.BackColor = Color.FromArgb(2, 14, 25);
+                    checkBox7.BackColor = Color.FromArgb(2, 14, 25);
+                    checkBox8.BackColor = Color.FromArgb(2, 14, 25);
+
+                    checkBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    checkBox2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    checkBox3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    checkBox4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    checkBox5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    checkBox6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    checkBox7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    checkBox8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+
+                    label11.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    label12.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    label13.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    label10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+
+                    label11.BackColor = Color.FromArgb(2, 14, 25);
+                    label12.BackColor = Color.FromArgb(2, 14, 25);
+                    label13.BackColor = Color.FromArgb(2, 14, 25);
+                    label10.BackColor = Color.FromArgb(2, 14, 25);
+
+                    textBox1.BackColor = Color.FromArgb(6, 40, 68);// Розмір поля
+                    textBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+
+                    button3.BackColor = Color.FromArgb(2, 14, 25);
+                    pictureBox2.BackColor = Color.FromArgb(2, 14, 25);
+
+                    SetActivePanel(panel4);
+
                 }
                 if (!checkBox1.Checked && !checkBox2.Checked)
                 {
@@ -1066,7 +1063,45 @@ namespace diplom
 
                     UpdateColorTheme(this, themeColor);
 
-                    //ProperColorTheme();
+                    BackColor = Color.FromArgb(212, 220, 225);
+                    panel1.BackColor = Color.FromArgb(171, 176, 180);
+                    button7.ForeColor = Color.FromArgb(82, 82, 82);
+                    button8.ForeColor = Color.FromArgb(82, 82, 82);
+                    button27.ForeColor = Color.FromArgb(82, 82, 82);
+                    button28.ForeColor = Color.FromArgb(82, 82, 82);
+
+                    checkBox1.ForeColor = Color.FromArgb(82, 82, 82);
+                    checkBox2.ForeColor = Color.FromArgb(82, 82, 82);
+                    checkBox3.ForeColor = Color.FromArgb(82, 82, 82);
+                    checkBox4.ForeColor = Color.FromArgb(82, 82, 82);
+                    checkBox5.ForeColor = Color.FromArgb(82, 82, 82);
+                    checkBox6.ForeColor = Color.FromArgb(82, 82, 82);
+                    checkBox7.ForeColor = Color.FromArgb(82, 82, 82);
+                    checkBox8.ForeColor = Color.FromArgb(82, 82, 82);
+
+                    checkBox1.BackColor = Color.FromArgb(212, 220, 225);
+                    checkBox2.BackColor = Color.FromArgb(212, 220, 225);
+                    checkBox3.BackColor = Color.FromArgb(212, 220, 225);
+                    checkBox4.BackColor = Color.FromArgb(212, 220, 225);
+                    checkBox5.BackColor = Color.FromArgb(212, 220, 225);
+                    checkBox6.BackColor = Color.FromArgb(212, 220, 225);
+                    checkBox7.BackColor = Color.FromArgb(212, 220, 225);
+                    checkBox8.BackColor = Color.FromArgb(212, 220, 225);
+
+                    label11.BackColor = Color.FromArgb(212, 220, 225);
+                    label12.BackColor = Color.FromArgb(212, 220, 225);
+                    label13.BackColor = Color.FromArgb(212, 220, 225);
+                    label10.BackColor = Color.FromArgb(212, 220, 225);
+
+                    label11.ForeColor = Color.FromArgb(82, 82, 82);
+                    label12.ForeColor = Color.FromArgb(82, 82, 82);
+                    label13.ForeColor = Color.FromArgb(82, 82, 82);
+                    label10.ForeColor = Color.FromArgb(82, 82, 82);
+
+                    textBox1.BackColor = Color.FromArgb(171, 176, 180);
+                    textBox1.ForeColor = Color.FromArgb(82, 82, 82);
+
+                    SetActivePanel(panel4);
                 }
                 if (!checkBox2.Checked && !checkBox1.Checked)
                 {
@@ -1173,93 +1208,89 @@ namespace diplom
             this.ResumeLayout(false);
             this.PerformLayout();
         }
-        
-       /* private void ProperColorTheme()
+
+        private void ProperColorTheme()
         {
-            if (CheckBox1Active == true || Form1.settings.ColorTheme == "dark")
+            if (Form1.settings.ColorTheme == "dark")
             {
-                checkBox1.Checked = true;
+                BackColor = Color.FromArgb(2, 14, 25);
+                panel1.BackColor = Color.FromArgb(4, 26, 44);
+                button7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                button8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                button27.ForeColor = System.Drawing.SystemColors.ActiveCaption;
 
-                this.BackColor = Color.FromArgb(2, 14, 25);
-                this.panel1.BackColor = Color.FromArgb(4, 26, 44);
-                this.button7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.button8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.button27.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                checkBox1.BackColor = Color.FromArgb(2, 14, 25);
+                checkBox2.BackColor = Color.FromArgb(2, 14, 25);
+                checkBox3.BackColor = Color.FromArgb(2, 14, 25);
+                checkBox4.BackColor = Color.FromArgb(2, 14, 25);
+                checkBox5.BackColor = Color.FromArgb(2, 14, 25);
+                checkBox6.BackColor = Color.FromArgb(2, 14, 25);
+                checkBox7.BackColor = Color.FromArgb(2, 14, 25);
 
-                this.checkBox1.BackColor = Color.FromArgb(2, 14, 25);
-                this.checkBox2.BackColor = Color.FromArgb(2, 14, 25);
-                this.checkBox3.BackColor = Color.FromArgb(2, 14, 25);
-                this.checkBox4.BackColor = Color.FromArgb(2, 14, 25);
-                this.checkBox5.BackColor = Color.FromArgb(2, 14, 25);
-                this.checkBox6.BackColor = Color.FromArgb(2, 14, 25);
-                this.checkBox7.BackColor = Color.FromArgb(2, 14, 25);
+                checkBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                checkBox2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                checkBox3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                checkBox4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                checkBox5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                checkBox6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                checkBox7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
 
-                this.checkBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.checkBox2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.checkBox3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.checkBox4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.checkBox5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.checkBox6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.checkBox7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                label11.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                label12.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                label13.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                label14.ForeColor = System.Drawing.SystemColors.ActiveCaption;
 
-                this.label11.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.label12.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.label13.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.label14.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                label11.BackColor = Color.FromArgb(2, 14, 25);
+                label12.BackColor = Color.FromArgb(2, 14, 25);
+                label13.BackColor = Color.FromArgb(2, 14, 25);
+                label14.BackColor = Color.FromArgb(2, 14, 25);
 
-                this.label11.BackColor = Color.FromArgb(2, 14, 25);
-                this.label12.BackColor = Color.FromArgb(2, 14, 25);
-                this.label13.BackColor = Color.FromArgb(2, 14, 25);
-                this.label14.BackColor = Color.FromArgb(2, 14, 25);
+                textBox1.BackColor = Color.FromArgb(6, 40, 68);// Розмір поля
+                textBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
 
-                this.textBox1.BackColor = Color.FromArgb(6, 40, 68);// Розмір поля
-                this.textBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-
-                this.button3.BackColor = Color.FromArgb(2, 14, 25);
-                this.pictureBox2.BackColor = Color.FromArgb(2, 14, 25);
+                button3.BackColor = Color.FromArgb(2, 14, 25);
+                pictureBox2.BackColor = Color.FromArgb(2, 14, 25);
             }
 
-            if (CheckBox2Active == true || Form1.settings.ColorTheme == "light")
+            if (Form1.settings.ColorTheme == "light")
             {
-                checkBox2.Checked = true;
+                BackColor = Color.FromArgb(212, 220, 225);
+                panel1.BackColor = Color.FromArgb(171, 176, 180);
+                button7.ForeColor = Color.FromArgb(82, 82, 82);
+                button8.ForeColor = Color.FromArgb(82, 82, 82);
+                button27.ForeColor = Color.FromArgb(82, 82, 82);
 
-                this.BackColor = Color.FromArgb(212, 220, 225);
-                this.panel1.BackColor = Color.FromArgb(171, 176, 180);
-                this.button7.ForeColor = Color.FromArgb(82, 82, 82);
-                this.button8.ForeColor = Color.FromArgb(82, 82, 82);
-                this.button27.ForeColor = Color.FromArgb(82, 82, 82);
+                checkBox1.ForeColor = Color.FromArgb(82, 82, 82);
+                checkBox2.ForeColor = Color.FromArgb(82, 82, 82);
+                checkBox3.ForeColor = Color.FromArgb(82, 82, 82);
+                checkBox4.ForeColor = Color.FromArgb(82, 82, 82);
+                checkBox5.ForeColor = Color.FromArgb(82, 82, 82);
+                checkBox6.ForeColor = Color.FromArgb(82, 82, 82);
+                checkBox7.ForeColor = Color.FromArgb(82, 82, 82);
 
-                this.checkBox1.ForeColor = Color.FromArgb(82, 82, 82);
-                this.checkBox2.ForeColor = Color.FromArgb(82, 82, 82);
-                this.checkBox3.ForeColor = Color.FromArgb(82, 82, 82);
-                this.checkBox4.ForeColor = Color.FromArgb(82, 82, 82);
-                this.checkBox5.ForeColor = Color.FromArgb(82, 82, 82);
-                this.checkBox6.ForeColor = Color.FromArgb(82, 82, 82);
-                this.checkBox7.ForeColor = Color.FromArgb(82, 82, 82);
+                checkBox1.BackColor = Color.FromArgb(212, 220, 225);
+                checkBox2.BackColor = Color.FromArgb(212, 220, 225);
+                checkBox3.BackColor = Color.FromArgb(212, 220, 225);
+                checkBox4.BackColor = Color.FromArgb(212, 220, 225);
+                checkBox5.BackColor = Color.FromArgb(212, 220, 225);
+                checkBox6.BackColor = Color.FromArgb(212, 220, 225);
+                checkBox7.BackColor = Color.FromArgb(212, 220, 225);
 
-                this.checkBox1.BackColor = Color.FromArgb(212, 220, 225);
-                this.checkBox2.BackColor = Color.FromArgb(212, 220, 225);
-                this.checkBox3.BackColor = Color.FromArgb(212, 220, 225);
-                this.checkBox4.BackColor = Color.FromArgb(212, 220, 225);
-                this.checkBox5.BackColor = Color.FromArgb(212, 220, 225);
-                this.checkBox6.BackColor = Color.FromArgb(212, 220, 225);
-                this.checkBox7.BackColor = Color.FromArgb(212, 220, 225);
+                label11.BackColor = Color.FromArgb(212, 220, 225);
+                label12.BackColor = Color.FromArgb(212, 220, 225);
+                label13.BackColor = Color.FromArgb(212, 220, 225);
+                label14.BackColor = Color.FromArgb(212, 220, 225);
 
-                this.label11.BackColor = Color.FromArgb(212, 220, 225);
-                this.label12.BackColor = Color.FromArgb(212, 220, 225);
-                this.label13.BackColor = Color.FromArgb(212, 220, 225);
-                this.label14.BackColor = Color.FromArgb(212, 220, 225);
+                label11.ForeColor = Color.FromArgb(82, 82, 82);
+                label12.ForeColor = Color.FromArgb(82, 82, 82);
+                label13.ForeColor = Color.FromArgb(82, 82, 82);
+                label14.ForeColor = Color.FromArgb(82, 82, 82);
 
-                this.label11.ForeColor = Color.FromArgb(82, 82, 82);
-                this.label12.ForeColor = Color.FromArgb(82, 82, 82);
-                this.label13.ForeColor = Color.FromArgb(82, 82, 82);
-                this.label14.ForeColor = Color.FromArgb(82, 82, 82);
-
-                this.textBox1.BackColor = Color.FromArgb(171, 176, 180); // Розмір поля
-                this.textBox1.ForeColor = Color.FromArgb(82, 82, 82);
+                textBox1.BackColor = Color.FromArgb(171, 176, 180); 
+                textBox1.ForeColor = Color.FromArgb(82, 82, 82);
             }
 
-        }*/
+        }
 
         private void AboutProgram()
         {
@@ -1342,43 +1373,43 @@ namespace diplom
 
             // Налаштовуємо PictureBox з фоновим зображенням
            // this.ConfigurePictureBox(pictureBox2, new Point(338, 394), new Size(515, 41), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox3, new Point(338, 441), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox3.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox4, new Point(338, 488), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox4.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox5, new Point(338, 535), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox5.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox6, new Point(338, 582), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox6.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox7, new Point(338, 629), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox3.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox8, new Point(338, 676), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox4.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox9, new Point(338, 723), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox5.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox10, new Point(338, 770), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox6.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox3, new Point(338, 441), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox3.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox4, new Point(338, 488), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox4.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox5, new Point(338, 535), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox5.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox6, new Point(338, 582), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox6.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox7, new Point(338, 629), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox3.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox8, new Point(338, 676), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox4.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox9, new Point(338, 723), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox5.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox10, new Point(338, 770), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox6.BackgroundImage"));
 
             // Налаштовуємо Label з зображенням
-            this.label3 = ConfigureLabel(new Point(277, 100), new Size(pictureBox3.Width, pictureBox3.Height), "label3", image: (Image)resources.GetObject("label3.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label4 = ConfigureLabel(new Point(277, 150), new Size(pictureBox4.Width, pictureBox4.Height), "label4", image: (Image)resources.GetObject("label4.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label5 = ConfigureLabel(new Point(277, 200), new Size(pictureBox5.Width, pictureBox5.Height), "label5", image: (Image)resources.GetObject("label5.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label6 = ConfigureLabel(new Point(277, 250), new Size(pictureBox6.Width, pictureBox6.Height), "label6", image: (Image)resources.GetObject("label6.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label7 = ConfigureLabel(new Point(277, 300), new Size(pictureBox7.Width, pictureBox7.Height), "label7", image: (Image)resources.GetObject("label7.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label8 = ConfigureLabel(new Point(277, 350), new Size(pictureBox8.Width, pictureBox8.Height), "label8", image: (Image)resources.GetObject("label8.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label9 = ConfigureLabel(new Point(277, 400), new Size(pictureBox9.Width, pictureBox9.Height), "label9", image: (Image)resources.GetObject("label9.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label11 = ConfigureLabel(new Point(277, 450), new Size(pictureBox10.Width, pictureBox10.Height), "label11", image: (Image)resources.GetObject("label11.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label3 = ConfigureLabel(new Point(277, 100), new Size(pictureBox3.Width, pictureBox3.Height), "label3", image: (Image)resources.GetObject("label3.Image"));
+            this.label4 = ConfigureLabel(new Point(277, 150), new Size(pictureBox4.Width, pictureBox4.Height), "label4", image: (Image)resources.GetObject("label4.Image"));
+            this.label5 = ConfigureLabel(new Point(277, 200), new Size(pictureBox5.Width, pictureBox5.Height), "label5", image: (Image)resources.GetObject("label5.Image"));
+            this.label6 = ConfigureLabel(new Point(277, 250), new Size(pictureBox6.Width, pictureBox6.Height), "label6", image: (Image)resources.GetObject("label6.Image"));
+            this.label7 = ConfigureLabel(new Point(277, 300), new Size(pictureBox7.Width, pictureBox7.Height), "label7", image: (Image)resources.GetObject("label7.Image"));
+            this.label8 = ConfigureLabel(new Point(277, 350), new Size(pictureBox8.Width, pictureBox8.Height), "label8", image: (Image)resources.GetObject("label8.Image"));
+            this.label9 = ConfigureLabel(new Point(277, 400), new Size(pictureBox9.Width, pictureBox9.Height), "label9", image: (Image)resources.GetObject("label9.Image"));
+            this.label11 = ConfigureLabel(new Point(277, 450), new Size(pictureBox10.Width, pictureBox10.Height), "label11", image: (Image)resources.GetObject("label11.Image"));
 
-            this.ConfigurePictureBox(pictureBox11, new Point(338, 441), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox11.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox12, new Point(338, 488), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox12.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox13, new Point(338, 535), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox13.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox14, new Point(338, 582), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox14.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox15, new Point(338, 629), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox15.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox16, new Point(338, 676), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox16.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox17, new Point(338, 723), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox17.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox18, new Point(338, 770), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox18.BackgroundImage"), backColor: commonBackColor);
+            this.ConfigurePictureBox(pictureBox11, new Point(338, 441), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox11.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox12, new Point(338, 488), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox12.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox13, new Point(338, 535), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox13.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox14, new Point(338, 582), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox14.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox15, new Point(338, 629), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox15.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox16, new Point(338, 676), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox16.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox17, new Point(338, 723), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox17.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox18, new Point(338, 770), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox18.BackgroundImage"));
 
             // Налаштовуємо Label з зображенням
-            this.label12 = ConfigureLabel(new Point(542, 100), new Size(pictureBox11.Width, pictureBox11.Height), "label12", image: (Image)resources.GetObject("label12.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label13 = ConfigureLabel(new Point(542, 150), new Size(pictureBox12.Width, pictureBox12.Height), "label13", image: (Image)resources.GetObject("label13.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label14 = ConfigureLabel(new Point(542, 200), new Size(pictureBox13.Width, pictureBox13.Height), "label14", image: (Image)resources.GetObject("label14.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label15 = ConfigureLabel(new Point(542, 250), new Size(pictureBox14.Width, pictureBox14.Height), "label15", image: (Image)resources.GetObject("label15.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label16 = ConfigureLabel(new Point(542, 300), new Size(pictureBox15.Width, pictureBox15.Height), "label16", image: (Image)resources.GetObject("label16.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label17 = ConfigureLabel(new Point(542, 350), new Size(pictureBox16.Width, pictureBox16.Height), "label17", image: (Image)resources.GetObject("label17.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label18 = ConfigureLabel(new Point(542, 400), new Size(pictureBox17.Width, pictureBox17.Height), "label18", image: (Image)resources.GetObject("label18.Image"), backColor: Color.FromArgb(6, 40, 68));
-            this.label19 = ConfigureLabel(new Point(542, 450), new Size(pictureBox18.Width, pictureBox18.Height), "label19", image: (Image)resources.GetObject("label19.Image"), backColor: Color.FromArgb(6, 40, 68));
+            this.label12 = ConfigureLabel(new Point(542, 100), new Size(pictureBox11.Width, pictureBox11.Height), "label12", image: (Image)resources.GetObject("label12.Image"));
+            this.label13 = ConfigureLabel(new Point(542, 150), new Size(pictureBox12.Width, pictureBox12.Height), "label13", image: (Image)resources.GetObject("label13.Image"));
+            this.label14 = ConfigureLabel(new Point(542, 200), new Size(pictureBox13.Width, pictureBox13.Height), "label14", image: (Image)resources.GetObject("label14.Image"));
+            this.label15 = ConfigureLabel(new Point(542, 250), new Size(pictureBox14.Width, pictureBox14.Height), "label15", image: (Image)resources.GetObject("label15.Image"));
+            this.label16 = ConfigureLabel(new Point(542, 300), new Size(pictureBox15.Width, pictureBox15.Height), "label16", image: (Image)resources.GetObject("label16.Image"));
+            this.label17 = ConfigureLabel(new Point(542, 350), new Size(pictureBox16.Width, pictureBox16.Height), "label17", image: (Image)resources.GetObject("label17.Image"));
+            this.label18 = ConfigureLabel(new Point(542, 400), new Size(pictureBox17.Width, pictureBox17.Height), "label18", image: (Image)resources.GetObject("label18.Image"));
+            this.label19 = ConfigureLabel(new Point(542, 450), new Size(pictureBox18.Width, pictureBox18.Height), "label19", image: (Image)resources.GetObject("label19.Image"));
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 
             this.button30 = CreateButton("button30", "-", new Point(807, 100), new Size(50, 41), this.button30_Click);

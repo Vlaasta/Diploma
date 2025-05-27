@@ -1,22 +1,3502 @@
 [
   {
-    "Url": "https://www.youtube.com/watch?v=38xYeot-ciM",
-    "Timestamp": "2025-04-08T16:17:51.093Z"
+    "Url": "https://www.google.com/search?q=lambda890",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T14:22:00",
+    "TimeSpent": 827,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
   },
   {
-    "Url": "chrome://extensions/?errors=lllolhdpmoalhehnikobpfdngpcgbhkc",
-    "Timestamp": "2025-04-08T16:17:53.450Z"
+    "Url": "https://dev.to/lambda805",
+    "PageTitle": "lambda - DEV Community",
+    "Timestamp": "2025-05-26T14:02:00",
+    "TimeSpent": 886,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
   },
   {
-    "Url": "https://kpopping.com/",
-    "Timestamp": "2025-04-08T16:20:16.215Z"
+    "Url": "https://en.wikipedia.org/wiki/rest315",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T16:16:00",
+    "TimeSpent": 228,
+    "Text": "This page contains information about rest, with useful examples and explanations."
   },
   {
-    "Url": "https://robota.ua/company14613343/vacancy10243663?ref=search&cre=search_new&pos=dkp_search_new",
-    "Timestamp": "2025-04-08T16:20:17.168Z"
+    "Url": "https://medium.com/@asyncawait495",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T11:39:00",
+    "TimeSpent": 540,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
   },
   {
-    "Url": "https://chatgpt.com/c/67f51733-2088-8009-a61a-baa2ac740904",
-    "Timestamp": "2025-04-08T16:20:20.956Z"
+    "Url": "https://en.wikipedia.org/wiki/json917",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T12:59:00",
+    "TimeSpent": 834,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/nuget243",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T15:19:00",
+    "TimeSpent": 563,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@api656",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T15:31:00",
+    "TimeSpent": 108,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/api574",
+    "PageTitle": "api - DEV Community",
+    "Timestamp": "2025-05-26T10:26:00",
+    "TimeSpent": 265,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=dotnet870",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T13:38:00",
+    "TimeSpent": 170,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/entityframework338",
+    "PageTitle": "entityframework - Documentation",
+    "Timestamp": "2025-05-26T10:46:00",
+    "TimeSpent": 790,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/xamarin131",
+    "PageTitle": "xamarin - Documentation",
+    "Timestamp": "2025-05-26T09:38:00",
+    "TimeSpent": 462,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/dotnet234",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T15:22:00",
+    "TimeSpent": 616,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@blazor653",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T09:40:00",
+    "TimeSpent": 454,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/aspnet376",
+    "PageTitle": "aspnet - Documentation",
+    "Timestamp": "2025-05-26T10:59:00",
+    "TimeSpent": 282,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=nuget116",
+    "PageTitle": "nuget - YouTube",
+    "Timestamp": "2025-05-26T09:59:00",
+    "TimeSpent": 625,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/api490",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T16:13:00",
+    "TimeSpent": 343,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/xamarin837",
+    "PageTitle": "xamarin - DEV Community",
+    "Timestamp": "2025-05-26T13:59:00",
+    "TimeSpent": 542,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/linq877",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T15:21:00",
+    "TimeSpent": 219,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/api826",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T15:16:00",
+    "TimeSpent": 770,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/maui185",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T11:56:00",
+    "TimeSpent": 107,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@visualstudio477",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T11:37:00",
+    "TimeSpent": 434,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/maui249",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T13:58:00",
+    "TimeSpent": 587,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=aspnet493",
+    "PageTitle": "aspnet - Documentation",
+    "Timestamp": "2025-05-26T14:52:00",
+    "TimeSpent": 208,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/csharp519",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T16:21:00",
+    "TimeSpent": 161,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/lambda537",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T16:47:00",
+    "TimeSpent": 541,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=blazor918",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T10:59:00",
+    "TimeSpent": 197,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/xamarin635",
+    "PageTitle": "xamarin - Documentation",
+    "Timestamp": "2025-05-26T16:55:00",
+    "TimeSpent": 154,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/rest154",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T14:46:00",
+    "TimeSpent": 668,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@asyncawait977",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T17:16:00",
+    "TimeSpent": 448,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=entityframework531",
+    "PageTitle": "entityframework - YouTube",
+    "Timestamp": "2025-05-26T08:26:00",
+    "TimeSpent": 203,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/api242",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T13:54:00",
+    "TimeSpent": 800,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/csharp199",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T12:08:00",
+    "TimeSpent": 116,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/dotnet560",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T11:30:00",
+    "TimeSpent": 771,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/rest709",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T12:03:00",
+    "TimeSpent": 565,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/linq486",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T10:45:00",
+    "TimeSpent": 433,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/winforms536",
+    "PageTitle": "winforms - DEV Community",
+    "Timestamp": "2025-05-26T16:08:00",
+    "TimeSpent": 897,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/wpf280",
+    "PageTitle": "wpf - DEV Community",
+    "Timestamp": "2025-05-26T11:29:00",
+    "TimeSpent": 630,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@winforms709",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T15:18:00",
+    "TimeSpent": 818,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/api945",
+    "PageTitle": "api - DEV Community",
+    "Timestamp": "2025-05-26T14:56:00",
+    "TimeSpent": 827,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=rest250",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T11:42:00",
+    "TimeSpent": 234,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/linq702",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T08:16:00",
+    "TimeSpent": 702,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/dotnet295",
+    "PageTitle": "dotnet - DEV Community",
+    "Timestamp": "2025-05-26T10:00:00",
+    "TimeSpent": 125,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/api728",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T15:30:00",
+    "TimeSpent": 713,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/chatgpt352",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T09:17:00",
+    "TimeSpent": 849,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/chatgpt186",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T17:27:00",
+    "TimeSpent": 876,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/winforms607",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T12:39:00",
+    "TimeSpent": 804,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/linq612",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T16:06:00",
+    "TimeSpent": 718,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/blazor640",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T17:23:00",
+    "TimeSpent": 654,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/rest185",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T15:17:00",
+    "TimeSpent": 159,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=linq200",
+    "PageTitle": "linq - YouTube",
+    "Timestamp": "2025-05-26T13:47:00",
+    "TimeSpent": 463,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/rest136",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T15:20:00",
+    "TimeSpent": 629,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/csharp835",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T15:33:00",
+    "TimeSpent": 542,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/csharp864",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T15:09:00",
+    "TimeSpent": 71,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=aspnet180",
+    "PageTitle": "aspnet - Documentation",
+    "Timestamp": "2025-05-26T09:58:00",
+    "TimeSpent": 529,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/dotnet765",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T08:42:00",
+    "TimeSpent": 105,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/aspnet181",
+    "PageTitle": "aspnet - Documentation",
+    "Timestamp": "2025-05-26T12:43:00",
+    "TimeSpent": 307,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/maui746",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T17:26:00",
+    "TimeSpent": 132,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=api239",
+    "PageTitle": "api - YouTube",
+    "Timestamp": "2025-05-26T10:32:00",
+    "TimeSpent": 744,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=visualstudio143",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T09:16:00",
+    "TimeSpent": 883,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/json217",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T17:24:00",
+    "TimeSpent": 68,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/wpf616",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T13:33:00",
+    "TimeSpent": 254,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/entityframework606",
+    "PageTitle": "entityframework - Documentation",
+    "Timestamp": "2025-05-26T14:15:00",
+    "TimeSpent": 221,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/rest802",
+    "PageTitle": "rest - DEV Community",
+    "Timestamp": "2025-05-26T08:05:00",
+    "TimeSpent": 197,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/dotnet541",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T09:19:00",
+    "TimeSpent": 159,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/blazor806",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T15:17:00",
+    "TimeSpent": 759,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=json779",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T15:10:00",
+    "TimeSpent": 327,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/csharp646",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T14:01:00",
+    "TimeSpent": 121,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/entityframework973",
+    "PageTitle": "entityframework - Documentation",
+    "Timestamp": "2025-05-26T13:00:00",
+    "TimeSpent": 295,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/blazor982",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T09:21:00",
+    "TimeSpent": 173,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/ai832",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T13:26:00",
+    "TimeSpent": 470,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/wpf927",
+    "PageTitle": "wpf - DEV Community",
+    "Timestamp": "2025-05-26T14:56:00",
+    "TimeSpent": 785,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/ai214",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T09:03:00",
+    "TimeSpent": 295,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/asyncawait726",
+    "PageTitle": "asyncawait - DEV Community",
+    "Timestamp": "2025-05-26T10:26:00",
+    "TimeSpent": 465,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/lambda318",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T13:22:00",
+    "TimeSpent": 279,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/chatgpt788",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T11:31:00",
+    "TimeSpent": 617,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=linq904",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T13:41:00",
+    "TimeSpent": 385,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=maui283",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T15:39:00",
+    "TimeSpent": 597,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/dotnet564",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T08:31:00",
+    "TimeSpent": 763,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@wpf306",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T17:30:00",
+    "TimeSpent": 315,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=csharp370",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T12:16:00",
+    "TimeSpent": 708,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/api658",
+    "PageTitle": "api - DEV Community",
+    "Timestamp": "2025-05-26T14:23:00",
+    "TimeSpent": 657,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/nuget276",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T09:14:00",
+    "TimeSpent": 132,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/linq528",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T09:55:00",
+    "TimeSpent": 640,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=asyncawait441",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T10:10:00",
+    "TimeSpent": 250,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/aspnet547",
+    "PageTitle": "aspnet - Documentation",
+    "Timestamp": "2025-05-26T11:19:00",
+    "TimeSpent": 325,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=json722",
+    "PageTitle": "json - YouTube",
+    "Timestamp": "2025-05-26T13:55:00",
+    "TimeSpent": 369,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/unity493",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T14:40:00",
+    "TimeSpent": 350,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/ai980",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T15:13:00",
+    "TimeSpent": 338,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/chatgpt763",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T17:25:00",
+    "TimeSpent": 260,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=rest417",
+    "PageTitle": "rest - YouTube",
+    "Timestamp": "2025-05-26T15:26:00",
+    "TimeSpent": 274,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/visualstudio295",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T09:47:00",
+    "TimeSpent": 684,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/api474",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T12:50:00",
+    "TimeSpent": 566,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/nuget152",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T14:17:00",
+    "TimeSpent": 711,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/api741",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T10:38:00",
+    "TimeSpent": 334,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=chatgpt523",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T16:58:00",
+    "TimeSpent": 385,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=api700",
+    "PageTitle": "api - YouTube",
+    "Timestamp": "2025-05-26T18:00:00",
+    "TimeSpent": 273,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@csharp203",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T09:25:00",
+    "TimeSpent": 836,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/dotnet695",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T11:31:00",
+    "TimeSpent": 489,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/wpf314",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T14:42:00",
+    "TimeSpent": 757,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/linq309",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T09:49:00",
+    "TimeSpent": 821,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/chatgpt751",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T10:29:00",
+    "TimeSpent": 130,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=lambda862",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T11:36:00",
+    "TimeSpent": 400,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/api349",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T10:19:00",
+    "TimeSpent": 156,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/json152",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T08:25:00",
+    "TimeSpent": 202,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/api679",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T14:38:00",
+    "TimeSpent": 738,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=rest625",
+    "PageTitle": "rest - YouTube",
+    "Timestamp": "2025-05-26T08:24:00",
+    "TimeSpent": 90,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/asyncawait347",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T16:52:00",
+    "TimeSpent": 273,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/winforms446",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T17:21:00",
+    "TimeSpent": 658,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/maui139",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T16:16:00",
+    "TimeSpent": 390,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=ai930",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T17:22:00",
+    "TimeSpent": 799,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/asyncawait468",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T13:02:00",
+    "TimeSpent": 583,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@dotnet127",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T09:50:00",
+    "TimeSpent": 340,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/lambda190",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T10:11:00",
+    "TimeSpent": 544,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/aspnet567",
+    "PageTitle": "aspnet - Documentation",
+    "Timestamp": "2025-05-26T11:39:00",
+    "TimeSpent": 544,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@winforms118",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T14:28:00",
+    "TimeSpent": 816,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=aspnet861",
+    "PageTitle": "aspnet - YouTube",
+    "Timestamp": "2025-05-26T16:00:00",
+    "TimeSpent": 700,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/lambda551",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T11:54:00",
+    "TimeSpent": 60,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=asyncawait533",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T11:30:00",
+    "TimeSpent": 769,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@json272",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T08:15:00",
+    "TimeSpent": 841,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@lambda695",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T09:48:00",
+    "TimeSpent": 389,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/maui393",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T13:08:00",
+    "TimeSpent": 64,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/linq921",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T11:48:00",
+    "TimeSpent": 352,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/rest608",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T10:59:00",
+    "TimeSpent": 160,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/xamarin536",
+    "PageTitle": "xamarin - Documentation",
+    "Timestamp": "2025-05-26T09:55:00",
+    "TimeSpent": 888,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=api743",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T15:42:00",
+    "TimeSpent": 361,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/asyncawait362",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T09:41:00",
+    "TimeSpent": 386,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=chatgpt824",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T08:29:00",
+    "TimeSpent": 737,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/dotnet355",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T11:08:00",
+    "TimeSpent": 237,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/visualstudio463",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T13:56:00",
+    "TimeSpent": 271,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@ai352",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T08:24:00",
+    "TimeSpent": 170,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/linq555",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T09:04:00",
+    "TimeSpent": 817,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=api361",
+    "PageTitle": "api - YouTube",
+    "Timestamp": "2025-05-26T15:38:00",
+    "TimeSpent": 303,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/unity393",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T13:29:00",
+    "TimeSpent": 811,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=unity607",
+    "PageTitle": "unity - YouTube",
+    "Timestamp": "2025-05-26T15:57:00",
+    "TimeSpent": 241,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/nuget258",
+    "PageTitle": "nuget - DEV Community",
+    "Timestamp": "2025-05-26T14:21:00",
+    "TimeSpent": 708,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/aspnet121",
+    "PageTitle": "aspnet - Documentation",
+    "Timestamp": "2025-05-26T12:30:00",
+    "TimeSpent": 401,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/blazor389",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T13:08:00",
+    "TimeSpent": 639,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/rest850",
+    "PageTitle": "rest - DEV Community",
+    "Timestamp": "2025-05-26T16:32:00",
+    "TimeSpent": 336,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/aspnet755",
+    "PageTitle": "aspnet - Documentation",
+    "Timestamp": "2025-05-26T16:25:00",
+    "TimeSpent": 473,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=asyncawait540",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T16:52:00",
+    "TimeSpent": 299,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/visualstudio808",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T15:27:00",
+    "TimeSpent": 889,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/csharp541",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T17:10:00",
+    "TimeSpent": 648,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=linq542",
+    "PageTitle": "linq - YouTube",
+    "Timestamp": "2025-05-26T11:54:00",
+    "TimeSpent": 858,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/winforms958",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T12:55:00",
+    "TimeSpent": 742,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=rest434",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T17:56:00",
+    "TimeSpent": 748,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=chatgpt816",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T09:40:00",
+    "TimeSpent": 326,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/json836",
+    "PageTitle": "json - DEV Community",
+    "Timestamp": "2025-05-26T15:16:00",
+    "TimeSpent": 204,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=chatgpt852",
+    "PageTitle": "chatgpt - YouTube",
+    "Timestamp": "2025-05-26T08:10:00",
+    "TimeSpent": 628,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/api498",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T09:35:00",
+    "TimeSpent": 336,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/visualstudio184",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T14:20:00",
+    "TimeSpent": 143,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/linq843",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T15:46:00",
+    "TimeSpent": 184,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=asyncawait598",
+    "PageTitle": "asyncawait - YouTube",
+    "Timestamp": "2025-05-26T16:12:00",
+    "TimeSpent": 256,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/blazor470",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T12:04:00",
+    "TimeSpent": 702,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=lambda162",
+    "PageTitle": "lambda - YouTube",
+    "Timestamp": "2025-05-26T17:10:00",
+    "TimeSpent": 897,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=api293",
+    "PageTitle": "api - YouTube",
+    "Timestamp": "2025-05-26T09:20:00",
+    "TimeSpent": 437,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=nuget534",
+    "PageTitle": "nuget - YouTube",
+    "Timestamp": "2025-05-26T14:11:00",
+    "TimeSpent": 728,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/chatgpt615",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T16:02:00",
+    "TimeSpent": 387,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@blazor872",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T14:30:00",
+    "TimeSpent": 514,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=winforms699",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T16:00:00",
+    "TimeSpent": 296,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/ai287",
+    "PageTitle": "ai - DEV Community",
+    "Timestamp": "2025-05-26T08:01:00",
+    "TimeSpent": 330,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/ai293",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T12:23:00",
+    "TimeSpent": 569,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/nuget315",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T14:29:00",
+    "TimeSpent": 227,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=blazor224",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T14:43:00",
+    "TimeSpent": 61,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/linq386",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T10:36:00",
+    "TimeSpent": 762,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/asyncawait709",
+    "PageTitle": "asyncawait - DEV Community",
+    "Timestamp": "2025-05-26T11:39:00",
+    "TimeSpent": 807,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@rest893",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T08:55:00",
+    "TimeSpent": 848,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=nuget187",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T17:34:00",
+    "TimeSpent": 759,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/rest458",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T17:27:00",
+    "TimeSpent": 357,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=xamarin494",
+    "PageTitle": "xamarin - YouTube",
+    "Timestamp": "2025-05-26T14:31:00",
+    "TimeSpent": 237,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/api799",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T16:40:00",
+    "TimeSpent": 69,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/api411",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T08:22:00",
+    "TimeSpent": 802,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=wpf886",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T11:01:00",
+    "TimeSpent": 575,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/json504",
+    "PageTitle": "json - DEV Community",
+    "Timestamp": "2025-05-26T15:43:00",
+    "TimeSpent": 700,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/asyncawait258",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T16:51:00",
+    "TimeSpent": 296,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=csharp231",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T09:12:00",
+    "TimeSpent": 88,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=api157",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T14:20:00",
+    "TimeSpent": 828,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/ai632",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T15:32:00",
+    "TimeSpent": 365,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/unity847",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T08:51:00",
+    "TimeSpent": 560,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@linq947",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T13:31:00",
+    "TimeSpent": 697,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=winforms755",
+    "PageTitle": "winforms - YouTube",
+    "Timestamp": "2025-05-26T11:44:00",
+    "TimeSpent": 121,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=asyncawait185",
+    "PageTitle": "asyncawait - YouTube",
+    "Timestamp": "2025-05-26T16:29:00",
+    "TimeSpent": 405,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/maui168",
+    "PageTitle": "maui - DEV Community",
+    "Timestamp": "2025-05-26T08:03:00",
+    "TimeSpent": 465,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=entityframework192",
+    "PageTitle": "entityframework - YouTube",
+    "Timestamp": "2025-05-26T11:06:00",
+    "TimeSpent": 322,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/entityframework367",
+    "PageTitle": "entityframework - Documentation",
+    "Timestamp": "2025-05-26T12:47:00",
+    "TimeSpent": 333,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/unity849",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T08:56:00",
+    "TimeSpent": 565,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/entityframework556",
+    "PageTitle": "entityframework - Documentation",
+    "Timestamp": "2025-05-26T15:34:00",
+    "TimeSpent": 101,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/api613",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T17:44:00",
+    "TimeSpent": 861,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/api323",
+    "PageTitle": "api - DEV Community",
+    "Timestamp": "2025-05-26T14:34:00",
+    "TimeSpent": 593,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/unity766",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T12:49:00",
+    "TimeSpent": 570,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=blazor334",
+    "PageTitle": "blazor - YouTube",
+    "Timestamp": "2025-05-26T14:20:00",
+    "TimeSpent": 604,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/api477",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T12:38:00",
+    "TimeSpent": 363,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=dotnet876",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T14:41:00",
+    "TimeSpent": 643,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/visualstudio331",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T15:56:00",
+    "TimeSpent": 687,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/maui414",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T08:20:00",
+    "TimeSpent": 181,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@rest724",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T13:12:00",
+    "TimeSpent": 257,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=maui755",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T10:42:00",
+    "TimeSpent": 424,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=rest430",
+    "PageTitle": "rest - YouTube",
+    "Timestamp": "2025-05-26T12:20:00",
+    "TimeSpent": 225,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/blazor421",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T15:44:00",
+    "TimeSpent": 618,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/lambda289",
+    "PageTitle": "lambda - DEV Community",
+    "Timestamp": "2025-05-26T17:02:00",
+    "TimeSpent": 590,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=chatgpt334",
+    "PageTitle": "chatgpt - YouTube",
+    "Timestamp": "2025-05-26T08:47:00",
+    "TimeSpent": 230,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/lambda661",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T15:10:00",
+    "TimeSpent": 302,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/lambda303",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T13:00:00",
+    "TimeSpent": 682,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/csharp188",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T10:15:00",
+    "TimeSpent": 778,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/dotnet484",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T16:04:00",
+    "TimeSpent": 123,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=nuget224",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T13:54:00",
+    "TimeSpent": 273,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/blazor400",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T10:28:00",
+    "TimeSpent": 245,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=blazor980",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T14:40:00",
+    "TimeSpent": 142,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/winforms847",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T09:21:00",
+    "TimeSpent": 348,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@api228",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T16:31:00",
+    "TimeSpent": 703,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/json644",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T16:14:00",
+    "TimeSpent": 579,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/lambda721",
+    "PageTitle": "lambda - DEV Community",
+    "Timestamp": "2025-05-26T17:55:00",
+    "TimeSpent": 849,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=xamarin972",
+    "PageTitle": "xamarin - Documentation",
+    "Timestamp": "2025-05-26T18:00:00",
+    "TimeSpent": 301,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=linq866",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T11:35:00",
+    "TimeSpent": 576,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/csharp331",
+    "PageTitle": "csharp - DEV Community",
+    "Timestamp": "2025-05-26T10:40:00",
+    "TimeSpent": 397,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/unity715",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T13:36:00",
+    "TimeSpent": 836,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=winforms709",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T10:50:00",
+    "TimeSpent": 823,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=dotnet702",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T11:14:00",
+    "TimeSpent": 596,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/lambda854",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T09:46:00",
+    "TimeSpent": 95,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/nuget580",
+    "PageTitle": "nuget - DEV Community",
+    "Timestamp": "2025-05-26T09:10:00",
+    "TimeSpent": 64,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/chatgpt739",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T10:55:00",
+    "TimeSpent": 675,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/xamarin470",
+    "PageTitle": "xamarin - Documentation",
+    "Timestamp": "2025-05-26T08:56:00",
+    "TimeSpent": 250,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=api357",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T08:06:00",
+    "TimeSpent": 680,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=api845",
+    "PageTitle": "api - YouTube",
+    "Timestamp": "2025-05-26T10:15:00",
+    "TimeSpent": 676,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/wpf891",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T16:33:00",
+    "TimeSpent": 297,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/nuget525",
+    "PageTitle": "nuget - DEV Community",
+    "Timestamp": "2025-05-26T08:16:00",
+    "TimeSpent": 380,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/wpf998",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T08:22:00",
+    "TimeSpent": 717,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/rest132",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T08:36:00",
+    "TimeSpent": 577,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/linq917",
+    "PageTitle": "linq - DEV Community",
+    "Timestamp": "2025-05-26T13:13:00",
+    "TimeSpent": 402,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/wpf442",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T10:08:00",
+    "TimeSpent": 589,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/json379",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T10:58:00",
+    "TimeSpent": 728,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/winforms235",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T11:49:00",
+    "TimeSpent": 391,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/api396",
+    "PageTitle": "api - DEV Community",
+    "Timestamp": "2025-05-26T10:22:00",
+    "TimeSpent": 295,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/json455",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T13:30:00",
+    "TimeSpent": 704,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/rest888",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T14:58:00",
+    "TimeSpent": 417,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=api314",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T08:17:00",
+    "TimeSpent": 431,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@dotnet485",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T16:19:00",
+    "TimeSpent": 859,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=dotnet538",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T11:48:00",
+    "TimeSpent": 470,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/rest394",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T16:52:00",
+    "TimeSpent": 793,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@xamarin595",
+    "PageTitle": "xamarin - Documentation",
+    "Timestamp": "2025-05-26T10:32:00",
+    "TimeSpent": 374,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@linq982",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T09:45:00",
+    "TimeSpent": 408,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/unity666",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T12:33:00",
+    "TimeSpent": 142,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/linq626",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T11:09:00",
+    "TimeSpent": 654,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@ai389",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T17:13:00",
+    "TimeSpent": 124,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=chatgpt880",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T11:54:00",
+    "TimeSpent": 127,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/maui733",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T08:37:00",
+    "TimeSpent": 271,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=maui857",
+    "PageTitle": "maui - YouTube",
+    "Timestamp": "2025-05-26T09:53:00",
+    "TimeSpent": 269,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/winforms177",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T13:17:00",
+    "TimeSpent": 89,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/maui603",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T10:14:00",
+    "TimeSpent": 225,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/linq324",
+    "PageTitle": "linq - DEV Community",
+    "Timestamp": "2025-05-26T16:40:00",
+    "TimeSpent": 221,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/lambda471",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T15:28:00",
+    "TimeSpent": 871,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/lambda211",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T14:49:00",
+    "TimeSpent": 510,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@blazor808",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T09:33:00",
+    "TimeSpent": 849,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=asyncawait940",
+    "PageTitle": "asyncawait - YouTube",
+    "Timestamp": "2025-05-26T10:21:00",
+    "TimeSpent": 441,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=dotnet213",
+    "PageTitle": "dotnet - YouTube",
+    "Timestamp": "2025-05-26T14:31:00",
+    "TimeSpent": 529,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=ai133",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T08:40:00",
+    "TimeSpent": 725,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=dotnet701",
+    "PageTitle": "dotnet - YouTube",
+    "Timestamp": "2025-05-26T15:06:00",
+    "TimeSpent": 248,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=maui841",
+    "PageTitle": "maui - YouTube",
+    "Timestamp": "2025-05-26T12:56:00",
+    "TimeSpent": 843,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/entityframework250",
+    "PageTitle": "entityframework - Documentation",
+    "Timestamp": "2025-05-26T17:43:00",
+    "TimeSpent": 452,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/xamarin118",
+    "PageTitle": "xamarin - Documentation",
+    "Timestamp": "2025-05-26T15:03:00",
+    "TimeSpent": 350,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@winforms418",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T14:27:00",
+    "TimeSpent": 776,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/linq479",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T15:32:00",
+    "TimeSpent": 626,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=maui585",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T09:28:00",
+    "TimeSpent": 321,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=blazor412",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T11:01:00",
+    "TimeSpent": 347,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/api435",
+    "PageTitle": "api - DEV Community",
+    "Timestamp": "2025-05-26T14:00:00",
+    "TimeSpent": 790,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/entityframework974",
+    "PageTitle": "entityframework - Documentation",
+    "Timestamp": "2025-05-26T14:39:00",
+    "TimeSpent": 332,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=winforms948",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T17:01:00",
+    "TimeSpent": 75,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/wpf839",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T09:38:00",
+    "TimeSpent": 870,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/entityframework407",
+    "PageTitle": "entityframework - Documentation",
+    "Timestamp": "2025-05-26T17:47:00",
+    "TimeSpent": 83,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/api601",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T09:32:00",
+    "TimeSpent": 107,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/csharp321",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T16:35:00",
+    "TimeSpent": 282,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/chatgpt997",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T10:31:00",
+    "TimeSpent": 73,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=rest772",
+    "PageTitle": "rest - YouTube",
+    "Timestamp": "2025-05-26T08:15:00",
+    "TimeSpent": 142,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=chatgpt248",
+    "PageTitle": "chatgpt - YouTube",
+    "Timestamp": "2025-05-26T09:28:00",
+    "TimeSpent": 573,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/asyncawait284",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T11:56:00",
+    "TimeSpent": 84,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/chatgpt774",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T10:18:00",
+    "TimeSpent": 634,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=xamarin351",
+    "PageTitle": "xamarin - YouTube",
+    "Timestamp": "2025-05-26T10:09:00",
+    "TimeSpent": 567,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=lambda409",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T09:18:00",
+    "TimeSpent": 118,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/visualstudio977",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T11:58:00",
+    "TimeSpent": 601,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=unity220",
+    "PageTitle": "unity - YouTube",
+    "Timestamp": "2025-05-26T16:12:00",
+    "TimeSpent": 168,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=api758",
+    "PageTitle": "api - YouTube",
+    "Timestamp": "2025-05-26T16:05:00",
+    "TimeSpent": 196,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=xamarin493",
+    "PageTitle": "xamarin - YouTube",
+    "Timestamp": "2025-05-26T14:35:00",
+    "TimeSpent": 663,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=lambda396",
+    "PageTitle": "lambda - YouTube",
+    "Timestamp": "2025-05-26T12:41:00",
+    "TimeSpent": 640,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/blazor804",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T15:11:00",
+    "TimeSpent": 675,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/csharp309",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T16:37:00",
+    "TimeSpent": 406,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/maui540",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T08:28:00",
+    "TimeSpent": 813,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/xamarin585",
+    "PageTitle": "xamarin - DEV Community",
+    "Timestamp": "2025-05-26T15:05:00",
+    "TimeSpent": 116,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=csharp195",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T13:27:00",
+    "TimeSpent": 838,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=rest413",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T08:52:00",
+    "TimeSpent": 702,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=api883",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T16:39:00",
+    "TimeSpent": 177,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/lambda927",
+    "PageTitle": "lambda - DEV Community",
+    "Timestamp": "2025-05-26T10:22:00",
+    "TimeSpent": 614,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@ai904",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T12:29:00",
+    "TimeSpent": 530,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/api365",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T09:18:00",
+    "TimeSpent": 586,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/entityframework783",
+    "PageTitle": "entityframework - DEV Community",
+    "Timestamp": "2025-05-26T17:47:00",
+    "TimeSpent": 286,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/json631",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T12:36:00",
+    "TimeSpent": 102,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@linq361",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T11:56:00",
+    "TimeSpent": 232,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/asyncawait934",
+    "PageTitle": "asyncawait - DEV Community",
+    "Timestamp": "2025-05-26T15:39:00",
+    "TimeSpent": 400,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=maui303",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T14:00:00",
+    "TimeSpent": 535,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/ai954",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T16:47:00",
+    "TimeSpent": 839,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/linq459",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T11:34:00",
+    "TimeSpent": 545,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/rest787",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T13:26:00",
+    "TimeSpent": 547,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/unity679",
+    "PageTitle": "unity - DEV Community",
+    "Timestamp": "2025-05-26T14:22:00",
+    "TimeSpent": 322,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/blazor529",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T17:10:00",
+    "TimeSpent": 793,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=visualstudio600",
+    "PageTitle": "visualstudio - YouTube",
+    "Timestamp": "2025-05-26T08:12:00",
+    "TimeSpent": 260,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/dotnet155",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T10:32:00",
+    "TimeSpent": 337,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=winforms392",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T09:11:00",
+    "TimeSpent": 603,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/ai526",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T13:12:00",
+    "TimeSpent": 438,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@rest629",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T13:19:00",
+    "TimeSpent": 784,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/xamarin683",
+    "PageTitle": "xamarin - Documentation",
+    "Timestamp": "2025-05-26T09:15:00",
+    "TimeSpent": 652,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/ai295",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T08:03:00",
+    "TimeSpent": 540,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/rest352",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T08:29:00",
+    "TimeSpent": 309,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/chatgpt243",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T09:41:00",
+    "TimeSpent": 98,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/asyncawait927",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T13:34:00",
+    "TimeSpent": 875,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/api124",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T14:28:00",
+    "TimeSpent": 644,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@visualstudio113",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T17:00:00",
+    "TimeSpent": 898,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=xamarin152",
+    "PageTitle": "xamarin - Documentation",
+    "Timestamp": "2025-05-26T15:11:00",
+    "TimeSpent": 784,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/lambda626",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T08:33:00",
+    "TimeSpent": 509,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=dotnet112",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T16:45:00",
+    "TimeSpent": 898,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/visualstudio442",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T16:08:00",
+    "TimeSpent": 63,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/json726",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T14:30:00",
+    "TimeSpent": 200,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/entityframework557",
+    "PageTitle": "entityframework - Documentation",
+    "Timestamp": "2025-05-26T11:30:00",
+    "TimeSpent": 660,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=linq390",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T11:03:00",
+    "TimeSpent": 68,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/winforms723",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T12:30:00",
+    "TimeSpent": 215,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/api803",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T13:34:00",
+    "TimeSpent": 248,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=dotnet513",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T14:10:00",
+    "TimeSpent": 639,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=json981",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T17:24:00",
+    "TimeSpent": 890,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/linq511",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T11:17:00",
+    "TimeSpent": 211,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=aspnet373",
+    "PageTitle": "aspnet - Documentation",
+    "Timestamp": "2025-05-26T10:53:00",
+    "TimeSpent": 433,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/winforms599",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T15:46:00",
+    "TimeSpent": 395,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/ai390",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T09:42:00",
+    "TimeSpent": 90,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/rest384",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T15:11:00",
+    "TimeSpent": 820,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=dotnet923",
+    "PageTitle": "dotnet - YouTube",
+    "Timestamp": "2025-05-26T13:06:00",
+    "TimeSpent": 439,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/api121",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T11:16:00",
+    "TimeSpent": 80,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/chatgpt787",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T16:36:00",
+    "TimeSpent": 364,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=entityframework175",
+    "PageTitle": "entityframework - YouTube",
+    "Timestamp": "2025-05-26T17:01:00",
+    "TimeSpent": 649,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/csharp480",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T17:16:00",
+    "TimeSpent": 584,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=blazor193",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T15:15:00",
+    "TimeSpent": 275,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/chatgpt128",
+    "PageTitle": "chatgpt - DEV Community",
+    "Timestamp": "2025-05-26T08:21:00",
+    "TimeSpent": 422,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/winforms696",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T17:31:00",
+    "TimeSpent": 481,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/entityframework434",
+    "PageTitle": "entityframework - Documentation",
+    "Timestamp": "2025-05-26T13:27:00",
+    "TimeSpent": 780,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/ai307",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T16:08:00",
+    "TimeSpent": 717,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/ai416",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T14:04:00",
+    "TimeSpent": 663,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/csharp473",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T16:53:00",
+    "TimeSpent": 802,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/csharp782",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T16:04:00",
+    "TimeSpent": 433,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=entityframework128",
+    "PageTitle": "entityframework - Documentation",
+    "Timestamp": "2025-05-26T08:00:00",
+    "TimeSpent": 680,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=ai878",
+    "PageTitle": "ai - YouTube",
+    "Timestamp": "2025-05-26T12:40:00",
+    "TimeSpent": 632,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=maui121",
+    "PageTitle": "maui - YouTube",
+    "Timestamp": "2025-05-26T15:43:00",
+    "TimeSpent": 424,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=winforms794",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T17:57:00",
+    "TimeSpent": 600,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/asyncawait831",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T13:34:00",
+    "TimeSpent": 232,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/nuget469",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T14:36:00",
+    "TimeSpent": 312,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@unity572",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T12:40:00",
+    "TimeSpent": 865,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@visualstudio481",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T14:02:00",
+    "TimeSpent": 384,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@dotnet499",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T15:26:00",
+    "TimeSpent": 352,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=csharp466",
+    "PageTitle": "csharp - YouTube",
+    "Timestamp": "2025-05-26T12:34:00",
+    "TimeSpent": 102,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/lambda694",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T12:38:00",
+    "TimeSpent": 524,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=blazor215",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T12:46:00",
+    "TimeSpent": 257,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/nuget715",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T16:25:00",
+    "TimeSpent": 536,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=unity926",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T12:30:00",
+    "TimeSpent": 150,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/unity157",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T11:18:00",
+    "TimeSpent": 480,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/winforms485",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T09:52:00",
+    "TimeSpent": 175,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/unity436",
+    "PageTitle": "unity - DEV Community",
+    "Timestamp": "2025-05-26T10:47:00",
+    "TimeSpent": 680,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/aspnet516",
+    "PageTitle": "aspnet - DEV Community",
+    "Timestamp": "2025-05-26T10:25:00",
+    "TimeSpent": 475,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/nuget411",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T11:00:00",
+    "TimeSpent": 639,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=lambda113",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T15:50:00",
+    "TimeSpent": 348,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/dotnet911",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T13:59:00",
+    "TimeSpent": 689,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=visualstudio508",
+    "PageTitle": "visualstudio - YouTube",
+    "Timestamp": "2025-05-26T14:12:00",
+    "TimeSpent": 304,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=lambda868",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T16:54:00",
+    "TimeSpent": 750,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=maui529",
+    "PageTitle": "maui - YouTube",
+    "Timestamp": "2025-05-26T15:33:00",
+    "TimeSpent": 558,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/unity895",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T12:56:00",
+    "TimeSpent": 224,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@chatgpt749",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T17:04:00",
+    "TimeSpent": 233,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=nuget106",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T12:55:00",
+    "TimeSpent": 311,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=wpf674",
+    "PageTitle": "wpf - YouTube",
+    "Timestamp": "2025-05-26T14:26:00",
+    "TimeSpent": 247,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/linq960",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T15:44:00",
+    "TimeSpent": 531,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/aspnet387",
+    "PageTitle": "aspnet - Documentation",
+    "Timestamp": "2025-05-26T17:47:00",
+    "TimeSpent": 860,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=linq551",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T11:26:00",
+    "TimeSpent": 757,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/visualstudio186",
+    "PageTitle": "visualstudio - DEV Community",
+    "Timestamp": "2025-05-26T11:03:00",
+    "TimeSpent": 457,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/lambda447",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T10:52:00",
+    "TimeSpent": 323,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/lambda175",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T14:24:00",
+    "TimeSpent": 458,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/unity371",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T17:11:00",
+    "TimeSpent": 187,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/asyncawait681",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T11:28:00",
+    "TimeSpent": 670,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=aspnet550",
+    "PageTitle": "aspnet - Documentation",
+    "Timestamp": "2025-05-26T08:51:00",
+    "TimeSpent": 584,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/aspnet160",
+    "PageTitle": "aspnet - Documentation",
+    "Timestamp": "2025-05-26T17:42:00",
+    "TimeSpent": 380,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=nuget391",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T10:04:00",
+    "TimeSpent": 246,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/unity701",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T15:58:00",
+    "TimeSpent": 126,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=visualstudio975",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T15:26:00",
+    "TimeSpent": 522,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/api480",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T11:45:00",
+    "TimeSpent": 569,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/visualstudio954",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T14:36:00",
+    "TimeSpent": 155,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=blazor304",
+    "PageTitle": "blazor - YouTube",
+    "Timestamp": "2025-05-26T14:25:00",
+    "TimeSpent": 250,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=json129",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T12:14:00",
+    "TimeSpent": 713,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/json602",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T11:20:00",
+    "TimeSpent": 610,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/xamarin639",
+    "PageTitle": "xamarin - Documentation",
+    "Timestamp": "2025-05-26T14:41:00",
+    "TimeSpent": 775,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=xamarin677",
+    "PageTitle": "xamarin - YouTube",
+    "Timestamp": "2025-05-26T15:11:00",
+    "TimeSpent": 534,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@asyncawait808",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T14:47:00",
+    "TimeSpent": 233,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/api924",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T12:48:00",
+    "TimeSpent": 431,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=unity426",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T15:08:00",
+    "TimeSpent": 547,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@ai409",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T13:03:00",
+    "TimeSpent": 438,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/winforms217",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T14:26:00",
+    "TimeSpent": 887,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=winforms931",
+    "PageTitle": "winforms - YouTube",
+    "Timestamp": "2025-05-26T16:45:00",
+    "TimeSpent": 617,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/wpf893",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T17:28:00",
+    "TimeSpent": 120,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/visualstudio132",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T14:53:00",
+    "TimeSpent": 551,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@xamarin614",
+    "PageTitle": "xamarin - Documentation",
+    "Timestamp": "2025-05-26T15:16:00",
+    "TimeSpent": 134,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/api737",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T12:54:00",
+    "TimeSpent": 884,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/linq434",
+    "PageTitle": "linq - DEV Community",
+    "Timestamp": "2025-05-26T15:44:00",
+    "TimeSpent": 397,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=api592",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T09:41:00",
+    "TimeSpent": 87,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=rest485",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T13:52:00",
+    "TimeSpent": 81,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=csharp597",
+    "PageTitle": "csharp - YouTube",
+    "Timestamp": "2025-05-26T11:10:00",
+    "TimeSpent": 168,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=maui141",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T11:46:00",
+    "TimeSpent": 522,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=entityframework351",
+    "PageTitle": "entityframework - Documentation",
+    "Timestamp": "2025-05-26T13:48:00",
+    "TimeSpent": 304,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/wpf149",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T10:40:00",
+    "TimeSpent": 753,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/winforms970",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T13:14:00",
+    "TimeSpent": 106,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@unity965",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T16:54:00",
+    "TimeSpent": 839,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=lambda741",
+    "PageTitle": "lambda - YouTube",
+    "Timestamp": "2025-05-26T08:27:00",
+    "TimeSpent": 518,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/json421",
+    "PageTitle": "json - DEV Community",
+    "Timestamp": "2025-05-26T10:36:00",
+    "TimeSpent": 787,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=visualstudio705",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T16:02:00",
+    "TimeSpent": 668,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/wpf562",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T16:48:00",
+    "TimeSpent": 855,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=visualstudio125",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T16:39:00",
+    "TimeSpent": 781,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@maui555",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T11:04:00",
+    "TimeSpent": 498,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/linq544",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T14:17:00",
+    "TimeSpent": 708,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/lambda907",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T16:23:00",
+    "TimeSpent": 556,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/csharp506",
+    "PageTitle": "csharp - DEV Community",
+    "Timestamp": "2025-05-26T14:47:00",
+    "TimeSpent": 164,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=visualstudio150",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T15:20:00",
+    "TimeSpent": 602,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/rest864",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T17:33:00",
+    "TimeSpent": 708,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=api310",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T16:23:00",
+    "TimeSpent": 648,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/api757",
+    "PageTitle": "api - DEV Community",
+    "Timestamp": "2025-05-26T10:03:00",
+    "TimeSpent": 764,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/unity180",
+    "PageTitle": "unity - DEV Community",
+    "Timestamp": "2025-05-26T13:46:00",
+    "TimeSpent": 213,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/nuget464",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T10:08:00",
+    "TimeSpent": 227,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=linq771",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T09:34:00",
+    "TimeSpent": 88,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/unity502",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T15:59:00",
+    "TimeSpent": 410,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/lambda159",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T09:44:00",
+    "TimeSpent": 771,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@lambda488",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T16:05:00",
+    "TimeSpent": 510,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@json339",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T09:46:00",
+    "TimeSpent": 623,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=aspnet403",
+    "PageTitle": "aspnet - YouTube",
+    "Timestamp": "2025-05-26T13:22:00",
+    "TimeSpent": 826,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/maui895",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T09:49:00",
+    "TimeSpent": 436,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/chatgpt338",
+    "PageTitle": "chatgpt - Documentation",
+    "Timestamp": "2025-05-26T08:49:00",
+    "TimeSpent": 794,
+    "Text": "This page contains information about chatgpt, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=api738",
+    "PageTitle": "api - YouTube",
+    "Timestamp": "2025-05-26T13:33:00",
+    "TimeSpent": 108,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/wpf507",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T08:27:00",
+    "TimeSpent": 343,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/aspnet388",
+    "PageTitle": "aspnet - Documentation",
+    "Timestamp": "2025-05-26T13:11:00",
+    "TimeSpent": 804,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/lambda487",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T12:02:00",
+    "TimeSpent": 157,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/xamarin879",
+    "PageTitle": "xamarin - DEV Community",
+    "Timestamp": "2025-05-26T12:09:00",
+    "TimeSpent": 718,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=json586",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T15:39:00",
+    "TimeSpent": 822,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/maui416",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T17:06:00",
+    "TimeSpent": 480,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=winforms583",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T11:10:00",
+    "TimeSpent": 287,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/wpf244",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T15:16:00",
+    "TimeSpent": 822,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=asyncawait144",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T08:18:00",
+    "TimeSpent": 298,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/asyncawait527",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T08:02:00",
+    "TimeSpent": 829,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=nuget401",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T11:39:00",
+    "TimeSpent": 625,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@asyncawait306",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T10:18:00",
+    "TimeSpent": 411,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/asyncawait701",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T17:34:00",
+    "TimeSpent": 100,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/winforms374",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T15:22:00",
+    "TimeSpent": 503,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/nuget334",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T12:17:00",
+    "TimeSpent": 474,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@entityframework558",
+    "PageTitle": "entityframework - Documentation",
+    "Timestamp": "2025-05-26T14:02:00",
+    "TimeSpent": 469,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=entityframework279",
+    "PageTitle": "entityframework - YouTube",
+    "Timestamp": "2025-05-26T10:51:00",
+    "TimeSpent": 490,
+    "Text": "This page contains information about entityframework, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=json369",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T15:45:00",
+    "TimeSpent": 233,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/visualstudio105",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T08:44:00",
+    "TimeSpent": 797,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/json866",
+    "PageTitle": "json - DEV Community",
+    "Timestamp": "2025-05-26T10:02:00",
+    "TimeSpent": 151,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/dotnet886",
+    "PageTitle": "dotnet - DEV Community",
+    "Timestamp": "2025-05-26T16:47:00",
+    "TimeSpent": 698,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/rest689",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T08:39:00",
+    "TimeSpent": 762,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/rest274",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T09:03:00",
+    "TimeSpent": 113,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/api783",
+    "PageTitle": "api - DEV Community",
+    "Timestamp": "2025-05-26T08:53:00",
+    "TimeSpent": 615,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/blazor433",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T08:48:00",
+    "TimeSpent": 514,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/visualstudio982",
+    "PageTitle": "visualstudio - DEV Community",
+    "Timestamp": "2025-05-26T14:11:00",
+    "TimeSpent": 873,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@json778",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T09:21:00",
+    "TimeSpent": 645,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=linq959",
+    "PageTitle": "linq - YouTube",
+    "Timestamp": "2025-05-26T08:09:00",
+    "TimeSpent": 451,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=csharp847",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T13:11:00",
+    "TimeSpent": 778,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@wpf482",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T12:28:00",
+    "TimeSpent": 587,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=rest861",
+    "PageTitle": "rest - Documentation",
+    "Timestamp": "2025-05-26T15:50:00",
+    "TimeSpent": 877,
+    "Text": "This page contains information about rest, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/csharp563",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T15:01:00",
+    "TimeSpent": 895,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/csharp334",
+    "PageTitle": "csharp - Documentation",
+    "Timestamp": "2025-05-26T11:10:00",
+    "TimeSpent": 139,
+    "Text": "This page contains information about csharp, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/unity220",
+    "PageTitle": "unity - Documentation",
+    "Timestamp": "2025-05-26T08:27:00",
+    "TimeSpent": 128,
+    "Text": "This page contains information about unity, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=blazor296",
+    "PageTitle": "blazor - Documentation",
+    "Timestamp": "2025-05-26T13:36:00",
+    "TimeSpent": 107,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/visualstudio454",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T17:21:00",
+    "TimeSpent": 569,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/api596",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T11:15:00",
+    "TimeSpent": 674,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/json797",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T17:33:00",
+    "TimeSpent": 763,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@dotnet951",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T09:14:00",
+    "TimeSpent": 318,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/json158",
+    "PageTitle": "json - Documentation",
+    "Timestamp": "2025-05-26T15:39:00",
+    "TimeSpent": 294,
+    "Text": "This page contains information about json, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=blazor457",
+    "PageTitle": "blazor - YouTube",
+    "Timestamp": "2025-05-26T13:40:00",
+    "TimeSpent": 529,
+    "Text": "This page contains information about blazor, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/maui600",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T08:25:00",
+    "TimeSpent": 527,
+    "Text": "This page contains information about maui, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/api442",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T13:41:00",
+    "TimeSpent": 141,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=winforms704",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T14:08:00",
+    "TimeSpent": 361,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/wpf324",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T12:13:00",
+    "TimeSpent": 286,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/winforms112",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T13:59:00",
+    "TimeSpent": 154,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=asyncawait466",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T08:00:00",
+    "TimeSpent": 897,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/visualstudio997",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T16:55:00",
+    "TimeSpent": 84,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/wpf106",
+    "PageTitle": "wpf - Documentation",
+    "Timestamp": "2025-05-26T09:51:00",
+    "TimeSpent": 520,
+    "Text": "This page contains information about wpf, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.youtube.com/watch?v=lambda727",
+    "PageTitle": "lambda - YouTube",
+    "Timestamp": "2025-05-26T15:58:00",
+    "TimeSpent": 453,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://news.ycombinator.com/item?id=lambda310",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T09:45:00",
+    "TimeSpent": 600,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=visualstudio948",
+    "PageTitle": "visualstudio - Documentation",
+    "Timestamp": "2025-05-26T14:44:00",
+    "TimeSpent": 837,
+    "Text": "This page contains information about visualstudio, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/ai409",
+    "PageTitle": "ai - Documentation",
+    "Timestamp": "2025-05-26T10:22:00",
+    "TimeSpent": 489,
+    "Text": "This page contains information about ai, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/dotnet225",
+    "PageTitle": "dotnet - DEV Community",
+    "Timestamp": "2025-05-26T12:31:00",
+    "TimeSpent": 401,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://en.wikipedia.org/wiki/aspnet875",
+    "PageTitle": "aspnet - Documentation",
+    "Timestamp": "2025-05-26T15:45:00",
+    "TimeSpent": 487,
+    "Text": "This page contains information about aspnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/asyncawait301",
+    "PageTitle": "asyncawait - Documentation",
+    "Timestamp": "2025-05-26T16:48:00",
+    "TimeSpent": 89,
+    "Text": "This page contains information about asyncawait, with useful examples and explanations."
+  },
+  {
+    "Url": "https://docs.microsoft.com/en-us/dotnet/nuget285",
+    "PageTitle": "nuget - Documentation",
+    "Timestamp": "2025-05-26T13:22:00",
+    "TimeSpent": 125,
+    "Text": "This page contains information about nuget, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=linq907",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T15:55:00",
+    "TimeSpent": 783,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://medium.com/@api676",
+    "PageTitle": "api - Documentation",
+    "Timestamp": "2025-05-26T13:59:00",
+    "TimeSpent": 138,
+    "Text": "This page contains information about api, with useful examples and explanations."
+  },
+  {
+    "Url": "https://stackoverflow.com/questions/lambda752",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T14:57:00",
+    "TimeSpent": 347,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=dotnet568",
+    "PageTitle": "dotnet - Documentation",
+    "Timestamp": "2025-05-26T12:33:00",
+    "TimeSpent": 788,
+    "Text": "This page contains information about dotnet, with useful examples and explanations."
+  },
+  {
+    "Url": "https://dev.to/xamarin552",
+    "PageTitle": "xamarin - DEV Community",
+    "Timestamp": "2025-05-26T14:06:00",
+    "TimeSpent": 184,
+    "Text": "This page contains information about xamarin, with useful examples and explanations."
+  },
+  {
+    "Url": "https://learn.microsoft.com/en-us/linq691",
+    "PageTitle": "linq - Documentation",
+    "Timestamp": "2025-05-26T17:14:00",
+    "TimeSpent": 765,
+    "Text": "This page contains information about linq, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/winforms596",
+    "PageTitle": "winforms - Documentation",
+    "Timestamp": "2025-05-26T16:01:00",
+    "TimeSpent": 461,
+    "Text": "This page contains information about winforms, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.google.com/search?q=lambda557",
+    "PageTitle": "lambda - Documentation",
+    "Timestamp": "2025-05-26T09:59:00",
+    "TimeSpent": 160,
+    "Text": "This page contains information about lambda, with useful examples and explanations."
+  },
+  {
+    "Url": "https://www.reddit.com/r/maui810",
+    "PageTitle": "maui - Documentation",
+    "Timestamp": "2025-05-26T13:59:00",
+    "TimeSpent": 585,
+    "Text": "This page contains information about maui, with useful examples and explanations."
   }
 ]

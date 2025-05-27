@@ -8,7 +8,7 @@ using OxyPlot.WindowsForms;
 using OxyPlot.Axes;
 using System.Linq;
 using OxyPlot.Annotations;
-using System.Globalization;
+
 
 namespace diplom
 {
@@ -38,6 +38,10 @@ namespace diplom
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
+
+        private readonly ToolTip _customToolTip = new ToolTip() { ShowAlways = true };
+
+        private bool _showDateInTooltip = false;
 
         private void InitializeComponentMain()
         {
@@ -191,10 +195,9 @@ namespace diplom
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             InitializeComponentMain();
-            // this.panel2 = new System.Windows.Forms.Panel();
             bool isDarkTheme = Form1.settings.ColorTheme == "dark";
 
-            this.button3 = new System.Windows.Forms.Button(); //кнопка "вверх"
+            this.button3 = new System.Windows.Forms.Button(); 
             this.button10 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -213,7 +216,6 @@ namespace diplom
             this.panel5 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
 
-            // this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -227,11 +229,11 @@ namespace diplom
 
             this.button1 = CreateButton("button1", "Додати проєкт", new Point(280, 327), new Size(515, 37), this.button1_Click);
             this.button2 = CreateButton("button2", "Запустити таймер", new Point(438, 250), new Size(200, 38), this.button2_Click);
-            this.button3 = CreateButton("button3", "Вверх", new Point(224, 413), new Size(50, 37), this.button3_Click);
+            //this.button3 = CreateButton("button3", "Вверх", new Point(224, 413), new Size(50, 37), this.button3_Click);
             this.button4 = CreateButton("button4", "-", new Point(801, 413), new Size(50, 37), this.button4_Click);
             this.button5 = CreateButton("button5", "-", new Point(801, 456), new Size(50, 37), this.button5_Click);
             this.button6 = CreateButton("button6", "-", new Point(801, 499), new Size(50, 37), this.button6_Click);
-            this.button10 = CreateButton("button10", "Вниз", new Point(224, 499), new Size(50, 37), this.button10_Click);
+           // this.button10 = CreateButton("button10", "Вниз", new Point(224, 499), new Size(50, 37), this.button10_Click);
 
             this.pictureBox1.Image = isDarkTheme ? Properties.Resources.ClockForDarkTheme : Properties.Resources.ClockForLightTheme;
             this.ConfigurePictureBox(pictureBox1, new Point(456, 58), new Size(164, 164));
@@ -272,6 +274,20 @@ namespace diplom
             this.label5.Font = new Font("Microsoft Sans Serif", 9);
             this.label8.Font = new Font("Microsoft Sans Serif", 9);
 
+            this.vScrollBar1 = new System.Windows.Forms.VScrollBar(); 
+
+            int visibleHeight = 200;
+
+            vScrollBar1.Minimum = 0;
+            // Maximum має враховувати, що LargeChange віднімається
+            vScrollBar1.LargeChange = visibleHeight;
+            vScrollBar1.SmallChange = 20;
+            // Максимальна прокрутка — на всю висоту контенту мінус те, що видно
+            vScrollBar1.Maximum = Math.Max(0, totalContentHeight - visibleHeight + vScrollBar1.LargeChange);
+            vScrollBar1.Value = 0;
+
+            vScrollBar1.ValueChanged += vScrollBar1_ValueChanged;
+
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(900,650);
 
@@ -286,7 +302,7 @@ namespace diplom
             this.Controls.Add(this.pictureBox9);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "Form1";
-           // this.panel2.ResumeLayout(false);
+
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
@@ -298,6 +314,45 @@ namespace diplom
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // Приклад даних
+            var rows = new[] {
+                new { Name = "Лаб_№1.docx", Path = @"E:\NAU\3 KURS\3 KURS 1 семестр\ОБДЗ\Лаб_№1.docx" },
+                new { Name = "3lab.accdb",  Path = @"E:\NAU\3 KURS\3 KURS 1 семестр\ОБДЗ\3lab.accdb"  },
+                new { Name = "YAPZ.sln",    Path = @"E:\4 KURS\4 KURS 2 семестр\ЯПЗ\YAPZ.sln" }       };
+
+            int y = 10;
+            foreach (var row in rows)
+            {
+                var lblName = new Label
+                {
+                    Text = row.Name,
+                    ForeColor = Color.White,
+                    BackColor = Color.Blue,
+                    AutoSize = true,
+                    Location = new Point(10, y)
+                };
+                // збережемо початкову Y-координату
+                lblName.Tag = lblName.Top;
+                panelContent.Controls.Add(lblName);
+
+                var lblPath = new Label
+                {
+                    Text = row.Path,
+                    ForeColor = Color.White,
+                    BackColor = panelContent.BackColor,
+                    AutoSize = true,
+                    Location = new Point(200, y)
+                };
+                lblPath.Tag = lblPath.Top;
+                panelContent.Controls.Add(lblPath);
+
+                y += lblName.Height + 10;
+            }
+
         }
 
         private System.Windows.Forms.Label ConfigureLabel2(Point location, Size size, string text, Image image = null)
@@ -381,20 +436,46 @@ namespace diplom
 
         private void StyleAxis(Axis axis)
         {
-            bool isDarkTheme = Form1.settings.ColorTheme == "dark"; 
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
 
             var mainColor = OxyColor.FromRgb(159, 183, 213);
-            var minorColor = OxyColor.FromRgb(81, 99, 119);
+            var minorBaseColor = isDarkTheme ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82);
+            var minorTransparent = isDarkTheme
+                ? OxyColor.FromAColor(80, minorBaseColor)   
+                : OxyColor.FromAColor(50, minorBaseColor); 
 
-            axis.TitleColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82);
-            axis.TextColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82);
-            axis.TicklineColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82);
-            axis.AxislineColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82);
-            axis.MajorGridlineColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82);
-            axis.MinorGridlineColor = isDarkTheme ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82);
+            axis.TitleColor = isDarkTheme ? mainColor : OxyColor.FromRgb(82, 82, 82);
+            axis.TextColor = axis.TitleColor;
+            axis.TicklineColor = axis.TitleColor;
+            axis.AxislineColor = axis.TitleColor;
+            var majorTransparent = isDarkTheme
+                 ? OxyColor.FromAColor(120, mainColor) // 120 ≈ 47% прозорості
+                 : OxyColor.FromAColor(100, OxyColor.FromRgb(82, 82, 82)); // трохи менше прозоре у світлій темі
+
+            axis.MajorGridlineColor = majorTransparent;
+            axis.MinorGridlineColor = minorTransparent;
             axis.MajorGridlineThickness = 1;
             axis.MinorGridlineThickness = 0.5;
-            axis.IsZoomEnabled = false;
+            axis.MajorGridlineStyle = LineStyle.Solid;
+            axis.MinorGridlineStyle = LineStyle.Dot;
+            axis.IsZoomEnabled = false; 
+        }
+
+        private string FormatTime(int totalSeconds)
+        {
+            if (totalSeconds < 60)
+                return $"{totalSeconds} сек.";
+
+            int hours = totalSeconds / 3600;
+            int minutes = (totalSeconds % 3600) / 60;
+            int seconds = totalSeconds % 60;
+
+            var parts = new List<string>();
+            if (hours > 0) parts.Add($"{hours} год.");
+            if (minutes > 0) parts.Add($"{minutes} хв.");
+            if (seconds > 0) parts.Add($"{seconds} сек.");
+
+            return string.Join(" ", parts);
         }
 
         private void buildChart(List<DateTime> xPoints, List<int> yPoints)
@@ -404,9 +485,9 @@ namespace diplom
 
             var lineSeries = new LineSeries
             {
-                Title = "Час роботи (сек)",
                 MarkerType = MarkerType.Circle,
-                Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82)
+                Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
+                TrackerFormatString = "\u200B"
             };
 
             for (int i = 0; i < xPoints.Count; i++)
@@ -416,6 +497,16 @@ namespace diplom
             }
 
             plotModel.Series.Add(lineSeries);
+
+            var ctrl = plotView.Controller ?? plotView.ActualController;
+
+            ctrl.UnbindMouseDown(
+                OxyPlot.OxyMouseButton.Left,
+                OxyPlot.OxyModifierKeys.None,
+                clickCount: 1
+            );
+
+            plotView.Controller = ctrl;
 
             var yMin = yPoints.Min();
             var yMax = yPoints.Max();
@@ -465,26 +556,59 @@ namespace diplom
                 AxisTitleDistance = 10
             };
 
+            _showDateInTooltip = true;
+            plotView.MouseDown += PlotView_MouseDown;
+            plotView.MouseUp += PlotView_MouseUp;
+
+            this.Controls.Add(plotView);
+
             StyleAxis(axisX);
             StyleAxis(axisY);
             plotModel.Axes.Add(axisX);
             plotModel.Axes.Add(axisY);
 
-            for (double y = axisY.Minimum; y <= axisY.Maximum; y += axisY.MinorStep)
-            {
-                var gridLine = new LineAnnotation
-                {
-                    Type = LineAnnotationType.Horizontal,
-                    Y = y,
-                    Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82),
-                    LineStyle = y % axisY.MajorStep == 0 ? LineStyle.Solid : LineStyle.Dot,
-                    StrokeThickness = y % axisY.MajorStep == 0 ? 1.5 : 0.5
-                };
-                plotModel.Annotations.Add(gridLine);
-            }
             this.label9 = CreateMainLabel("label9", "label9", 545, 570, new Size(530, 50), new Font("Arial", 16, FontStyle.Regular));
             plotView.Model = plotModel;
             this.Controls.Add(plotView);
+        }
+
+        private string GetToolTipText(DateTime dt, int seconds, bool showDate)
+        {
+            var timePart = $"Час: {FormatTime(seconds)}";
+            if (!showDate)
+                return timePart;
+            var datePart = $"Дата: {dt:dd.MM.yyyy}";
+            return $"{datePart}\n{timePart}";
+        }
+
+        private void PlotView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left) return;
+            var view = sender as PlotView;
+            var model = view?.Model;
+            if (view == null || model == null) return;
+            _customToolTip.Hide(view);
+
+            var series = model.Series.OfType<LineSeries>().FirstOrDefault();
+            if (series == null) return;
+
+            var sp = new ScreenPoint(e.X, e.Y);
+            var nearest = series.GetNearestPoint(sp, interpolate: false);
+            if (nearest == null || nearest.Position.DistanceTo(sp) >= 10)
+                return;
+
+            var dp = nearest.DataPoint;
+            var dt = DateTimeAxis.ToDateTime(dp.X, TimeSpan.FromSeconds(1));
+
+            string text = GetToolTipText(dt, (int)dp.Y, _showDateInTooltip);
+
+            _customToolTip.Show(text, view, e.X + 10, e.Y + 10);
+        }
+
+        private void PlotView_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (sender is OxyPlot.WindowsForms.PlotView view)
+                _customToolTip.Hide(view);
         }
 
         private void buildDailyChart<T>(List<T> dataList, DateTime selectedDate, Func<T, (DateTime Start, DateTime Stop)?> convertToInterval)
@@ -495,34 +619,62 @@ namespace diplom
                 .Select(convertToInterval)
                 .Where(interval => interval.HasValue && interval.Value.Start != DateTime.MinValue)
                 .Select(interval => interval.Value)
-                .OrderBy(p => p.Start)
                 .ToList();
+
+            // Групуємо тривалість активності по годинах доби
+            double[] minutesPerHour = new double[24];
+
+            foreach (var interval in parsed)
+            {
+                DateTime start = interval.Start;
+                DateTime stop = interval.Stop;
+
+                if (stop < today || start >= today.AddDays(1))
+                    continue; // ігноруємо, якщо не сьогодні
+
+                // Обмежуємо діапазон в межах обраного дня
+                if (start < today)
+                    start = today;
+                if (stop > today.AddDays(1))
+                    stop = today.AddDays(1);
+
+                while (start < stop)
+                {
+                    int hour = start.Hour;
+                    DateTime nextHour = new DateTime(start.Year, start.Month, start.Day, hour, 0, 0).AddHours(1);
+                    DateTime segmentEnd = stop < nextHour ? stop : nextHour;
+
+                    double minutes = (segmentEnd - start).TotalMinutes;
+                    minutesPerHour[hour] += minutes;
+
+                    start = segmentEnd;
+                }
+            }
 
             var plotView = CreatePlotView();
             var plotModel = plotView.Model;
 
             var series = new LineSeries
             {
-                Title = "Час роботи (хв)",
-                MarkerType = MarkerType.Circle,
+                MarkerType = MarkerType.None,
                 Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
                 StrokeThickness = 2
             };
 
-            series.Points.Add(new DataPoint(0, 0));
+            var ctrl = plotView.Controller ?? plotView.ActualController;
 
-            foreach (var seg in parsed)
+            ctrl.UnbindMouseDown(
+                OxyPlot.OxyMouseButton.Left,
+                OxyPlot.OxyModifierKeys.None,
+                clickCount: 1
+            );
+
+            plotView.Controller = ctrl;
+
+            for (int h = 0; h < 24; h++)
             {
-                double startH = (seg.Start - today).TotalHours;
-                double stopH = (seg.Stop - today).TotalHours;
-                double elapsedMin = (seg.Stop - seg.Start).TotalMinutes;
-
-                series.Points.Add(new DataPoint(startH, 0));
-                series.Points.Add(new DataPoint(stopH, elapsedMin));
-                series.Points.Add(new DataPoint(stopH, 0));
+                series.Points.Add(new DataPoint(h, minutesPerHour[h]));
             }
-
-            series.Points.Add(new DataPoint(23.5, 0));
 
             plotModel.Series.Add(series);
 
@@ -538,8 +690,7 @@ namespace diplom
                 Angle = -45
             };
 
-            double maxMin = series.Points.Max(p => p.Y);
-            double maxY = Math.Ceiling(maxMin + 1);
+            double maxY = Math.Ceiling(minutesPerHour.Max() + 1);
             double majorY = Math.Max(1, Math.Ceiling(maxY / 10.0));
             double minorY = majorY / 2.0;
 
@@ -547,17 +698,22 @@ namespace diplom
             {
                 Position = AxisPosition.Left,
                 Title = "Час роботи (хв)",
-                Minimum = -1,
+                Minimum = 0,
                 Maximum = maxY,
                 MajorStep = majorY,
                 MinorStep = minorY
             };
 
+            _showDateInTooltip = false;
+            plotView.MouseDown += PlotView_MouseDown;
+            plotView.MouseUp += PlotView_MouseUp;
+
             StyleAxis(axisX);
             StyleAxis(axisY);
-            plotModel.Axes.Add(axisX); 
+            plotModel.Axes.Add(axisX);
             plotModel.Axes.Add(axisY);
 
+            // Вертикальні лінії на кожну годину
             for (int h = 0; h < 24; h++)
             {
                 plotModel.Annotations.Add(new LineAnnotation
@@ -569,6 +725,8 @@ namespace diplom
                     LineStyle = LineStyle.Solid
                 });
             }
+
+            // Горизонтальні лінії
             for (double y = 0; y <= maxY; y += minorY)
             {
                 plotModel.Annotations.Add(new LineAnnotation
@@ -584,7 +742,6 @@ namespace diplom
             this.label9 = CreateMainLabel("label9", "label9", 545, 570, new Size(530, 50), new Font("Arial", 16, FontStyle.Regular));
             plotView.Model = plotModel;
             this.Controls.Add(plotView);
-
         }
 
         private void BuildMergedPlotModel(List<double> projMinutes, List<double> browserMinutes, DateTime selectedDate)
@@ -600,11 +757,9 @@ namespace diplom
 
             var series = new LineSeries
             {
-                Title = "Загальний час (хв)",
                 MarkerType = MarkerType.Circle,
                 Color = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
-                StrokeThickness = 2,
-                TrackerFormatString = "Значення: {4:0.00} хв"
+                StrokeThickness = 2
             };
 
             for (int i = 0; i < 96; i++)
@@ -664,6 +819,21 @@ namespace diplom
                 Model = model
             };
             this.Controls.Add(plotView);
+
+            var ctrl = plotView.Controller ?? plotView.ActualController;
+
+            ctrl.UnbindMouseDown(
+                OxyPlot.OxyMouseButton.Left,
+                OxyPlot.OxyModifierKeys.None,
+                clickCount: 1
+            );
+
+            plotView.Controller = ctrl;
+
+            _showDateInTooltip = false;
+            plotView.MouseDown += PlotView_MouseDown;
+            plotView.MouseUp += PlotView_MouseUp;
+
             this.label9 = CreateMainLabel("label9", "label9", 545, 570, new Size(530, 50), new Font("Arial", 16, FontStyle.Regular));
             label9.Text = $"Загальний час: {statistic.HumanizeSeconds(merged.Sum() * 60)}";
             label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
@@ -912,7 +1082,7 @@ namespace diplom
             this.textBox1.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196); 
             this.textBox1.ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82);
             this.textBox1.Font = new Font("Arial", 9, FontStyle.Regular);
-            this.textBox1.Text = "Введіть лише число за допомогою цифр";
+            this.textBox1.Text = "Введіть число";
             this.textBox1.BorderStyle = BorderStyle.None;
             this.Controls.Add(textBox1);
 
@@ -932,7 +1102,7 @@ namespace diplom
             checkBox7.CheckedChanged += (sender, e) =>
             {
                 if (checkBox7.Checked &&
-                (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр" || textBoxText == null))
+                (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть число" || textBoxText == null))
                 {
                     checkBox5.Checked = false;
                     checkBox6.Checked = false;
@@ -952,7 +1122,7 @@ namespace diplom
             checkBox6.CheckedChanged += (sender, e) =>
             {
                 if (checkBox6.Checked  &&
-                (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр" || textBoxText == null))
+                (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть число" || textBoxText == null))
                 {
                     checkBox5.Checked = false;
                     checkBox7.Checked = false;
@@ -971,7 +1141,7 @@ namespace diplom
             checkBox5.CheckedChanged += (sender, e) =>
             {
                 if (checkBox5.Checked &&
-                (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр" || textBoxText == null))
+                (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть число" || textBoxText == null))
                 {
                     checkBox6.Checked = false;
                     checkBox7.Checked = false;
@@ -1150,7 +1320,7 @@ namespace diplom
 
              if (Form1.settings.TextBoxValue == 0)
              {
-                 textBox1.Text = "Введіть лише число за допомогою цифр";
+                 textBox1.Text = "Введіть число";
              }
              else if (Form1.settings.TextBoxValue != 0)
              {
@@ -1166,7 +1336,7 @@ namespace diplom
 
             textBox1.TextChanged += (sender, e) =>
             {
-                if (!(string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр") || Form1.settings.TextBoxValue != 0)
+                if (!(string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть число") || Form1.settings.TextBoxValue != 0)
                 {
                     textBoxText = textBox1.Text;
 
@@ -1184,9 +1354,9 @@ namespace diplom
                     }
                 }
 
-                if (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть лише число за допомогою цифр" || Form1.settings.TextBoxValue == 0)
+                if (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text == "Введіть число" || Form1.settings.TextBoxValue == 0)
                 {
-                    textBoxText = "Введіть лише число за допомогою цифр";
+                    textBoxText = "Введіть число";
                     TextBoxValue = 0;
 
                     UpdateTextBoxValue(this, TextBoxValue);
@@ -1199,7 +1369,7 @@ namespace diplom
 
             textBox1.Enter += (sender, e) =>
             {
-                if (textBox1.Text == "Введіть лише число за допомогою цифр")
+                if (textBox1.Text == "Введіть число")
                 {
                     textBox1.Text = "";
                 }
@@ -1296,58 +1466,31 @@ namespace diplom
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 
-            this.label15 = new System.Windows.Forms.Label();
-            this.label15.AutoSize = true;
-            this.label15.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label15.Location = new System.Drawing.Point(300, 150);
-            this.label15.Name = "label15";
-            this.label15.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
-            this.label15.Size = new System.Drawing.Size(180, 180);
-            // this.label9.TabIndex = 19;
-            this.label15.BackColor = Color.FromArgb(2, 14, 25);
-            this.label15.Text = "Ця програма представляє собою кваліфікаційну роботу";
-            this.Controls.Add(this.label15);
+            /* this.label17 = new System.Windows.Forms.Label();
+             this.label17.AutoSize = true;
+             this.label17.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+             this.label17.Location = new System.Drawing.Point(300, 400);
+             this.label17.Name = "label17";
+             this.label17.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
+             this.label17.Size = new System.Drawing.Size(180, 180);
+             // this.label9.TabIndex = 19;
+             this.label17.BackColor = Color.FromArgb(2, 14, 25);
+             this.label17.Text = "Якщо вас не задовільнило жодне значення, введіть власне значення в наступне поле:";
+             this.Controls.Add(this.label17);
 
-            this.label16 = new System.Windows.Forms.Label();
-            this.label16.AutoSize = true;
-            this.label16.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label16.Location = new System.Drawing.Point(300, 200);
-            this.label16.Name = "label16";
-            this.label16.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
-            this.label16.Size = new System.Drawing.Size(180, 180);
-            // this.label9.TabIndex = 19;
-            this.label16.BackColor = Color.FromArgb(2, 14, 25);
-            this.label16.Text = "Більшість людей у сучасному світі працює дистанційно у вільному графіку, і тому багато хто не знає, скільки реально часу працює, " +
-                                "оскільки робочий день не нормований. Дома людям важко залишатися повністю зосередженими на роботі і не відволікатися на сторонні " +
-                                "фактори. Через це часто люди можуть перепрацьовувати. Це призводить до зниження ефективності роботи і виникненню проблем зі здоров'ям." +
-                                "Ця програма створена для того, щоб вирішити цю проблему та допомогти людям отримати реальні данні про робочий час.";
-            this.Controls.Add(this.label16);
+             this.label18 = new System.Windows.Forms.Label();
+             this.label18.AutoSize = true;
+             this.label18.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+             this.label18.Location = new System.Drawing.Point(400, 50);
+             this.label18.Name = "label18";
+             this.label18.Font = new Font("Arial", 20, FontStyle.Regular); // Arial, 16 пт, курсив
+             this.label18.Size = new System.Drawing.Size(180, 180);
+             // this.label9.TabIndex = 19;
+             //this.label14.BackColor = Color.FromArgb(2, 14, 25);
+             this.label18.Text = "Докладні відомості про програму";
+             this.Controls.Add(this.label18);*/
 
-           /* this.label17 = new System.Windows.Forms.Label();
-            this.label17.AutoSize = true;
-            this.label17.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label17.Location = new System.Drawing.Point(300, 400);
-            this.label17.Name = "label17";
-            this.label17.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
-            this.label17.Size = new System.Drawing.Size(180, 180);
-            // this.label9.TabIndex = 19;
-            this.label17.BackColor = Color.FromArgb(2, 14, 25);
-            this.label17.Text = "Якщо вас не задовільнило жодне значення, введіть власне значення в наступне поле:";
-            this.Controls.Add(this.label17);
-
-            this.label18 = new System.Windows.Forms.Label();
-            this.label18.AutoSize = true;
-            this.label18.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label18.Location = new System.Drawing.Point(400, 50);
-            this.label18.Name = "label18";
-            this.label18.Font = new Font("Arial", 20, FontStyle.Regular); // Arial, 16 пт, курсив
-            this.label18.Size = new System.Drawing.Size(180, 180);
-            // this.label9.TabIndex = 19;
-            //this.label14.BackColor = Color.FromArgb(2, 14, 25);
-            this.label18.Text = "Докладні відомості про програму";
-            this.Controls.Add(this.label18);*/
-
-           // ProperColorTheme();
+            // ProperColorTheme();
 
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1514,6 +1657,8 @@ namespace diplom
         public System.Windows.Forms.CheckBox checkBox7;
 
         private System.Windows.Forms.TextBox textBox1;
+
+        private System.Windows.Forms.VScrollBar vScrollBar1;
 
     }
 }

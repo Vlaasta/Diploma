@@ -1,7 +1,7 @@
 {
-  "ColorTheme": "light",
+  "ColorTheme": "dark",
   "Autostart": true,
   "NotificatonOnOff": false,
-  "InactivityAmount": 5,
-  "TextBoxValue": 1
+  "InactivityAmount": 10,
+  "TextBoxValue": 0
 }

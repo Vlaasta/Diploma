@@ -267,24 +267,29 @@ namespace diplom
                     {
                         var _tmpData = JsonProcessing.LoadUrlData();
 
-                        buildDailyChart<UrlData>(_tmpData, selectedDate, record =>
-                        {
-                            var start = record.Timestamp;
-                            var stop = start.Add(TimeSpan.FromSeconds(record.TimeSpent)); 
-                            return (start, stop);
-                        });
-
+                        // Фільтруємо записи лише на поточний день
                         var _tmpDayData = _tmpData
                             .Where(d => d.Timestamp.Date == selectedDate.Date)
                             .ToList();
 
+                        // Побудова графіка
+                        buildDailyChart<UrlData>(_tmpDayData, selectedDate, record =>
+                        {
+                            var start = record.Timestamp;
+                            var stop = start.Add(TimeSpan.FromSeconds(record.TimeSpent));
+                            return (start, stop);
+                        });
+
+                        // Обчислення загального часу
                         string _tmpTotalTime = statistic.CalculateTotalTime<UrlData>(
                             _tmpDayData,
                             nameof(UrlData.TimeSpent)
                         );
 
+                        // Оновлення підписів
                         label9.Text = $"Усього витрачено на роботу: {_tmpTotalTime}";
                         label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
+
                         break;
                     }
 
@@ -970,7 +975,16 @@ namespace diplom
             InitializeComponentMain();
             SetActivePanel(panel3);
             AboutProgram();
-        } 
+        }
+
+        private void vScrollBar1_ValueChanged(object sender, EventArgs e)
+        {
+            // якщо це PictureBox
+            pictureBox1.Top = -vScrollBar1.Value;
+            // або, якщо рядки — зрушуєте всі Label’и: 
+            foreach (var ctrl in container.Controls)
+                ctrl.Top = ctrl.OriginalTop - vScrollBar1.Value;
+        }
 
         private void Label1_MouseEnter(object sender, EventArgs e)
         {

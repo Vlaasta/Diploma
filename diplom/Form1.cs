@@ -78,9 +78,7 @@ namespace diplom
 
             settings = new DataSettings();
 
-            loadValues();
-
-            label3.MouseEnter += Label1_MouseEnter;
+           /* label3.MouseEnter += Label1_MouseEnter;
             label4.MouseEnter += Label1_MouseEnter;
             label5.MouseEnter += Label1_MouseEnter;
             label6.MouseEnter += Label1_MouseEnter;
@@ -92,16 +90,13 @@ namespace diplom
             label5.MouseLeave += Label1_MouseLeave;
             label6.MouseLeave += Label1_MouseLeave;
             label7.MouseLeave += Label1_MouseLeave;
-            label8.MouseLeave += Label1_MouseLeave;
+            label8.MouseLeave += Label1_MouseLeave;*/
 
             isPersonChoose = false;
 
-            LabelsToShow();
-            ButtonsToShow();
             GetTimeAmount();
 
             JsonProcessing.LoadSettings();
-            //ProperColorTheme();
         }
 
         private void GetTimeAmount()
@@ -179,35 +174,6 @@ namespace diplom
 
                     lastUpdated = DateTime.Now;
                 }
-            }
-        }
-
-        private void DeleteProject(string projectName)
-        {
-            var projects = JsonProcessing.LoadProjects();
-            var projectToRemove = projects.Find(p => p.Name == projectName);
-
-            if (projectToRemove != null)
-            {
-                projects.Remove(projectToRemove);
-                JsonProcessing.SaveProjects(projects);
-            }
-        }
-
-        private void loadValues()
-        {
-            var projects = JsonProcessing.LoadProjects();
-            var projectsNames = new List<Label> { label3, label4, label5 };
-            var projectsPath = new List<Label> { label6, label7, label8 };
-
-            for (int i = 0; i < projectsNames.Count && i < projects.Count; i++)
-            {
-                projectsNames[i].Text = projects[i].Name;
-            }
-
-            for (int i = 0; i < projectsPath.Count && i < projects.Count; i++)
-            {
-                projectsPath[i].Text = projects[i].Path;
             }
         }
 
@@ -511,49 +477,6 @@ namespace diplom
             }
         }
 
-        private void button6_Click(object sender, EventArgs e)
-        {
-            string projectName = label5.Text;
-            var result = MessageBox.Show($"Ви дійсно хочете видалити проєкт \"{projectName}\"?", "Підтвердження", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-            if (result == DialogResult.Yes)
-            {
-                DeleteProject(projectName);
-                loadValues();
-                LabelsToShow();
-                ButtonsToShow();
-            }
-        } //видалити проект
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            string projectName = label4.Text;
-            var result = MessageBox.Show($"Ви дійсно хочете видалити проєкт \"{projectName}\"?", "Підтвердження", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-            if (result == DialogResult.Yes)
-            {
-                DeleteProject(projectName);
-                loadValues();
-                LabelsToShow();
-                ButtonsToShow();
-
-            }
-        } //видалити проект
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            string projectName = label3.Text;
-            var result = MessageBox.Show($"Ви дійсно хочете видалити проєкт \"{projectName}\"?", "Підтвердження", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-            if (result == DialogResult.Yes)
-            {
-                DeleteProject(projectName);
-                loadValues();
-                LabelsToShow();
-                ButtonsToShow();
-            }
-        } //видалити проект
-
         private void button1_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -571,9 +494,7 @@ namespace diplom
                     {
                         JsonProcessing.AddProject(selectedFilePath);
                         MessageBox.Show($"Файл успішно додано: {selectedFilePath}", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LabelsToShow();
-                        loadValues();
-                        ButtonsToShow();
+                        PopulateProjects();
                     }
                     catch (Exception ex)
                     {
@@ -623,182 +544,9 @@ namespace diplom
         {
             this.Controls.Clear();
             InitializeComponentMainMenu();
-            //ProperColorTheme();
             SetActivePanel(panel6);
-            this.button3.Visible = false;
             GetTimeAmount();
-            loadValues();
-            LabelsToShow();
-            ButtonsToShow();
-        }
-
-        private void button3_Click(object sender, EventArgs e)//кнопка вверх
-        {
-            // Завантажуємо проєкти
-            var projects = JsonProcessing.LoadProjects();
-            this.button10.Visible = true;
-
-            string firstProjectName = GetFirstProjectName();
-            //MessageBox.Show($"Перше значення Name: {firstProjectName}");
-
-            // Поточні значення Label
-            string currentLabel3 = label3.Text;
-            string currentLabel4 = label4.Text;
-            string currentLabel5 = label5.Text;
-
-            // Знаходимо індекс для label3 у списку проектів
-            int currentIndexForLabel3 = projects.FindIndex(p => p.Name == currentLabel3);
-
-            // Отримуємо попереднє значення для label3
-            string previousLabel3 = currentIndexForLabel3 > 0
-                ? projects[currentIndexForLabel3 - 1].Name // Попереднє значення
-                : projects.LastOrDefault()?.Name ?? "Немає даних"; // Повертаємося на останній елемент, якщо це перший елемент
-
-            // Оновлюємо значення Label
-            label3.Text = previousLabel3;  // label3 отримує попереднє значення
-            label4.Text = currentLabel3;   // label4 отримує значення label3
-            label5.Text = currentLabel4;   // label5 отримує значення label4
-
-            // Поточні значення Label
-            string currentLabel6 = label6.Text;
-            string currentLabel7 = label7.Text;
-            string currentLabel8 = label8.Text;
-
-            // Знаходимо індекс для label3 у списку проектів
-            int currentIndexForLabel6 = projects.FindIndex(p => p.Path == currentLabel6);
-
-            // Отримуємо попереднє значення для label3
-            string previousLabel6 = currentIndexForLabel6 > 0
-                ? projects[currentIndexForLabel6 - 1].Path // Попереднє значення
-                : projects.LastOrDefault()?.Path ?? "Немає даних"; // Повертаємося на останній елемент, якщо це перший елемент
-
-            // Оновлюємо значення Label
-            label6.Text = previousLabel6;  // label3 отримує попереднє значення
-            label7.Text = currentLabel6;   // label4 отримує значення label3
-            label8.Text = currentLabel7;   // label5 отримує значення label4
-
-            // Якщо label5 набуває значення останнього елемента
-            if (label3.Text == firstProjectName)
-            {
-                this.button3.Visible = false; // Приховуємо кнопку
-                this.button10.Visible = true;
-            }
-
-            /* var labelsToCheck = new List<Label> { label3, label4, label5, label6, label7 };
-
-             // Перевірка кожного Label на кількість символів
-             foreach (var label in labelsToCheck)
-             {
-                 if (label.Text.Length > 41)
-                 {
-                     label.Text = label.Text.Substring(0, 41);
-                 }
-             }*/
-
-            LabelsToShow();
-            // ButtonsToShow();
-        }
-
-        private void button10_Click(object sender, EventArgs e) //кнопка вниз
-        {
-            // Завантажуємо проєкти
-            var projects = JsonProcessing.LoadProjects();
-            string lastProjectName = GetLastProjectName();
-            button3.Visible = true;
-            //MessageBox.Show(lastProjectName);
-
-            // Поточні значення Label
-            string currentLabel3 = label3.Text;
-            string currentLabel4 = label4.Text;
-            string currentLabel5 = label5.Text;
-
-            // Знаходимо індекс для label5 у списку проектів
-            int currentIndex = projects.FindIndex(p => p.Name == currentLabel5);
-
-            // Отримуємо наступне значення для label5
-            string nextLabel5 = currentIndex != -1 && currentIndex + 1 < projects.Count
-                ? projects[currentIndex + 1].Name // Наступне значення
-                : projects.FirstOrDefault()?.Name ?? "Немає даних"; // Повертаємося на початок, якщо це останній елемент
-
-            // Оновлюємо значення Label
-            label3.Text = currentLabel4; // label3 отримує значення label4
-            label4.Text = currentLabel5; // label4 отримує значення label5
-            label5.Text = nextLabel5;    // label5 отримує наступне значення
-
-            // Якщо label5 набуває значення останнього елемента
-            if (label5.Text == lastProjectName)
-            {
-                this.button10.Visible = false; // Приховуємо кнопку
-                this.button3.Visible = true;
-
-            }
-
-            // Поточні значення Label
-            string currentLabel6 = label6.Text;
-            string currentLabel7 = label7.Text;
-            string currentLabel8 = label8.Text;
-
-            // Знаходимо індекс для label3 у списку проектів
-            int currentIndex2 = projects.FindIndex(p => p.Path == currentLabel8);
-
-            // Отримуємо попереднє значення для label3
-            string nextLabel8 = currentIndex2 != -1 && currentIndex2 + 1 < projects.Count
-                ? projects[currentIndex2 + 1].Path // Попереднє значення
-                : projects.FirstOrDefault()?.Path ?? "Немає даних"; // Повертаємося на останній елемент, якщо це перший елемент
-
-            // Оновлюємо значення Label
-            label6.Text = currentLabel7;  // label3 отримує попереднє значення
-            label7.Text = currentLabel8;   // label4 отримує значення label3
-            label8.Text = nextLabel8;   // label5 отримує значення label4
-                                        //MessageBox.Show($"Привіт");
-
-            /* var labelsToCheck = new List<Label> { label3, label4, label5, label6, label7 };
-
-             // Перевірка кожного Label на кількість символів
-             foreach (var label in labelsToCheck)
-             {
-                 if (label.Text.Length > 41)
-                 {
-                     label.Text = label.Text.Substring(0, 41);
-                 }
-             }*/
-
-            LabelsToShow();
-            // ButtonsToShow();
-        }
-
-        private string GetLastProjectName()
-        {
-            // Завантажуємо проєкти з JSON
-            var projects = JsonProcessing.LoadProjects();
-
-            // Перевіряємо, чи список не порожній
-            if (projects.Count > 0)
-            {
-                // Повертаємо Name останнього елемента
-                return projects.Last().Name;
-            }
-
-            // Якщо список порожній, повертаємо повідомлення або порожній рядок
-            return "Немає даних";
-        }
-
-        private string GetFirstProjectName()
-        {
-            // Завантажуємо проєкти з JSON
-            var projects = JsonProcessing.LoadProjects();
-
-            // Перевіряємо, чи список не порожній
-            if (projects.Count > 0)
-            {
-                // Повертаємо Name останнього елемента
-                return projects.First().Name;
-            }
-
-            // Якщо список порожній, повертаємо повідомлення або порожній рядок
-            return "Немає даних";
-
-
+            PopulateProjects(); 
         }
 
         public static int GetNonActiveTime()
@@ -819,7 +567,7 @@ namespace diplom
 
         private void LoadBrowserDataIntoLabels()
         {
-            string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
+           /* string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
             if (!File.Exists(filePath)) return;
 
             string json = File.ReadAllText(filePath);
@@ -850,7 +598,7 @@ namespace diplom
             button39.Visible = currentOffset + visibleItemsCount < records.Count;
 
             // Кнопка "вгору" зникає, якщо ми на початку
-            button38.Visible = currentOffset > 0;
+            button38.Visible = currentOffset > 0;*/
         }
 
         private void DeleteRecordAndRefreshLabels(int indexOnPage)
@@ -977,15 +725,6 @@ namespace diplom
             AboutProgram();
         }
 
-        private void vScrollBar1_ValueChanged(object sender, EventArgs e)
-        {
-            // якщо це PictureBox
-            pictureBox1.Top = -vScrollBar1.Value;
-            // або, якщо рядки — зрушуєте всі Label’и: 
-            foreach (var ctrl in container.Controls)
-                ctrl.Top = ctrl.OriginalTop - vScrollBar1.Value;
-        }
-
         private void Label1_MouseEnter(object sender, EventArgs e)
         {
             if (sender is Label label)
@@ -999,125 +738,6 @@ namespace diplom
             if (sender is Label label)
             {
                 toolTip.Hide(label);
-            }
-        }
-
-        private void LabelsToShow()
-        {
-            // var projects = JsonProcessing.LoadProjects();
-
-            if (JsonProcessing.LoadProjects().Count == 0)
-            {
-                pictureBox3.Visible = false;
-                pictureBox4.Visible = false;
-                pictureBox5.Visible = false;
-                pictureBox6.Visible = false;
-                pictureBox7.Visible = false;
-                pictureBox8.Visible = false;
-
-                label3.Visible = false;
-                label4.Visible = false;
-                label5.Visible = false;
-                label6.Visible = false;
-                label7.Visible = false;
-                label8.Visible = false;
-
-                button6.Visible = false;
-                button10.Visible = false;
-                button3.Visible = false;
-                button5.Visible = false;
-                button4.Visible = false;
-            }
-            else if (JsonProcessing.LoadProjects().Count == 1)
-            {
-                pictureBox3.Visible = true;
-                pictureBox4.Visible = false;
-                pictureBox5.Visible = false;
-                pictureBox6.Visible = true;
-                pictureBox7.Visible = false;
-                pictureBox8.Visible = false;
-
-                label3.Visible = true;
-                label4.Visible = false;
-                label5.Visible = false;
-                label6.Visible = true;
-                label7.Visible = false;
-                label8.Visible = false;
-
-                button6.Visible = false;
-                button10.Visible = false;
-                button3.Visible = false;
-                button5.Visible = false;
-                button4.Visible = true;
-                button5.Visible = false;
-
-            }
-            else if (JsonProcessing.LoadProjects().Count == 2)
-            {
-                pictureBox3.Visible = true;
-                pictureBox4.Visible = true;
-                pictureBox5.Visible = false;
-                pictureBox6.Visible = true;
-                pictureBox7.Visible = true;
-                pictureBox8.Visible = false;
-
-                label3.Visible = true;
-                label4.Visible = true;
-                label5.Visible = false;
-                label6.Visible = true;
-                label7.Visible = true;
-                label8.Visible = false;
-
-                button6.Visible = false;
-                button10.Visible = false;
-                button3.Visible = false;
-                button4.Visible = true;
-                button5.Visible = true;
-            }
-            else if (JsonProcessing.LoadProjects().Count >= 3)
-            {
-                pictureBox3.Visible = true;
-                pictureBox4.Visible = true;
-                pictureBox5.Visible = true;
-                pictureBox6.Visible = true;
-                pictureBox7.Visible = true;
-
-                label3.Visible = true;
-                label4.Visible = true;
-                label5.Visible = true;
-                label6.Visible = true;
-                label7.Visible = true;
-                label8.Visible = true;
-
-                button4.Visible = true;
-                button5.Visible = true;
-                button6.Visible = true;
-            }
-        }
-
-        private void ButtonsToShow()
-        {
-            string firstProjectName = GetFirstProjectName();
-            string lastProjectName = GetLastProjectName();
-
-            if (label3.Text == firstProjectName)
-            {
-                this.button3.Visible = false;
-            }
-
-            if (label5.Text == lastProjectName)
-            {
-                this.button10.Visible = false;
-            }
-
-            if (label5.Text != lastProjectName && JsonProcessing.LoadProjects().Count >= 3)
-            {
-                this.button10.Visible = true;
-            }
-
-            if (label3.Text != firstProjectName && JsonProcessing.LoadProjects().Count >= 3)
-            {
-                this.button3.Visible = true;
             }
         }
 

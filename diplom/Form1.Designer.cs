@@ -42,6 +42,11 @@ namespace diplom
         private readonly ToolTip _customToolTip = new ToolTip() { ShowAlways = true };
 
         private bool _showDateInTooltip = false;
+        private HashSet<int> selectedRows = new HashSet<int>();
+
+        private List<UrlData> allUrls;
+        private List<DateTime> availableDates;
+        private int currentIndex;
 
         private void InitializeComponentMain()
         {
@@ -197,6 +202,7 @@ namespace diplom
             InitializeComponentMain();
             bool isDarkTheme = Form1.settings.ColorTheme == "dark";
 
+            this.panel2 = new System.Windows.Forms.Panel();
             this.button3 = new System.Windows.Forms.Button(); 
             this.button10 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -229,11 +235,6 @@ namespace diplom
 
             this.button1 = CreateButton("button1", "Додати проєкт", new Point(280, 327), new Size(515, 37), this.button1_Click);
             this.button2 = CreateButton("button2", "Запустити таймер", new Point(438, 250), new Size(200, 38), this.button2_Click);
-            //this.button3 = CreateButton("button3", "Вверх", new Point(224, 413), new Size(50, 37), this.button3_Click);
-            this.button4 = CreateButton("button4", "-", new Point(801, 413), new Size(50, 37), this.button4_Click);
-            this.button5 = CreateButton("button5", "-", new Point(801, 456), new Size(50, 37), this.button5_Click);
-            this.button6 = CreateButton("button6", "-", new Point(801, 499), new Size(50, 37), this.button6_Click);
-           // this.button10 = CreateButton("button10", "Вниз", new Point(224, 499), new Size(50, 37), this.button10_Click);
 
             this.pictureBox1.Image = isDarkTheme ? Properties.Resources.ClockForDarkTheme : Properties.Resources.ClockForLightTheme;
             this.ConfigurePictureBox(pictureBox1, new Point(456, 58), new Size(164, 164));
@@ -241,55 +242,37 @@ namespace diplom
             this.pictureBox1.TabStop = false;
 
             var commonBackColor = Color.FromArgb(6, 40, 68);
-            this.ConfigurePictureBox(pictureBox2, new Point(280, 370), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox3, new Point(280, 413), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox3.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox4, new Point(280, 456), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox4.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox5, new Point(280, 499), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox5.BackgroundImage"));
-
-            this.ConfigurePictureBox(pictureBox6, new Point(540, 413), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox6.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox7, new Point(540, 456), new Size(255, 37));
-            this.ConfigurePictureBox(pictureBox8, new Point(540, 499), new Size(255, 37));
-            this.ConfigurePictureBox(pictureBox9, new Point(540, 370), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage"));
+            this.ConfigurePictureBox(pictureBox2, new Point(280, 370), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage")); //назва
+            this.ConfigurePictureBox(pictureBox9, new Point(540, 370), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage")); //шлях
 
             this.label2 = ConfigureLabel(new Point(507, 128), new Size(65, 26), "00:00:00");
             label2.BackColor = Color.FromArgb(186, 192, 196);
             label2.ForeColor = Color.FromArgb(0, 0, 0);
 
+            panel2 = new Panel
+            {
+                Name = "panel2",
+                Location = new Point(280, 413),       
+                Size = new Size(540, 168),      
+                BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225), 
+                AutoScroll = true
+            };
+
+            this.Controls.Add(panel2);
+
             this.label1 = ConfigureLabel(new Point(380, 380), new Size(65, 16), "Назва");
             this.label9 = ConfigureLabel(new Point(640, 380), new Size(65, 16), "Шлях");
-            this.label7 = ConfigureLabel(new Point(540, 456), new Size(pictureBox7.Width, pictureBox7.Height), "label7");
-            this.label3 = ConfigureLabel(new Point(280, 413), new Size(pictureBox3.Width, pictureBox3.Height), "label3", image: (Image)resources.GetObject("label3.Image"));
-            this.label4 = ConfigureLabel(new Point(280, 456), new Size(pictureBox4.Width, pictureBox4.Height), "label4", image: (Image)resources.GetObject("label4.Image"));
-            this.label5 = ConfigureLabel(new Point(280, 499), new Size(pictureBox5.Width, pictureBox5.Height), "label5", image: (Image)resources.GetObject("label5.Image"));
-            this.label6 = ConfigureLabel(new Point(540, 413), new Size(pictureBox6.Width, pictureBox6.Height), "label6", image: (Image)resources.GetObject("label6.Image"));
-            this.label8 = ConfigureLabel(new Point(540, 499), new Size(pictureBox8.Width, pictureBox8.Height), "label8", image: (Image)resources.GetObject("label8.Image"));
 
             this.label2.Font = new Font("Microsoft Sans Serif", 10);
             this.label1.Font = new Font("Microsoft Sans Serif", 12);
             this.label9.Font = new Font("Microsoft Sans Serif", 12);
-            this.label7.Font = new Font("Microsoft Sans Serif", 9);
-            this.label3.Font = new Font("Microsoft Sans Serif", 9);
-            this.label4.Font = new Font("Microsoft Sans Serif", 9);
-            this.label6.Font = new Font("Microsoft Sans Serif", 9);
-            this.label5.Font = new Font("Microsoft Sans Serif", 9);
-            this.label8.Font = new Font("Microsoft Sans Serif", 9);
 
-            this.vScrollBar1 = new System.Windows.Forms.VScrollBar(); 
-
-            int visibleHeight = 200;
-
-            vScrollBar1.Minimum = 0;
-            // Maximum має враховувати, що LargeChange віднімається
-            vScrollBar1.LargeChange = visibleHeight;
-            vScrollBar1.SmallChange = 20;
-            // Максимальна прокрутка — на всю висоту контенту мінус те, що видно
-            vScrollBar1.Maximum = Math.Max(0, totalContentHeight - visibleHeight + vScrollBar1.LargeChange);
-            vScrollBar1.Value = 0;
-
-            vScrollBar1.ValueChanged += vScrollBar1_ValueChanged;
+            this.button3 = CreateButton("buttonDelete", "Видалити", new Point(690, 586), new Size(150, 37), this.buttonDelete_Click);
 
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(900,650);
+
+            PopulateProjects();
 
             this.Controls.Add(this.pictureBox6);
             this.Controls.Add(this.pictureBox7);
@@ -316,62 +299,101 @@ namespace diplom
             this.PerformLayout();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void PopulateProjects()
         {
-            // Приклад даних
-            var rows = new[] {
-                new { Name = "Лаб_№1.docx", Path = @"E:\NAU\3 KURS\3 KURS 1 семестр\ОБДЗ\Лаб_№1.docx" },
-                new { Name = "3lab.accdb",  Path = @"E:\NAU\3 KURS\3 KURS 1 семестр\ОБДЗ\3lab.accdb"  },
-                new { Name = "YAPZ.sln",    Path = @"E:\4 KURS\4 KURS 2 семестр\ЯПЗ\YAPZ.sln" }       };
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
 
-            int y = 10;
-            foreach (var row in rows)
+            panel2.Controls.Clear();
+            selectedRows.Clear();
+            button3.Visible = false;
+
+            var projects = JsonProcessing.LoadProjects();
+            int rowH = 37, spacing = 6;
+            int nameX = 0, pathX = 260;
+            int y = 0;
+
+            for (int i = 0; i < projects.Count; i++, y += rowH + spacing)
             {
-                var lblName = new Label
-                {
-                    Text = row.Name,
-                    ForeColor = Color.White,
-                    BackColor = Color.Blue,
-                    AutoSize = true,
-                    Location = new Point(10, y)
-                };
-                // збережемо початкову Y-координату
-                lblName.Tag = lblName.Top;
-                panelContent.Controls.Add(lblName);
+                // 1) Створюємо два Label для цього рядка
+                var lblName = ConfigureLabel3(
+                    new Point(nameX, y), new Size(255, rowH), "lblName" + i);
+                lblName.Text = projects[i].Name;
+                lblName.Tag = i;  // номер рядка
+                lblName.ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82);
+                lblName.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
 
-                var lblPath = new Label
-                {
-                    Text = row.Path,
-                    ForeColor = Color.White,
-                    BackColor = panelContent.BackColor,
-                    AutoSize = true,
-                    Location = new Point(200, y)
-                };
-                lblPath.Tag = lblPath.Top;
-                panelContent.Controls.Add(lblPath);
+                var lblPath = ConfigureLabel3(
+                    new Point(pathX, y), new Size(255, rowH), "lblPath" + i);
+                lblPath.Text = projects[i].Path;
+                lblPath.Tag = i;  // той самий номер рядка
+                lblPath.ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82);
+                lblPath.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
 
-                y += lblName.Height + 10;
+                // 2) Підписуємо обидва на один і той же обробник кліка
+                lblName.Click += Label_Click;
+                lblPath.Click += Label_Click;
+
+                panel2.Controls.Add(lblName);
+                panel2.Controls.Add(lblPath);
             }
-
         }
 
-        private System.Windows.Forms.Label ConfigureLabel2(Point location, Size size, string text, Image image = null)
+        private void Label_Click(object sender, EventArgs e)
         {
-            var label = new System.Windows.Forms.Label();
-            label.Location = location;
-            label.Size = size;
-            label.Text = text;
-            if (image != null)
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
+            var lbl = sender as Label;
+            int rowIndex = (int)lbl.Tag;
+
+            // Тoggle у HashSet: якщо був – видаляємо, інакше додаємо
+            if (!selectedRows.Remove(rowIndex))
+                selectedRows.Add(rowIndex);
+
+            // Перефарбовуємо обидва Label-і цього рядка
+            bool isSelected = selectedRows.Contains(rowIndex);
+            Color bg = isSelected
+                ? isDarkTheme ? Color.FromArgb(30, 60, 90) : Color.FromArgb(145, 150, 153)   // ваш колір “відзначено”
+                : isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);            // колір “звичайний”
+
+            foreach (Control c in panel2.Controls)
+                if (c is Label l && (int)l.Tag == rowIndex)
+                    l.BackColor = bg;
+
+            // Показуємо кнопку видалення, якщо є хоч один вибраний
+            button3.Visible = selectedRows.Count > 0;
+        }
+
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+            var projects = JsonProcessing.LoadProjects();
+
+            // Видаляємо вибрані з кінця, щоб індекси не зіпсувались
+            foreach (int idx in selectedRows.OrderByDescending(i => i))
+                projects.RemoveAt(idx);
+
+            JsonProcessing.SaveProjects(projects);
+
+            // Перебудовуємо UI
+            PopulateProjects();
+        }
+
+        private Label ConfigureLabel3(Point location, Size size, string name)
+        {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
+            var lbl = new Label
             {
-                label.Image = image;
-            }
-
-            label.BackColor = Color.FromArgb(186, 192, 196);
-            label.ForeColor = Color.FromArgb(0, 0, 0);
-
-            label.TextAlign = ContentAlignment.MiddleLeft;
-            this.Controls.Add(label);
-            return label;
+                Name = name,
+                Location = location,
+                Size = size,
+                ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82),
+                BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196),
+                AutoSize = false,  // або true, як ви хочете
+                TextAlign = ContentAlignment.MiddleLeft,
+            };
+            // зберігаємо початкову координату Y
+            lbl.Tag = location.Y;
+            return lbl;
         }
 
         private System.Windows.Forms.Label ConfigureLabel(Point location, Size size, string text, Image image = null)
@@ -478,6 +500,28 @@ namespace diplom
             return string.Join(" ", parts);
         }
 
+        private string FormatTimeForY(int totalSeconds)
+        {
+            // Якщо менше хвилини — показуємо тільки секунди
+            if (totalSeconds < 60)
+                return $"{totalSeconds} сек.";
+
+            int hours = totalSeconds / 3600;
+            int minutes = (totalSeconds % 3600) / 60;
+
+            // Якщо є години — показуємо години та хвилини
+            if (hours > 0)
+            {
+                // якщо хвилин немає — тільки години
+                return minutes > 0
+                    ? $"{hours} год. {minutes} хв."
+                    : $"{hours} год.";
+            }
+
+            // якщо годин нема, але є хвилини (і навіть якщо залишились секунди) — тільки хвилини
+            return $"{minutes} хв.";
+        }
+
         private void buildChart(List<DateTime> xPoints, List<int> yPoints)
         {
             var plotView = CreatePlotView();
@@ -522,7 +566,31 @@ namespace diplom
                 Minimum = yMin - 2,
                 Maximum = yMax + 2,
                 MajorStep = majorStep,
-                MinorStep = minorStep
+                MinorStep = minorStep,
+                LabelFormatter = value => FormatTimeForY((int)Math.Round(value))
+            };
+
+            axisY.LabelFormatter = value =>
+            {
+                // округлюємо до цілих секунд
+                int totalSeconds = (int)Math.Round(value);
+
+                // якщо менше хвилини — показуємо тільки секунди
+                if (totalSeconds < 60)
+                    return $"{totalSeconds} сек.";
+
+                // інакше переводимо в хвилини (і години, якщо треба)
+                int hours = totalSeconds / 3600;
+                int minutes = (totalSeconds % 3600) / 60;
+
+                // якщо є години — показуємо години і хвилини
+                if (hours > 0)
+                    return minutes > 0
+                        ? $"{hours} год. {minutes} хв."
+                        : $"{hours} год.";
+
+                // якщо годин нема, але є хвилини — тільки хвилини (без секунд!)
+                return $"{minutes} хв.";
             };
 
             var minDate = xPoints.Min();
@@ -681,7 +749,7 @@ namespace diplom
             var axisX = new LinearAxis
             {
                 Position = AxisPosition.Bottom,
-                Title = "Година доби",
+                Title = "Година",
                 Minimum = -0.5,
                 Maximum = 23.5,
                 MajorStep = 1,
@@ -697,11 +765,12 @@ namespace diplom
             var axisY = new LinearAxis
             {
                 Position = AxisPosition.Left,
-                Title = "Час роботи (хв)",
-                Minimum = 0,
+                Title = "Час",
+                Minimum = -1,
                 Maximum = maxY,
                 MajorStep = majorY,
-                MinorStep = minorY
+                MinorStep = minorY,
+                LabelFormatter = value => FormatTimeForY((int)Math.Round(value))
             };
 
             _showDateInTooltip = false;
@@ -841,7 +910,6 @@ namespace diplom
 
         private void RemoveChart()
         {
-            // Перевірка, чи існує контрол PlotView
             var plotView = this.Controls.OfType<PlotView>().FirstOrDefault();
             if (plotView != null)
             {
@@ -849,7 +917,6 @@ namespace diplom
                 plotView.Dispose(); // Звільнення ресурсів
             }
 
-            // Перевірка, чи існує label9 (якщо ви хочете видалити його також)
             if (this.label9 != null)
             {
                 this.Controls.Remove(this.label9);
@@ -1379,193 +1446,149 @@ namespace diplom
             this.PerformLayout();
         }
 
-        private void ProperColorTheme()
-        {
-            if (Form1.settings.ColorTheme == "dark")
-            {
-                BackColor = Color.FromArgb(2, 14, 25);
-                panel1.BackColor = Color.FromArgb(4, 26, 44);
-                button7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                button8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                button27.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-
-                checkBox1.BackColor = Color.FromArgb(2, 14, 25);
-                checkBox2.BackColor = Color.FromArgb(2, 14, 25);
-                checkBox3.BackColor = Color.FromArgb(2, 14, 25);
-                checkBox4.BackColor = Color.FromArgb(2, 14, 25);
-                checkBox5.BackColor = Color.FromArgb(2, 14, 25);
-                checkBox6.BackColor = Color.FromArgb(2, 14, 25);
-                checkBox7.BackColor = Color.FromArgb(2, 14, 25);
-
-                checkBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                checkBox2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                checkBox3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                checkBox4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                checkBox5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                checkBox6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                checkBox7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-
-                label11.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                label12.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                label13.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                label14.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-
-                label11.BackColor = Color.FromArgb(2, 14, 25);
-                label12.BackColor = Color.FromArgb(2, 14, 25);
-                label13.BackColor = Color.FromArgb(2, 14, 25);
-                label14.BackColor = Color.FromArgb(2, 14, 25);
-
-                textBox1.BackColor = Color.FromArgb(6, 40, 68);// Розмір поля
-                textBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-
-                button3.BackColor = Color.FromArgb(2, 14, 25);
-                pictureBox2.BackColor = Color.FromArgb(2, 14, 25);
-            }
-
-            if (Form1.settings.ColorTheme == "light")
-            {
-                BackColor = Color.FromArgb(212, 220, 225);
-                panel1.BackColor = Color.FromArgb(171, 176, 180);
-                button7.ForeColor = Color.FromArgb(82, 82, 82);
-                button8.ForeColor = Color.FromArgb(82, 82, 82);
-                button27.ForeColor = Color.FromArgb(82, 82, 82);
-
-                checkBox1.ForeColor = Color.FromArgb(82, 82, 82);
-                checkBox2.ForeColor = Color.FromArgb(82, 82, 82);
-                checkBox3.ForeColor = Color.FromArgb(82, 82, 82);
-                checkBox4.ForeColor = Color.FromArgb(82, 82, 82);
-                checkBox5.ForeColor = Color.FromArgb(82, 82, 82);
-                checkBox6.ForeColor = Color.FromArgb(82, 82, 82);
-                checkBox7.ForeColor = Color.FromArgb(82, 82, 82);
-
-                checkBox1.BackColor = Color.FromArgb(212, 220, 225);
-                checkBox2.BackColor = Color.FromArgb(212, 220, 225);
-                checkBox3.BackColor = Color.FromArgb(212, 220, 225);
-                checkBox4.BackColor = Color.FromArgb(212, 220, 225);
-                checkBox5.BackColor = Color.FromArgb(212, 220, 225);
-                checkBox6.BackColor = Color.FromArgb(212, 220, 225);
-                checkBox7.BackColor = Color.FromArgb(212, 220, 225);
-
-                label11.BackColor = Color.FromArgb(212, 220, 225);
-                label12.BackColor = Color.FromArgb(212, 220, 225);
-                label13.BackColor = Color.FromArgb(212, 220, 225);
-                label14.BackColor = Color.FromArgb(212, 220, 225);
-
-                label11.ForeColor = Color.FromArgb(82, 82, 82);
-                label12.ForeColor = Color.FromArgb(82, 82, 82);
-                label13.ForeColor = Color.FromArgb(82, 82, 82);
-                label14.ForeColor = Color.FromArgb(82, 82, 82);
-
-                textBox1.BackColor = Color.FromArgb(171, 176, 180); 
-                textBox1.ForeColor = Color.FromArgb(82, 82, 82);
-            }
-
-        }
-
         private void AboutProgram()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-
-            /* this.label17 = new System.Windows.Forms.Label();
-             this.label17.AutoSize = true;
-             this.label17.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-             this.label17.Location = new System.Drawing.Point(300, 400);
-             this.label17.Name = "label17";
-             this.label17.Font = new Font("Arial", 10, FontStyle.Regular); // Arial, 16 пт, курсив
-             this.label17.Size = new System.Drawing.Size(180, 180);
-             // this.label9.TabIndex = 19;
-             this.label17.BackColor = Color.FromArgb(2, 14, 25);
-             this.label17.Text = "Якщо вас не задовільнило жодне значення, введіть власне значення в наступне поле:";
-             this.Controls.Add(this.label17);
-
-             this.label18 = new System.Windows.Forms.Label();
-             this.label18.AutoSize = true;
-             this.label18.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-             this.label18.Location = new System.Drawing.Point(400, 50);
-             this.label18.Name = "label18";
-             this.label18.Font = new Font("Arial", 20, FontStyle.Regular); // Arial, 16 пт, курсив
-             this.label18.Size = new System.Drawing.Size(180, 180);
-             // this.label9.TabIndex = 19;
-             //this.label14.BackColor = Color.FromArgb(2, 14, 25);
-             this.label18.Text = "Докладні відомості про програму";
-             this.Controls.Add(this.label18);*/
-
-            // ProperColorTheme();
 
             this.ResumeLayout(false);
             this.PerformLayout();
         }
 
+        private void InitBrowserInfo()
+        {
+            // 1) Завантажуємо один раз
+            allUrls = JsonProcessing.LoadUrlData();
+
+            // 2) Формуємо список унікальних дат
+            availableDates = allUrls
+                .Select(u => u.Timestamp.Date)
+                .Distinct()
+                .OrderBy(d => d)
+                .ToList();
+
+            if (availableDates.Count == 0)
+                return; // нічого не показувати
+
+            // 3) За замовчуванням – остання дата
+            currentIndex = availableDates.Count - 1;
+
+            // 4) Прив’язуємо обробники
+            button11.Click += ButtonPrevDate_Click;
+            button12.Click += ButtonNextDate_Click;
+
+            // 5) Першочергове наповнення
+            UpdateDateView();
+        }
+
+        private void UpdateDateView()
+        {
+            var date = availableDates[currentIndex];
+
+            // Оновлюємо текст дати
+            label10.Text = date.ToString("dd MMMM yyyy");
+
+            // Кнопки «‹» та «›» видно лише коли є відповідна дата
+            button11.Visible = (currentIndex > 0);
+            button12.Visible = (currentIndex < availableDates.Count - 1);
+
+            // Очищаємо і наповнюємо панель
+            panel2.Controls.Clear();
+            selectedRows.Clear();
+            button3.Visible = false;
+
+            // Фільтруємо записи саме за поточною датою
+            var todaysUrls = allUrls
+                .Where(u => u.Timestamp.Date == date)
+                .ToList();
+            PopulateUrls(todaysUrls);
+        }
+
+        private void ButtonPrevDate_Click(object sender, EventArgs e)
+        {
+            if (currentIndex > 0)
+            {
+                currentIndex--;
+                UpdateDateView();
+            }
+        }
+
+        private void ButtonNextDate_Click(object sender, EventArgs e)
+        {
+            if (currentIndex < availableDates.Count - 1)
+            {
+                currentIndex++;
+                UpdateDateView();
+            }
+        }
+
+        // Єдина версія PopulateUrls – приймає вже відфільтрований список
+        private void PopulateUrls(List<UrlData> urls)
+        {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
+            int rowH = 37, spacing = 6;
+            int nameX = 0, pathX = 260;
+            int y = 0;
+
+            for (int i = 0; i < urls.Count; i++, y += rowH + spacing)
+            {
+                var bg = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
+                var fg = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82);
+
+                var lblName = ConfigureLabel3(
+                    new Point(nameX, y),
+                    new Size(255, rowH),
+                    "lblName" + i);
+                lblName.Text = urls[i].Url;
+                lblName.Tag = i;
+                lblName.ForeColor = fg;
+                lblName.BackColor = bg;
+                lblName.Click += Label_Click;
+
+                var lblPath = ConfigureLabel3(
+                    new Point(pathX, y),
+                    new Size(255, rowH),
+                    "lblPath" + i);
+                lblPath.Text = urls[i].PageTitle;
+                lblPath.Tag = i;
+                lblPath.ForeColor = fg;
+                lblPath.BackColor = bg;
+                lblPath.Click += Label_Click;
+
+                panel2.Controls.Add(lblName);
+                panel2.Controls.Add(lblPath);
+            }
+        }
+
         private void BrowserInfo()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.pictureBox9 = new System.Windows.Forms.PictureBox();
-            this.pictureBox10 = new System.Windows.Forms.PictureBox();
-            this.pictureBox11 = new System.Windows.Forms.PictureBox();
-            this.pictureBox12 = new System.Windows.Forms.PictureBox();
-            this.pictureBox13 = new System.Windows.Forms.PictureBox();
-            this.pictureBox14 = new System.Windows.Forms.PictureBox();
-            this.pictureBox15 = new System.Windows.Forms.PictureBox();
-            this.pictureBox16 = new System.Windows.Forms.PictureBox();
-            this.pictureBox17 = new System.Windows.Forms.PictureBox();
-            this.pictureBox18 = new System.Windows.Forms.PictureBox();
+
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
+            this.panel2 = new System.Windows.Forms.Panel();
+
             // Створюємо основну мітку
             this.label10 = CreateMainLabel("label10", "label10", 545, 30, new Size(530, 50), new Font("Arial", 16, FontStyle.Regular));
             this.label10.ForeColor = System.Drawing.SystemColors.ActiveCaption; 
-            var commonBackColor = Color.FromArgb(6, 40, 68);
 
-            // Налаштовуємо PictureBox з фоновим зображенням
-           // this.ConfigurePictureBox(pictureBox2, new Point(338, 394), new Size(515, 41), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage"), backColor: commonBackColor);
-            this.ConfigurePictureBox(pictureBox3, new Point(338, 441), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox3.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox4, new Point(338, 488), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox4.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox5, new Point(338, 535), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox5.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox6, new Point(338, 582), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox6.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox7, new Point(338, 629), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox3.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox8, new Point(338, 676), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox4.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox9, new Point(338, 723), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox5.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox10, new Point(338, 770), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox6.BackgroundImage"));
+            this.panel2 = new Panel
+            {
+                Name = "panel2",
+                Location = new Point(270, 100),
+                Size = new Size(550, 400),
+                BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225),
+                //BorderStyle = BorderStyle.FixedSingle,
+                AutoScroll = true    
+            };
+            this.Controls.Add(panel2);
 
-            // Налаштовуємо Label з зображенням
-            this.label3 = ConfigureLabel(new Point(277, 100), new Size(pictureBox3.Width, pictureBox3.Height), "label3", image: (Image)resources.GetObject("label3.Image"));
-            this.label4 = ConfigureLabel(new Point(277, 150), new Size(pictureBox4.Width, pictureBox4.Height), "label4", image: (Image)resources.GetObject("label4.Image"));
-            this.label5 = ConfigureLabel(new Point(277, 200), new Size(pictureBox5.Width, pictureBox5.Height), "label5", image: (Image)resources.GetObject("label5.Image"));
-            this.label6 = ConfigureLabel(new Point(277, 250), new Size(pictureBox6.Width, pictureBox6.Height), "label6", image: (Image)resources.GetObject("label6.Image"));
-            this.label7 = ConfigureLabel(new Point(277, 300), new Size(pictureBox7.Width, pictureBox7.Height), "label7", image: (Image)resources.GetObject("label7.Image"));
-            this.label8 = ConfigureLabel(new Point(277, 350), new Size(pictureBox8.Width, pictureBox8.Height), "label8", image: (Image)resources.GetObject("label8.Image"));
-            this.label9 = ConfigureLabel(new Point(277, 400), new Size(pictureBox9.Width, pictureBox9.Height), "label9", image: (Image)resources.GetObject("label9.Image"));
-            this.label11 = ConfigureLabel(new Point(277, 450), new Size(pictureBox10.Width, pictureBox10.Height), "label11", image: (Image)resources.GetObject("label11.Image"));
+            this.button3 = CreateButton("buttonDelete", "Видалити", new Point(690, 586), new Size(150, 37), this.buttonDelete_Click);
+            this.button11 = CreateButton("buttonPrevDate", "<", new Point(218, 520), new Size(41, 41), this.ButtonPrevDate_Click);
+            this.button12 = CreateButton("buttonNextDate", ">", new Point(820, 520), new Size(41, 41), this.ButtonNextDate_Click);
 
-            this.ConfigurePictureBox(pictureBox11, new Point(338, 441), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox11.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox12, new Point(338, 488), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox12.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox13, new Point(338, 535), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox13.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox14, new Point(338, 582), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox14.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox15, new Point(338, 629), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox15.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox16, new Point(338, 676), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox16.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox17, new Point(338, 723), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox17.BackgroundImage"));
-            this.ConfigurePictureBox(pictureBox18, new Point(338, 770), new Size(255, 41), backgroundImage: (Image)resources.GetObject("pictureBox18.BackgroundImage"));
+            InitBrowserInfo();
 
-            // Налаштовуємо Label з зображенням
-            this.label12 = ConfigureLabel(new Point(542, 100), new Size(pictureBox11.Width, pictureBox11.Height), "label12", image: (Image)resources.GetObject("label12.Image"));
-            this.label13 = ConfigureLabel(new Point(542, 150), new Size(pictureBox12.Width, pictureBox12.Height), "label13", image: (Image)resources.GetObject("label13.Image"));
-            this.label14 = ConfigureLabel(new Point(542, 200), new Size(pictureBox13.Width, pictureBox13.Height), "label14", image: (Image)resources.GetObject("label14.Image"));
-            this.label15 = ConfigureLabel(new Point(542, 250), new Size(pictureBox14.Width, pictureBox14.Height), "label15", image: (Image)resources.GetObject("label15.Image"));
-            this.label16 = ConfigureLabel(new Point(542, 300), new Size(pictureBox15.Width, pictureBox15.Height), "label16", image: (Image)resources.GetObject("label16.Image"));
-            this.label17 = ConfigureLabel(new Point(542, 350), new Size(pictureBox16.Width, pictureBox16.Height), "label17", image: (Image)resources.GetObject("label17.Image"));
-            this.label18 = ConfigureLabel(new Point(542, 400), new Size(pictureBox17.Width, pictureBox17.Height), "label18", image: (Image)resources.GetObject("label18.Image"));
-            this.label19 = ConfigureLabel(new Point(542, 450), new Size(pictureBox18.Width, pictureBox18.Height), "label19", image: (Image)resources.GetObject("label19.Image"));
-            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-
-            this.button30 = CreateButton("button30", "-", new Point(807, 100), new Size(50, 41), this.button30_Click);
-            this.button31 = CreateButton("button31", "-", new Point(807, 150), new Size(50, 41), this.button31_Click);
-            this.button32 = CreateButton("button32", "-", new Point(807, 200), new Size(50, 41), this.button32_Click);
-            this.button33 = CreateButton("button33", "-", new Point(807, 250), new Size(50, 41), this.button33_Click);
-            this.button34 = CreateButton("button34", "-", new Point(807, 300), new Size(50, 41), this.button34_Click);
-            this.button35 = CreateButton("button35", "-", new Point(807, 350), new Size(50, 41), this.button35_Click);
-            this.button36 = CreateButton("button36", "-", new Point(807, 400), new Size(50, 41), this.button36_Click);
-            this.button37 = CreateButton("button37", "-", new Point(807, 450), new Size(50, 41), this.button37_Click);
-
-            this.button38 = CreateButton("button38", "Вверх", new Point(217, 100), new Size(50, 41), this.button38_Click);
-            this.button39 = CreateButton("button39", "Вниз", new Point(217, 450), new Size(50, 41), this.button39_Click);
         }
 
 
@@ -1578,25 +1601,9 @@ namespace diplom
         private System.Windows.Forms.PictureBox pictureBox7;
         private System.Windows.Forms.PictureBox pictureBox8;
         private System.Windows.Forms.PictureBox pictureBox9;
-        private System.Windows.Forms.PictureBox pictureBox10;
-
-        private System.Windows.Forms.PictureBox pictureBox11;
-        private System.Windows.Forms.PictureBox pictureBox12;
-        private System.Windows.Forms.PictureBox pictureBox13;
-        private System.Windows.Forms.PictureBox pictureBox14;
-        private System.Windows.Forms.PictureBox pictureBox15;
-        private System.Windows.Forms.PictureBox pictureBox16;
-        private System.Windows.Forms.PictureBox pictureBox17;
-        private System.Windows.Forms.PictureBox pictureBox18;
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         //налаштування програми
@@ -1628,17 +1635,6 @@ namespace diplom
 
         private System.Windows.Forms.Button button27;
         private System.Windows.Forms.Button button28;
-
-        private System.Windows.Forms.Button button30;
-        private System.Windows.Forms.Button button31;
-        private System.Windows.Forms.Button button32;
-        private System.Windows.Forms.Button button33;
-        private System.Windows.Forms.Button button34;
-        private System.Windows.Forms.Button button35;
-        private System.Windows.Forms.Button button36;
-        private System.Windows.Forms.Button button37;
-        private System.Windows.Forms.Button button38;
-        private System.Windows.Forms.Button button39;
 
 
         private System.Windows.Forms.Panel panel2;

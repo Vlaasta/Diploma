@@ -8,6 +8,7 @@ using OxyPlot.WindowsForms;
 using OxyPlot.Axes;
 using System.Linq;
 using OxyPlot.Annotations;
+using System.Runtime.InteropServices;
 
 
 namespace diplom
@@ -47,6 +48,17 @@ namespace diplom
         private List<UrlData> allUrls;
         private List<DateTime> availableDates;
         private int currentIndex;
+        private bool isDragging = false;
+        private int dragOffsetY = 0;
+
+
+        // Задаємо тут, щоб RecalcScrollbar міг порахувати SmallChange
+        private const int rowH = 37;
+        private const int spacing = 6;
+
+        private Panel viewport;
+        private Panel contentPanel;
+        private System.Windows.Forms.VScrollBar vScrollBar1;
 
         private void InitializeComponentMain()
         {
@@ -268,7 +280,6 @@ namespace diplom
             this.label9.Font = new Font("Microsoft Sans Serif", 12);
 
             this.button3 = CreateButton("buttonDelete", "Видалити", new Point(690, 586), new Size(150, 37), this.buttonDelete_Click);
-
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(900,650);
 
@@ -1454,53 +1465,84 @@ namespace diplom
             this.PerformLayout();
         }
 
+        private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+            // прокручуємо лише внутрішню панель
+            contentPanel.Top = -vScrollBar1.Value;
+        }
+
+        private void Viewport_MouseWheel(object sender, MouseEventArgs e)
+        {
+            // щоб колесо миші теж працювало
+            int newVal = vScrollBar1.Value - e.Delta;
+            newVal = Math.Max(vScrollBar1.Minimum,
+                      Math.Min(newVal, vScrollBar1.Maximum - vScrollBar1.LargeChange + 1));
+            vScrollBar1.Value = newVal;
+        }
+
+
+        private void UpdateScrollBar()
+        {
+            int contentHeight = contentPanel.Height;
+            int viewHeight = panel2.ClientSize.Height;
+
+            if (contentHeight > viewHeight)
+            {
+                // вмикаємо і налаштовуємо
+                vScrollBar1.Enabled = true;
+                vScrollBar1.Visible = true;
+                vScrollBar1.Maximum = contentHeight;
+                vScrollBar1.LargeChange = viewHeight;
+            }
+            else
+            {
+                // контент вміщується без прокрутки
+                vScrollBar1.Enabled = false;
+                vScrollBar1.Visible = false;
+                vScrollBar1.Value = 0;
+                contentPanel.Top = 0;
+            }
+        }
+
         private void InitBrowserInfo()
         {
-            // 1) Завантажуємо один раз
             allUrls = JsonProcessing.LoadUrlData();
-
-            // 2) Формуємо список унікальних дат
             availableDates = allUrls
                 .Select(u => u.Timestamp.Date)
                 .Distinct()
                 .OrderBy(d => d)
                 .ToList();
 
-            if (availableDates.Count == 0)
-                return; // нічого не показувати
+            if (availableDates.Count == 0) return;
 
-            // 3) За замовчуванням – остання дата
             currentIndex = availableDates.Count - 1;
 
             // 4) Прив’язуємо обробники
             button11.Click += ButtonPrevDate_Click;
             button12.Click += ButtonNextDate_Click;
 
-            // 5) Першочергове наповнення
             UpdateDateView();
         }
 
         private void UpdateDateView()
         {
             var date = availableDates[currentIndex];
-
-            // Оновлюємо текст дати
             label10.Text = date.ToString("dd MMMM yyyy");
 
-            // Кнопки «‹» та «›» видно лише коли є відповідна дата
             button11.Visible = (currentIndex > 0);
             button12.Visible = (currentIndex < availableDates.Count - 1);
 
-            // Очищаємо і наповнюємо панель
-            panel2.Controls.Clear();
+            contentPanel.Controls.Clear();
             selectedRows.Clear();
             button3.Visible = false;
 
-            // Фільтруємо записи саме за поточною датою
             var todaysUrls = allUrls
                 .Where(u => u.Timestamp.Date == date)
                 .ToList();
             PopulateUrls(todaysUrls);
+
+            // ПІСЛЯ наповнення – оновлюємо скролбар
+            UpdateScrollBar();
         }
 
         private void ButtonPrevDate_Click(object sender, EventArgs e)
@@ -1525,70 +1567,90 @@ namespace diplom
         private void PopulateUrls(List<UrlData> urls)
         {
             bool isDarkTheme = Form1.settings.ColorTheme == "dark";
-
-            int rowH = 37, spacing = 6;
-            int nameX = 0, pathX = 260;
-            int y = 0;
+            int nameX = 0, pathX = 260, y = 0;
 
             for (int i = 0; i < urls.Count; i++, y += rowH + spacing)
             {
                 var bg = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
                 var fg = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82);
 
-                var lblName = ConfigureLabel3(
-                    new Point(nameX, y),
-                    new Size(255, rowH),
-                    "lblName" + i);
+                var lblName = ConfigureLabel3(new Point(nameX, y), new Size(255, rowH), "lblName" + i);
                 lblName.Text = urls[i].Url;
                 lblName.Tag = i;
                 lblName.ForeColor = fg;
                 lblName.BackColor = bg;
                 lblName.Click += Label_Click;
 
-                var lblPath = ConfigureLabel3(
-                    new Point(pathX, y),
-                    new Size(255, rowH),
-                    "lblPath" + i);
+                var lblPath = ConfigureLabel3(new Point(pathX, y), new Size(255, rowH), "lblPath" + i);
                 lblPath.Text = urls[i].PageTitle;
                 lblPath.Tag = i;
                 lblPath.ForeColor = fg;
                 lblPath.BackColor = bg;
                 lblPath.Click += Label_Click;
 
-                panel2.Controls.Add(lblName);
-                panel2.Controls.Add(lblPath);
+                contentPanel.Controls.Add(lblName);
+                contentPanel.Controls.Add(lblPath);
             }
         }
 
         private void BrowserInfo()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-
             bool isDarkTheme = Form1.settings.ColorTheme == "dark";
-
-            this.panel2 = new System.Windows.Forms.Panel();
-
-            // Створюємо основну мітку
-            this.label10 = CreateMainLabel("label10", "label10", 545, 30, new Size(530, 50), new Font("Arial", 16, FontStyle.Regular));
-            this.label10.ForeColor = System.Drawing.SystemColors.ActiveCaption; 
-
-            this.panel2 = new Panel
-            {
-                Name = "panel2",
-                Location = new Point(270, 100),
-                Size = new Size(550, 400),
-                BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225),
-                //BorderStyle = BorderStyle.FixedSingle,
-                AutoScroll = true    
-            };
-            this.Controls.Add(panel2);
-
             this.button3 = CreateButton("buttonDelete", "Видалити", new Point(690, 586), new Size(150, 37), this.buttonDelete_Click);
             this.button11 = CreateButton("buttonPrevDate", "<", new Point(218, 520), new Size(41, 41), this.ButtonPrevDate_Click);
             this.button12 = CreateButton("buttonNextDate", ">", new Point(820, 520), new Size(41, 41), this.ButtonNextDate_Click);
 
-            InitBrowserInfo();
+            // 1) Зовнішній viewport (panel2)
+            panel2 = new Panel
+            {
+                Name = "panel2",
+                Location = new Point(270, 100),
+                Size = new Size(550, 400),
+                BackColor = isDarkTheme
+                             ? Color.FromArgb(2, 14, 25)
+                             : Color.FromArgb(212, 220, 225),
+                AutoScroll = false,
+                BorderStyle = BorderStyle.FixedSingle
+            };
+            this.Controls.Add(panel2);
 
+            // 2) Внутрішній contentPanel
+            contentPanel = new Panel
+            {
+                Name = "contentPanel",
+                Location = new Point(0, 0),
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink
+            };
+            panel2.Controls.Add(contentPanel);
+
+            // <- Ось сюди додаємо підписки на колесо миші та фокус:
+            contentPanel.MouseWheel += Viewport_MouseWheel;
+            contentPanel.MouseEnter += (s, e) => contentPanel.Focus();
+            contentPanel.TabStop = true;
+
+            // 3) Вертикальний скролбар
+            vScrollBar1 = new CustomVScrollBar
+            {
+                Minimum = 0,
+                SmallChange = 20,
+                Width = 18,
+                TrackColor = Color.FromArgb(50, 50, 50),
+                ThumbColor = Color.CornflowerBlue,
+                ThumbAlpha = 200,
+                Dock = DockStyle.Right
+            };
+            panel2.Controls.Add(vScrollBar1);
+            vScrollBar1.BringToFront();
+            vScrollBar1.Dock = DockStyle.Right;
+
+            vScrollBar1.Scroll += vScrollBar1_Scroll;
+
+            // 4) Зміни розміру форми
+            this.Resize += (s, e) => UpdateScrollBar();
+
+            // 5) Ініціалізація даних
+            InitBrowserInfo();
         }
 
 
@@ -1606,18 +1668,6 @@ namespace diplom
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
-        //налаштування програми
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label16;
-        //
-        //налаштування програми
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label label19;
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
@@ -1654,8 +1704,63 @@ namespace diplom
 
         private System.Windows.Forms.TextBox textBox1;
 
-        private System.Windows.Forms.VScrollBar vScrollBar1;
+        
 
+    }
+
+    public class CustomVScrollBar : VScrollBar
+    {
+        // P/Invoke, щоб вимкнути теми Windows для цього вікна
+        [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
+        private static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
+
+        // Властивості для настроювання з форми
+        public Color TrackColor { get; set; } = Color.LightGray;
+        public Color ThumbColor { get; set; } = Color.DarkGray;
+        public int ThumbAlpha { get; set; } = 200;  // 0…255
+
+        public CustomVScrollBar()
+        {
+            // Вмикаємо owner-draw та прозорий фон
+            SetStyle(
+                ControlStyles.UserPaint
+              | ControlStyles.AllPaintingInWmPaint
+              | ControlStyles.OptimizedDoubleBuffer
+              | ControlStyles.SupportsTransparentBackColor,
+                true);
+
+            BackColor = Color.Transparent;
+        }
+
+        // Після створення хендла вимикаємо теми
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            SetWindowTheme(this.Handle, "", "");
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            var r = ClientRectangle;
+
+            // 1) Трек
+            using (var brushTrack = new SolidBrush(TrackColor))
+                g.FillRectangle(brushTrack, r);
+
+            // 2) Thumb
+            int view = LargeChange;
+            int total = Maximum - Minimum + 1;
+            int movable = Math.Max(1, total - view);
+            int thumbH = Math.Max(view, 20);
+            float pct = (Value - Minimum) / (float)movable;
+            int thumbY = (int)((r.Height - thumbH) * pct);
+            var thumbRect = new Rectangle(0, thumbY, r.Width, thumbH);
+
+            var c = Color.FromArgb(ThumbAlpha, ThumbColor);
+            using (var brushThumb = new SolidBrush(c))
+                g.FillRectangle(brushThumb, thumbRect);
+        }
     }
 }
 

@@ -709,6 +709,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="License-LGPL.txt" />
+    <None Include="Resources\Logos4.jpg" />
+    <None Include="Resources\Logos3.jpg" />
+    <None Include="Resources\Logos2.jpg" />
+    <None Include="Resources\Logos1.jpg" />
+    <None Include="Resources\Logo3.jpg" />
+    <None Include="Resources\Logo.jpg" />
+    <None Include="Resources\Logo2.png" />
+    <None Include="Resources\image_2025-05-29_11-34-32.png" />
+    <None Include="Resources\DarkLogo.bmp" />
     <None Include="Resources\ClockForLightTheme.png" />
     <None Include="Resources\ClockForDarkTheme.png" />
     <None Include="Resources\ClockLightTheme.png" />

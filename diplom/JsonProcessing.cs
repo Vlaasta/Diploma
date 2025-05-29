@@ -9,7 +9,6 @@ using System.Linq;
 using System.Collections.Concurrent;
 using System.Threading;
 
-
 namespace diplom
 {
     public static class JsonProcessing
@@ -391,6 +390,12 @@ namespace diplom
             }
 
             return false;
+        }
+
+        public static void SaveUrlListToJson(List<UrlData> urlList)
+        {
+            var json = JsonConvert.SerializeObject(urlList, Formatting.Indented);
+            File.WriteAllText(filePath2, json);
         }
 
         public static bool IfWasModifiedToday()

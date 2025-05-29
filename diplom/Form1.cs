@@ -6,7 +6,6 @@ using System.Globalization;
 using Newtonsoft.Json;
 using System.Linq;
 
-
 namespace diplom
 {
     public partial class Form1 : Form
@@ -77,6 +76,7 @@ namespace diplom
             handButton.OnTimeUpdated += HandButton_OnTimeUpdated;
 
             settings = new DataSettings();
+            //ListInstalledFonts();
 
            /* label3.MouseEnter += Label1_MouseEnter;
             label4.MouseEnter += Label1_MouseEnter;
@@ -554,17 +554,6 @@ namespace diplom
             return nonActiveTime;
         }
 
-        private void button29_Click(object sender, EventArgs e)
-        {
-            this.Controls.Clear();
-            InitializeComponentMain();
-
-            BrowserInfo();
-            label10.Text = "Статистичні дані про активність в браузері";
-
-            LoadBrowserDataIntoLabels();
-        }
-
         private void LoadBrowserDataIntoLabels()
         {
            /* string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
@@ -697,7 +686,7 @@ namespace diplom
             BrowserInfo();
             LoadBrowserDataIntoLabels();
             ExitButton();
-            label10.Text = "Дані активності в браузері"; 
+            //label10.Text = "Дані активності в браузері"; 
         }
 
         private void button14_Click(object sender, EventArgs e) //вихід з даних в браузері
@@ -777,6 +766,20 @@ namespace diplom
         {
             Form1.settings.TextBoxValue = newTextBoxValue;
             JsonProcessing.SaveSettings(form1);
+        }
+
+        public void EnableAutoStart()
+        {
+            string startupFolder =
+                Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+            string shortcutPath = Path.Combine(startupFolder, "MyApp.lnk");
+
+            var wsh = new WshShell();
+            IWshShortcut shortcut = (IWshShortcut)wsh.CreateShortcut(shortcutPath);
+            shortcut.TargetPath = Application.ExecutablePath;
+            shortcut.WorkingDirectory = Application.StartupPath;
+            shortcut.Description = "Auto-start MyApp";
+            shortcut.Save();
         }
     }
 }

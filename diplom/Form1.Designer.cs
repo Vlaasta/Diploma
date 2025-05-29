@@ -8,8 +8,8 @@ using OxyPlot.WindowsForms;
 using OxyPlot.Axes;
 using System.Linq;
 using OxyPlot.Annotations;
-using System.Runtime.InteropServices;
-
+using System.Globalization;
+using System.Drawing.Text;
 
 namespace diplom
 {
@@ -48,17 +48,30 @@ namespace diplom
         private List<UrlData> allUrls;
         private List<DateTime> availableDates;
         private int currentIndex;
-        private bool isDragging = false;
-        private int dragOffsetY = 0;
-
 
         // Задаємо тут, щоб RecalcScrollbar міг порахувати SmallChange
         private const int rowH = 37;
         private const int spacing = 6;
+        private readonly ToolTip _labelToolTip = new ToolTip { ShowAlways = true };
 
-        private Panel viewport;
-        private Panel contentPanel;
-        private System.Windows.Forms.VScrollBar vScrollBar1;
+        // Заздалегідь визначаємо список прямокутників (x,y,width,height)
+        /* private readonly List<Rectangle> _blueRects = new List<Rectangle>
+         {
+             new Rectangle(245, 145, 570, 30),
+             new Rectangle(245, 195, 570, 30),
+             new Rectangle(245, 295, 570, 30),  // під другим
+             new Rectangle(245, 245, 570, 30),
+             new Rectangle(245, 395, 570, 30) // під третім
+             // … і так далі, під усі потрібні координати
+         };*/
+
+        /* private readonly List<Rectangle> _blueRects = new List<Rectangle>
+         {
+             new Rectangle(245, 95, 570, 30),
+             new Rectangle(245, 345, 570, 30),
+             new Rectangle(245, 445, 570, 30),  // під другим// під третім
+             // … і так далі, під усі потрібні координати
+         };*/
 
         private void InitializeComponentMain()
         {
@@ -67,18 +80,23 @@ namespace diplom
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.panel7 = new System.Windows.Forms.Panel();
             this.button7 = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.button8 = new System.Windows.Forms.Button();
             this.button27 = new System.Windows.Forms.Button();
             this.button28 = new System.Windows.Forms.Button();
+            this.pictureBox10 = new System.Windows.Forms.PictureBox();
 
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel6.SuspendLayout();
+            this.panel7.SuspendLayout();
             this.SuspendLayout();
+
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
 
             this.BackColor = Color.FromArgb(2, 14, 25);
 
@@ -87,6 +105,7 @@ namespace diplom
             this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.panel6);
+            this.panel1.Controls.Add(this.pictureBox10);
 
             this.panel1.BackColor = Color.FromArgb(4, 26, 44);
             this.panel1.Location = new System.Drawing.Point(0, 1);
@@ -99,8 +118,20 @@ namespace diplom
             this.panel3.Size = new System.Drawing.Size(225, 46);
             this.panel3.TabIndex = 23;
 
+            this.pictureBox10.Image = isDarkTheme ? Properties.Resources.Logos4 : Properties.Resources.ClockForLightTheme;
+            this.ConfigurePictureBox(pictureBox10, new Point(23, 15), new Size(170, 100));
+            this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox10.TabStop = false;
+            this.pictureBox10.Visible = true;
+
+            //this.panel1.Controls.Add(this.pictureBox10);
+            /* this.panel7.Controls.Add(this.pictureBox10);
+             this.panel7.Location = new System.Drawing.Point(0, 7);
+             this.panel7.Name = "panel7";
+             this.panel7.Size = new System.Drawing.Size(130, 65);*/
+
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button7.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
             this.button7.Location = new System.Drawing.Point(-8, 0);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(200, 45);
@@ -109,6 +140,7 @@ namespace diplom
             this.button7.Click += new System.EventHandler(this.button7_Click);
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button7.FlatAppearance.BorderSize = 0;
+            this.button7.Font = new Font("Segoe UI", 12);
 
             this.panel2.Controls.Add(this.button7);
             this.panel2.Location = new System.Drawing.Point(0, 150);
@@ -116,7 +148,7 @@ namespace diplom
             this.panel2.Size = new System.Drawing.Size(225, 46);
 
             this.button27.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button27.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button27.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
             this.button27.Location = new System.Drawing.Point(-8, 0);
             this.button27.Name = "button27";
             this.button27.Size = new System.Drawing.Size(200, 45);
@@ -125,6 +157,7 @@ namespace diplom
             this.button27.Click += new System.EventHandler(this.button27_Click);
             this.button27.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button27.FlatAppearance.BorderSize = 0;
+            this.button27.Font = new Font("Segoe UI", 12);
 
             this.panel6.Controls.Add(this.button8);
             this.panel6.Location = new System.Drawing.Point(0, 100);
@@ -132,7 +165,7 @@ namespace diplom
             this.panel6.Size = new System.Drawing.Size(225, 46);
 
             this.button28.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button28.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button28.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
             this.button28.Location = new System.Drawing.Point(-8, 0);
             this.button28.Name = "button28";
             this.button28.Size = new System.Drawing.Size(200, 45);
@@ -141,6 +174,7 @@ namespace diplom
             this.button28.Click += new System.EventHandler(this.button28_Click);
             this.button28.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button28.FlatAppearance.BorderSize = 0;
+            this.button28.Font = new Font("Segoe UI", 12);
 
             this.panel4.Controls.Add(this.button27);
             this.panel4.Location = new System.Drawing.Point(0, 200);
@@ -150,7 +184,7 @@ namespace diplom
 
             this.button8.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button8.BackgroundImage")));
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button8.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
             this.button8.Location = new System.Drawing.Point(-8, 0);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(200, 45);
@@ -159,6 +193,7 @@ namespace diplom
             this.button8.Click += new System.EventHandler(this.button8_Click);
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button8.FlatAppearance.BorderSize = 0;
+            this.button8.Font = new Font("Segoe UI", 12);
 
             if (CheckBox2Active == true || Form1.settings.ColorTheme == "light")
             {
@@ -174,10 +209,6 @@ namespace diplom
             {
                 this.BackColor = Color.FromArgb(2, 14, 25);
                 this.panel1.BackColor = Color.FromArgb(4, 26, 44);
-                this.button7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.button27.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.button8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                this.button28.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             }
 
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
@@ -193,6 +224,13 @@ namespace diplom
 
             this.ResumeLayout(false);
             this.PerformLayout();
+        }
+
+        private void ListInstalledFonts()
+        {
+            var fonts = new InstalledFontCollection();
+            foreach (var ff in fonts.Families)
+                Console.WriteLine(ff.Name);
         }
 
         private void SetActivePanel(Panel panel)
@@ -257,7 +295,7 @@ namespace diplom
             this.ConfigurePictureBox(pictureBox2, new Point(280, 370), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage")); //назва
             this.ConfigurePictureBox(pictureBox9, new Point(540, 370), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage")); //шлях
 
-            this.label2 = ConfigureLabel(new Point(507, 128), new Size(65, 26), "00:00:00");
+            this.label2 = ConfigureLabel(new Point(498, 123), new Size(100, 36), "00:00:00");
             label2.BackColor = Color.FromArgb(186, 192, 196);
             label2.ForeColor = Color.FromArgb(0, 0, 0);
 
@@ -272,14 +310,13 @@ namespace diplom
 
             this.Controls.Add(panel2);
 
-            this.label1 = ConfigureLabel(new Point(380, 380), new Size(65, 16), "Назва");
-            this.label9 = ConfigureLabel(new Point(640, 380), new Size(65, 16), "Шлях");
+            this.label1 = ConfigureLabel(new Point(380, 370), new Size(65, 35), "Назва");
+            this.label9 = ConfigureLabel(new Point(640, 370), new Size(65, 35), "Шлях");
 
-            this.label2.Font = new Font("Microsoft Sans Serif", 10);
-            this.label1.Font = new Font("Microsoft Sans Serif", 12);
-            this.label9.Font = new Font("Microsoft Sans Serif", 12);
+            this.label2.Font = new Font("Microsoft Sans Serif", 14);
 
-            this.button3 = CreateButton("buttonDelete", "Видалити", new Point(690, 586), new Size(150, 37), this.buttonDelete_Click);
+            this.button3 = CreateButton("buttonDelete", "Видалити", new Point(694, 586), new Size(100, 25), this.buttonDelete_Click);
+            this.button3.Font = new Font("Segoe UI", 9, FontStyle.Bold);
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(900,650);
 
@@ -325,27 +362,23 @@ namespace diplom
 
             for (int i = 0; i < projects.Count; i++, y += rowH + spacing)
             {
-                // 1) Створюємо два Label для цього рядка
-                var lblName = ConfigureLabel3(
-                    new Point(nameX, y), new Size(255, rowH), "lblName" + i);
+                var lblName = ConfigureLabel3(new Point(nameX, y), new Size(255, rowH), "lblName" + i);
                 lblName.Text = projects[i].Name;
-                lblName.Tag = i;  // номер рядка
-                lblName.ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82);
-                lblName.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
-
-                var lblPath = ConfigureLabel3(
-                    new Point(pathX, y), new Size(255, rowH), "lblPath" + i);
-                lblPath.Text = projects[i].Path;
-                lblPath.Tag = i;  // той самий номер рядка
-                lblPath.ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82);
-                lblPath.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
-
-                // 2) Підписуємо обидва на один і той же обробник кліка
+                lblName.Tag = i;
                 lblName.Click += Label_Click;
+                lblName.Text = TrimWithEllipsis(projects[i].Name, lblName.Font, lblName.Width);
+
+                var lblPath = ConfigureLabel3(new Point(pathX, y), new Size(255, rowH), "lblPath" + i);
+                lblPath.Text = projects[i].Path;
+                lblPath.Tag = i;
                 lblPath.Click += Label_Click;
+                lblPath.Text = TrimWithEllipsis(projects[i].Path, lblName.Font, lblName.Width);
 
                 panel2.Controls.Add(lblName);
                 panel2.Controls.Add(lblPath);
+
+                _labelToolTip.SetToolTip(lblName, projects[i].Name);
+                _labelToolTip.SetToolTip(lblPath, projects[i].Path);
             }
         }
 
@@ -388,6 +421,65 @@ namespace diplom
             PopulateProjects();
         }
 
+        private void buttonDelete2_Click(object sender, EventArgs e)
+        {
+            if (selectedRows.Count == 0)
+                return; // нічого не видаляти
+
+            // Запитуємо підтвердження у користувача
+            /*var result = MessageBox.Show(
+                $"Ви дійсно хочете видалити {selectedRows.Count} запис(и)?",
+                "Підтвердження видалення",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result != DialogResult.Yes)
+                return; */
+
+            // 1) Збираємо список URLData, які зараз показані на поточній сторінці (за date)
+            var date = availableDates[currentIndex];
+            var todaysUrls = allUrls
+                .Where(u => u.Timestamp.Date == date)
+                .ToList();
+
+            // 2) Визначаємо, які саме об’єкти потрібно видалити
+            var toDelete = selectedRows
+                .Select(idx => todaysUrls[idx])
+                .ToList();
+
+            // 3) Видаляємо їх з головного списку
+            foreach (var u in toDelete)
+                allUrls.Remove(u);
+
+            // 4) Записуємо оновлений список у файл
+            JsonProcessing.SaveUrlListToJson(allUrls);
+
+            // 5) Оновлюємо список дат на випадок, якщо остання дата стала пустою
+            availableDates = allUrls
+                .Select(u => u.Timestamp.Date)
+                .Distinct()
+                .OrderBy(d => d)
+                .ToList();
+
+            if (availableDates.Count == 0)
+            {
+                // Якщо більше немає даних — очищаємо вивід
+                panel2.Controls.Clear();
+                label10.Text = "Немає даних";
+                button11.Visible = button12.Visible = false;
+                button3.Visible = false;
+                return;
+            }
+
+            // 6) Підганяємо currentIndex, щоб він був у межах нового списку дат
+            currentIndex = Math.Min(currentIndex, availableDates.Count - 1);
+
+            // 7) Очищаємо виділення й оновлюємо вивід
+            selectedRows.Clear();
+            button3.Visible = false;
+            UpdateDateView();
+        }
+
         private Label ConfigureLabel3(Point location, Size size, string name)
         {
             bool isDarkTheme = Form1.settings.ColorTheme == "dark";
@@ -397,14 +489,35 @@ namespace diplom
                 Name = name,
                 Location = location,
                 Size = size,
-                ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82),
+                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82),
                 BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196),
-                AutoSize = false,  // або true, як ви хочете
-                TextAlign = ContentAlignment.MiddleLeft,
+                AutoSize = false,
+                TextAlign = ContentAlignment.MiddleLeft, 
+                Font = new Font("Segoe UI", 12),
+                AutoEllipsis = true
             };
-            // зберігаємо початкову координату Y
+
             lbl.Tag = location.Y;
             return lbl;
+        }
+
+        string TrimWithEllipsis(string txt, Font f, int maxWidth)
+        {
+            const string ell = "...";
+            if (TextRenderer.MeasureText(txt, f).Width <= maxWidth)
+                return txt;
+
+            int lo = 0, hi = txt.Length;
+            while (lo < hi)
+            {
+                int mid = (lo + hi) / 2;
+                var candidate = txt.Substring(0, mid) + ell;
+                if (TextRenderer.MeasureText(candidate, f).Width <= maxWidth)
+                    lo = mid + 1;
+                else
+                    hi = mid;
+            }
+            return txt.Substring(0, lo - 1) + ell;
         }
 
         private System.Windows.Forms.Label ConfigureLabel(Point location, Size size, string text, Image image = null)
@@ -422,9 +535,9 @@ namespace diplom
             label.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
             if (label != label2)
             {
-                label.ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82);
+                label.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
             }
-
+            label.Font = new Font("Segoe UI", 12);
             label.AutoEllipsis = true;  // Додає "..." якщо текст не влізе
             label.TextAlign = ContentAlignment.MiddleLeft;
             this.Controls.Add(label);
@@ -513,23 +626,18 @@ namespace diplom
 
         private string FormatTimeForY(int totalSeconds)
         {
-            // Якщо менше хвилини — показуємо тільки секунди
             if (totalSeconds < 60)
                 return $"{totalSeconds} сек.";
 
             int hours = totalSeconds / 3600;
             int minutes = (totalSeconds % 3600) / 60;
 
-            // Якщо є години — показуємо години та хвилини
             if (hours > 0)
             {
-                // якщо хвилин немає — тільки години
                 return minutes > 0
                     ? $"{hours} год. {minutes} хв."
                     : $"{hours} год.";
             }
-
-            // якщо годин нема, але є хвилини (і навіть якщо залишились секунди) — тільки хвилини
             return $"{minutes} хв.";
         }
 
@@ -646,7 +754,7 @@ namespace diplom
             plotModel.Axes.Add(axisX);
             plotModel.Axes.Add(axisY);
 
-            this.label9 = CreateMainLabel("label9", "label9", 545, 570, new Size(530, 50), new Font("Arial", 16, FontStyle.Regular));
+            this.label9 = CreateMainLabel("label9", "label9", 545, 550, new Size(530, 50));
             plotView.Model = plotModel;
             this.Controls.Add(plotView);
         }
@@ -819,7 +927,7 @@ namespace diplom
                 });
             }
 
-            this.label9 = CreateMainLabel("label9", "label9", 545, 570, new Size(530, 50), new Font("Arial", 16, FontStyle.Regular));
+            this.label9 = CreateMainLabel("label9", "label9", 545, 550, new Size(530, 50));
             plotView.Model = plotModel;
             this.Controls.Add(plotView);
         }
@@ -914,7 +1022,7 @@ namespace diplom
             plotView.MouseDown += PlotView_MouseDown;
             plotView.MouseUp += PlotView_MouseUp;
 
-            this.label9 = CreateMainLabel("label9", "label9", 545, 570, new Size(530, 50), new Font("Arial", 16, FontStyle.Regular));
+            this.label9 = CreateMainLabel("label9", "label9", 545, 550, new Size(530, 50));
             label9.Text = $"Загальний час: {statistic.HumanizeSeconds(merged.Sum() * 60)}";
             label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
         }
@@ -950,7 +1058,7 @@ namespace diplom
             comboBox.Location = new Point(245, 100);
             comboBox.Size = new Size(150, 30);
             comboBox.ItemHeight = 30; 
-            comboBox.Font = new Font("Segoe UI", 12);
+            comboBox.Font = new Font("Microsoft Sans Serif", 12);
 
             ComboBox secondcomboBox = new ComboBox();
             secondcomboBox.BackColor = Color.FromArgb(186, 192, 196);
@@ -958,10 +1066,10 @@ namespace diplom
             secondcomboBox.Items.Add("За браузером");
             secondcomboBox.Items.Add("Об'єднана");
             secondcomboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            secondcomboBox.Location = new Point(406, 100);
+            secondcomboBox.Location = new Point(400, 100);
             secondcomboBox.Size = new Size(150, 30);
             secondcomboBox.ItemHeight = 30;
-            secondcomboBox.Font = new Font("Segoe UI", 12);
+            secondcomboBox.Font = new Font("Microsoft Sans Serif", 12);
             secondcomboBox.ItemHeight = 30;
 
             comboBox.SelectedItem = "За день";
@@ -1018,10 +1126,10 @@ namespace diplom
                 }
             };
 
-            this.button11 = CreateButton("button11", "<", new Point(218, 520), new Size(41, 41), this.button11_Click);
-            this.button12 = CreateButton("button12", ">", new Point(820, 520), new Size(41, 41), this.button12_Click);
-            this.button13 = CreateButton("button13", "Продивитися дані", new Point(600, 100), new Size(150, 30), this.button13_Click);
-            this.label10 = CreateMainLabel("label10", "label10", 545, 30, new Size(530, 50), new Font("Arial", 16, FontStyle.Regular));
+            this.button11 = CreateButton("button11", "<", new Point(218, 550), new Size(41, 41), this.button11_Click);
+            this.button12 = CreateButton("button12", ">", new Point(820, 550), new Size(41, 41), this.button12_Click);
+            this.button13 = CreateButton("button13", "Продивитися дані", new Point(647, 100), new Size(150, 30), this.button13_Click);
+            this.label10 = CreateMainLabel("label10", "label10", 545, 30, new Size(530, 50));
 
             if (CheckBox2Active == true)
             {
@@ -1032,7 +1140,7 @@ namespace diplom
 
             if (CheckBox1Active == true)
             {
-                this.label10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                this.label10.ForeColor = Color.FromArgb(186, 192, 196);
                 this.label10.BackColor = Color.FromArgb(2, 14, 25);
             }
 
@@ -1044,7 +1152,7 @@ namespace diplom
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 
-            this.button14 = CreateButton("button14", "Повернутися назад", new Point(420, 540), new Size(240, 41), this.button14_Click);
+            this.button14 = CreateButton("button14", "Повернутися назад", new Point(420, 550), new Size(240, 41), this.button14_Click);
             this.PerformLayout();
         }
 
@@ -1058,18 +1166,19 @@ namespace diplom
                 Text = text,
                 Location = location,
                 Size = size,
-                ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82),
+                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82),
                 BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196),
                 FlatStyle = System.Windows.Forms.FlatStyle.Flat,
-                UseVisualStyleBackColor = true
+                UseVisualStyleBackColor = true,
             };
             button.FlatAppearance.BorderSize = 0;
+            button.Font = new Font("Segoe UI", 12); 
             button.Click += clickHandler;
             this.Controls.Add(button);
             return button;
         }
 
-        private System.Windows.Forms.Label CreateMainLabel(string name, string text, int centerX, int y, Size size, Font font)
+        private System.Windows.Forms.Label CreateMainLabel(string name, string text, int centerX, int y, Size size)
         {
             // Обчислюємо X так, щоб центр мітки збігався з centerX
             int labelX = centerX - size.Width / 2;
@@ -1081,9 +1190,9 @@ namespace diplom
                 Text = text,
                 Location = new Point(labelX, y),
                 Size = size,
-                Font = font,
+                Font = new Font("Segoe UI", 16),
                 TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82),
+                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82),
                 BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225)
             };
             this.Controls.Add(label);
@@ -1091,18 +1200,18 @@ namespace diplom
             return label; 
         }
 
-        private Label CreateSettingsLabel(Point location, string name, string text, int fontSize = 10, bool isTitle = false)
+        private Label CreateSettingsLabel(Point location, string name, string text, int fontSize = 12, bool isTitle = false)
         {
             bool isDarkTheme = Form1.settings.ColorTheme == "dark";
 
             var label = new Label
             {
                 AutoSize = true,
-                ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82),
+                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82),
                 BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225),
                 Location = location,
                 Name = name,
-                Font = new Font("Arial", fontSize, FontStyle.Regular),
+                Font = new Font("Segoe UI", 12),
                 Size = new Size(180, 180),
                 Text = text,
                 TextAlign = ContentAlignment.MiddleLeft
@@ -1119,18 +1228,29 @@ namespace diplom
             var checkBox = new CheckBox
             {
                 AutoSize = true,
-                ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82),
+                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82),
                 Location = location,
                 Name = name,
-                Font = new Font("Arial", 10, FontStyle.Regular),
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
                 Size = new Size(180, 180),
                 Text = text,
-                BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225)
+                BackColor = Color.Transparent
             };
-
+            
             this.Controls.Add(checkBox);
             return checkBox;
         }
+
+       /* private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
+            using (var brush = new SolidBrush(isDarkTheme ? Color.FromArgb(30, 60, 90) : Color.FromArgb(145, 150, 153)))
+            {
+                foreach (var r in _blueRects)
+                    e.Graphics.FillRectangle(brush, r);
+            }
+        }*/
 
         #endregion
 
@@ -1139,27 +1259,35 @@ namespace diplom
             bool isDarkTheme = Form1.settings.ColorTheme == "dark";
 
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            Label label11 = CreateSettingsLabel(new Point(250, 100), "label11", "Колір теми:");
-            Label label12 = CreateSettingsLabel(new Point(250, 350), "label12", "Автоматично вимикати таймер за неактивності протягом:");
-            Label label13 = CreateSettingsLabel(new Point(250, 450), "label13", "Якщо вас не задовільнило жодне значення, введіть власне значення в наступне поле:");
-            Label label10 = CreateMainLabel("label10", "Налаштування роботи програми", 550, 30, new Size(500, 30), new Font("Arial", 16, FontStyle.Regular));
+            label11 = CreateSettingsLabel(new Point(250, 100), "label11", "Колір теми:");
+            label12 = CreateSettingsLabel(new Point(250, 350), "label12", "Автоматично вимикати таймер за неактивності протягом:");
+            label13 = CreateSettingsLabel(new Point(250, 450), "label13", "Якщо вас не задовільнило жодне значення, введіть власне в наступне поле:");
 
-            CheckBox checkBox1 = CreateCheckBox(new Point(250, 150), "checkBox1", "Темна тема");
-            CheckBox checkBox2 = CreateCheckBox(new Point(450, 150), "checkBox2", "Світла тема");
-            CheckBox checkBox3 = CreateCheckBox(new Point(250, 200), "checkBox3", "Автозапуск програми");
-            CheckBox checkBox4 = CreateCheckBox(new Point(250, 250), "checkBox4", "Дозволити програмі надсилати сповіщення:");
-            CheckBox checkBox5 = CreateCheckBox(new Point(250, 400), "checkBox5", "5 хв");
-            CheckBox checkBox6 = CreateCheckBox(new Point(450, 400), "checkBox6", "10 хв");
-            CheckBox checkBox7 = CreateCheckBox(new Point(650, 400), "checkBox7", "15 хв");
-            CheckBox checkBox8 = CreateCheckBox(new Point(250, 300), "checkBox8", "Відстежувати активність в браузері");
+            label13.Size = new Size(400, 300);
+            label10 = CreateMainLabel("label10", "Налаштування роботи програми", 550, 30, new Size(500, 50));
+
+            label11.BackColor = Color.Transparent;
+            label12.BackColor = Color.Transparent;
+            label13.BackColor = Color.Transparent;
+
+            checkBox1 = CreateCheckBox(new Point(250, 150), "checkBox1", "Темна тема");
+            checkBox2 = CreateCheckBox(new Point(450, 150), "checkBox2", "Світла тема");
+            checkBox3 = CreateCheckBox(new Point(250, 200), "checkBox3", "Автозапуск програми");
+            checkBox4 = CreateCheckBox(new Point(250, 250), "checkBox4", "Дозволити програмі надсилати сповіщення:");
+            checkBox5 = CreateCheckBox(new Point(250, 400), "checkBox5", "5 хв");
+            checkBox6 = CreateCheckBox(new Point(450, 400), "checkBox6", "10 хв");
+            checkBox7 = CreateCheckBox(new Point(650, 400), "checkBox7", "15 хв");
+            checkBox8 = CreateCheckBox(new Point(250, 300), "checkBox8", "Відстежувати активність в браузері");
+
+           // this.Paint += Form1_Paint;
 
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox1.Location = new Point(250, 500); 
             this.textBox1.AutoSize = false;
-            this.textBox1.Size = new Size(250, 20);
+            this.textBox1.Size = new Size(150, 20);
             this.textBox1.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196); 
-            this.textBox1.ForeColor = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82);
-            this.textBox1.Font = new Font("Arial", 9, FontStyle.Regular);
+            this.textBox1.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
+            this.textBox1.Font = new Font("Segoe UI", 12); 
             this.textBox1.Text = "Введіть число";
             this.textBox1.BorderStyle = BorderStyle.None;
             this.Controls.Add(textBox1);
@@ -1250,10 +1378,10 @@ namespace diplom
 
                     BackColor = Color.FromArgb(2, 14, 25);
                     panel1.BackColor = Color.FromArgb(4, 26, 44);
-                    button7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                    button8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                    button27.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                    button28.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    button7.ForeColor = Color.FromArgb(186, 192, 196);
+                    button8.ForeColor = Color.FromArgb(186, 192, 196);
+                    button27.ForeColor = Color.FromArgb(186, 192, 196);
+                    button28.ForeColor = Color.FromArgb(186, 192, 196);
 
                     checkBox1.BackColor = Color.FromArgb(2, 14, 25);
                     checkBox2.BackColor = Color.FromArgb(2, 14, 25);
@@ -1264,19 +1392,19 @@ namespace diplom
                     checkBox7.BackColor = Color.FromArgb(2, 14, 25);
                     checkBox8.BackColor = Color.FromArgb(2, 14, 25);
 
-                    checkBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                    checkBox2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                    checkBox3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                    checkBox4.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                    checkBox5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                    checkBox6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                    checkBox7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                    checkBox8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    checkBox1.ForeColor = Color.FromArgb(186, 192, 196);
+                    checkBox2.ForeColor = Color.FromArgb(186, 192, 196);
+                    checkBox3.ForeColor = Color.FromArgb(186, 192, 196);
+                    checkBox4.ForeColor = Color.FromArgb(186, 192, 196);
+                    checkBox5.ForeColor = Color.FromArgb(186, 192, 196);
+                    checkBox6.ForeColor = Color.FromArgb(186, 192, 196);
+                    checkBox7.ForeColor = Color.FromArgb(186, 192, 196);
+                    checkBox8.ForeColor = Color.FromArgb(186, 192, 196);
 
-                    label11.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                    label12.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                    label13.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-                    label10.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    label11.ForeColor = Color.FromArgb(186, 192, 196);
+                    label12.ForeColor = Color.FromArgb(186, 192, 196);
+                    label13.ForeColor = Color.FromArgb(186, 192, 196);
+                    label10.ForeColor = Color.FromArgb(186, 192, 196);
 
                     label11.BackColor = Color.FromArgb(2, 14, 25);
                     label12.BackColor = Color.FromArgb(2, 14, 25);
@@ -1284,7 +1412,7 @@ namespace diplom
                     label10.BackColor = Color.FromArgb(2, 14, 25);
 
                     textBox1.BackColor = Color.FromArgb(6, 40, 68);// Розмір поля
-                    textBox1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+                    textBox1.ForeColor = Color.FromArgb(186, 192, 196);
 
                     button3.BackColor = Color.FromArgb(2, 14, 25);
                     pictureBox2.BackColor = Color.FromArgb(2, 14, 25);
@@ -1465,84 +1593,66 @@ namespace diplom
             this.PerformLayout();
         }
 
-        private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        private void buttonDelete_Click2(object sender, EventArgs e)
         {
-            // прокручуємо лише внутрішню панель
-            contentPanel.Top = -vScrollBar1.Value;
-        }
+            var projects = JsonProcessing.LoadProjects();
 
-        private void Viewport_MouseWheel(object sender, MouseEventArgs e)
-        {
-            // щоб колесо миші теж працювало
-            int newVal = vScrollBar1.Value - e.Delta;
-            newVal = Math.Max(vScrollBar1.Minimum,
-                      Math.Min(newVal, vScrollBar1.Maximum - vScrollBar1.LargeChange + 1));
-            vScrollBar1.Value = newVal;
-        }
+            // Видаляємо вибрані з кінця, щоб індекси не зіпсувались
+            foreach (int idx in selectedRows.OrderByDescending(i => i))
+                projects.RemoveAt(idx);
 
+            JsonProcessing.SaveProjects(projects);
 
-        private void UpdateScrollBar()
-        {
-            int contentHeight = contentPanel.Height;
-            int viewHeight = panel2.ClientSize.Height;
-
-            if (contentHeight > viewHeight)
-            {
-                // вмикаємо і налаштовуємо
-                vScrollBar1.Enabled = true;
-                vScrollBar1.Visible = true;
-                vScrollBar1.Maximum = contentHeight;
-                vScrollBar1.LargeChange = viewHeight;
-            }
-            else
-            {
-                // контент вміщується без прокрутки
-                vScrollBar1.Enabled = false;
-                vScrollBar1.Visible = false;
-                vScrollBar1.Value = 0;
-                contentPanel.Top = 0;
-            }
+            // Перебудовуємо UI
+            PopulateProjects();
         }
 
         private void InitBrowserInfo()
         {
+            // 1) Завантажуємо один раз
             allUrls = JsonProcessing.LoadUrlData();
+
+            // 2) Формуємо список унікальних дат
             availableDates = allUrls
                 .Select(u => u.Timestamp.Date)
                 .Distinct()
                 .OrderBy(d => d)
                 .ToList();
 
-            if (availableDates.Count == 0) return;
+            if (availableDates.Count == 0)
+                return; // нічого не показувати
 
+            // 3) За замовчуванням – остання дата
             currentIndex = availableDates.Count - 1;
 
             // 4) Прив’язуємо обробники
             button11.Click += ButtonPrevDate_Click;
             button12.Click += ButtonNextDate_Click;
 
+            // 5) Першочергове наповнення
             UpdateDateView();
         }
 
         private void UpdateDateView()
         {
             var date = availableDates[currentIndex];
-            label10.Text = date.ToString("dd MMMM yyyy");
 
+            label10.Text = "Робочі вебсторінки за " + date.ToString("dd.MM.yyyy");
+
+            // Кнопки «‹» та «›» видно лише коли є відповідна дата
             button11.Visible = (currentIndex > 0);
             button12.Visible = (currentIndex < availableDates.Count - 1);
 
-            contentPanel.Controls.Clear();
+            // Очищаємо і наповнюємо панель
+            panel2.Controls.Clear();
             selectedRows.Clear();
             button3.Visible = false;
 
+            // Фільтруємо записи саме за поточною датою
             var todaysUrls = allUrls
                 .Where(u => u.Timestamp.Date == date)
                 .ToList();
             PopulateUrls(todaysUrls);
-
-            // ПІСЛЯ наповнення – оновлюємо скролбар
-            UpdateScrollBar();
         }
 
         private void ButtonPrevDate_Click(object sender, EventArgs e)
@@ -1563,96 +1673,75 @@ namespace diplom
             }
         }
 
-        // Єдина версія PopulateUrls – приймає вже відфільтрований список
         private void PopulateUrls(List<UrlData> urls)
         {
             bool isDarkTheme = Form1.settings.ColorTheme == "dark";
-            int nameX = 0, pathX = 260, y = 0;
+
+            int rowH = 37, spacing = 5;
+            int nameX = 0, pathX = 260;
+            int y = 0;
 
             for (int i = 0; i < urls.Count; i++, y += rowH + spacing)
             {
-                var bg = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
-                var fg = isDarkTheme ? System.Drawing.SystemColors.ActiveCaption : Color.FromArgb(82, 82, 82);
+                var lblUrl = ConfigureLabel3(
+                    new Point(nameX, y),
+                    new Size(255, rowH),
+                    "lblUrl" + i);
+                lblUrl.Text = urls[i].Url;
+                lblUrl.Tag = i;
+                lblUrl.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
+                lblUrl.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
+                lblUrl.Click += Label_Click;
+                lblUrl.Text = TrimWithEllipsis(urls[i].Url, lblUrl.Font, lblUrl.Width);
 
-                var lblName = ConfigureLabel3(new Point(nameX, y), new Size(255, rowH), "lblName" + i);
-                lblName.Text = urls[i].Url;
-                lblName.Tag = i;
-                lblName.ForeColor = fg;
-                lblName.BackColor = bg;
-                lblName.Click += Label_Click;
+                var lblPageTitle = ConfigureLabel3(
+                    new Point(pathX, y),
+                    new Size(255, rowH),
+                    "lblPageTitle" + i);
+                lblPageTitle.Text = urls[i].PageTitle;
+                lblPageTitle.Tag = i;
+                lblPageTitle.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
+                lblPageTitle.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
+                lblPageTitle.Click += Label_Click;
+                lblPageTitle.Text = TrimWithEllipsis(urls[i].PageTitle, lblPageTitle.Font, lblPageTitle.Width);
 
-                var lblPath = ConfigureLabel3(new Point(pathX, y), new Size(255, rowH), "lblPath" + i);
-                lblPath.Text = urls[i].PageTitle;
-                lblPath.Tag = i;
-                lblPath.ForeColor = fg;
-                lblPath.BackColor = bg;
-                lblPath.Click += Label_Click;
+                panel2.Controls.Add(lblUrl);
+                panel2.Controls.Add(lblPageTitle);
 
-                contentPanel.Controls.Add(lblName);
-                contentPanel.Controls.Add(lblPath);
+                _labelToolTip.SetToolTip(lblUrl, urls[i].Url);
+                _labelToolTip.SetToolTip(lblPageTitle, urls[i].PageTitle);
             }
         }
 
         private void BrowserInfo()
         {
-            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
-            this.button3 = CreateButton("buttonDelete", "Видалити", new Point(690, 586), new Size(150, 37), this.buttonDelete_Click);
-            this.button11 = CreateButton("buttonPrevDate", "<", new Point(218, 520), new Size(41, 41), this.ButtonPrevDate_Click);
-            this.button12 = CreateButton("buttonNextDate", ">", new Point(820, 520), new Size(41, 41), this.ButtonNextDate_Click);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 
-            // 1) Зовнішній viewport (panel2)
-            panel2 = new Panel
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
+            this.panel2 = new System.Windows.Forms.Panel();
+
+            this.label10 = CreateMainLabel("label10", "label10", 545, 30, new Size(530, 50));
+            this.label10.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
+
+            this.panel2 = new Panel
             {
                 Name = "panel2",
                 Location = new Point(270, 100),
-                Size = new Size(550, 400),
-                BackColor = isDarkTheme
-                             ? Color.FromArgb(2, 14, 25)
-                             : Color.FromArgb(212, 220, 225),
-                AutoScroll = false,
-                BorderStyle = BorderStyle.FixedSingle
+                Size = new Size(550, 377),
+                BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225),
+                AutoScroll = true
             };
             this.Controls.Add(panel2);
 
-            // 2) Внутрішній contentPanel
-            contentPanel = new Panel
-            {
-                Name = "contentPanel",
-                Location = new Point(0, 0),
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink
-            };
-            panel2.Controls.Add(contentPanel);
+            this.button3 = CreateButton("buttonDelete", "Видалити", new Point(685, 482), new Size(100, 25), this.buttonDelete2_Click);
+            this.button3.Font = new Font("Segoe UI", 9);
+            this.button11 = CreateButton("buttonPrevDate", "<", new Point(218, 550), new Size(41, 41), this.ButtonPrevDate_Click);
+            this.button12 = CreateButton("buttonNextDate", ">", new Point(820, 550), new Size(41, 41), this.ButtonNextDate_Click);
 
-            // <- Ось сюди додаємо підписки на колесо миші та фокус:
-            contentPanel.MouseWheel += Viewport_MouseWheel;
-            contentPanel.MouseEnter += (s, e) => contentPanel.Focus();
-            contentPanel.TabStop = true;
-
-            // 3) Вертикальний скролбар
-            vScrollBar1 = new CustomVScrollBar
-            {
-                Minimum = 0,
-                SmallChange = 20,
-                Width = 18,
-                TrackColor = Color.FromArgb(50, 50, 50),
-                ThumbColor = Color.CornflowerBlue,
-                ThumbAlpha = 200,
-                Dock = DockStyle.Right
-            };
-            panel2.Controls.Add(vScrollBar1);
-            vScrollBar1.BringToFront();
-            vScrollBar1.Dock = DockStyle.Right;
-
-            vScrollBar1.Scroll += vScrollBar1_Scroll;
-
-            // 4) Зміни розміру форми
-            this.Resize += (s, e) => UpdateScrollBar();
-
-            // 5) Ініціалізація даних
             InitBrowserInfo();
-        }
 
+        }
 
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
@@ -1663,11 +1752,15 @@ namespace diplom
         private System.Windows.Forms.PictureBox pictureBox7;
         private System.Windows.Forms.PictureBox pictureBox8;
         private System.Windows.Forms.PictureBox pictureBox9;
+        private System.Windows.Forms.PictureBox pictureBox10;
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
@@ -1693,6 +1786,7 @@ namespace diplom
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel panel7;
 
         public System.Windows.Forms.CheckBox checkBox1;
         public System.Windows.Forms.CheckBox checkBox2;
@@ -1701,6 +1795,7 @@ namespace diplom
         public System.Windows.Forms.CheckBox checkBox5;
         public System.Windows.Forms.CheckBox checkBox6;
         public System.Windows.Forms.CheckBox checkBox7;
+        public System.Windows.Forms.CheckBox checkBox8;
 
         private System.Windows.Forms.TextBox textBox1;
 
@@ -1708,59 +1803,5 @@ namespace diplom
 
     }
 
-    public class CustomVScrollBar : VScrollBar
-    {
-        // P/Invoke, щоб вимкнути теми Windows для цього вікна
-        [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
-        private static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
-
-        // Властивості для настроювання з форми
-        public Color TrackColor { get; set; } = Color.LightGray;
-        public Color ThumbColor { get; set; } = Color.DarkGray;
-        public int ThumbAlpha { get; set; } = 200;  // 0…255
-
-        public CustomVScrollBar()
-        {
-            // Вмикаємо owner-draw та прозорий фон
-            SetStyle(
-                ControlStyles.UserPaint
-              | ControlStyles.AllPaintingInWmPaint
-              | ControlStyles.OptimizedDoubleBuffer
-              | ControlStyles.SupportsTransparentBackColor,
-                true);
-
-            BackColor = Color.Transparent;
-        }
-
-        // Після створення хендла вимикаємо теми
-        protected override void OnHandleCreated(EventArgs e)
-        {
-            base.OnHandleCreated(e);
-            SetWindowTheme(this.Handle, "", "");
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            var g = e.Graphics;
-            var r = ClientRectangle;
-
-            // 1) Трек
-            using (var brushTrack = new SolidBrush(TrackColor))
-                g.FillRectangle(brushTrack, r);
-
-            // 2) Thumb
-            int view = LargeChange;
-            int total = Maximum - Minimum + 1;
-            int movable = Math.Max(1, total - view);
-            int thumbH = Math.Max(view, 20);
-            float pct = (Value - Minimum) / (float)movable;
-            int thumbY = (int)((r.Height - thumbH) * pct);
-            var thumbRect = new Rectangle(0, thumbY, r.Width, thumbH);
-
-            var c = Color.FromArgb(ThumbAlpha, ThumbColor);
-            using (var brushThumb = new SolidBrush(c))
-                g.FillRectangle(brushThumb, thumbRect);
-        }
-    }
 }
 

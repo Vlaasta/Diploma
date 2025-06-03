@@ -177,65 +177,79 @@ namespace diplom
             {
                 case "за проєктами":
                     {
-                        var _tmpData = JsonProcessing.LoadTimerData();
-                        string _tmpDateKey = selectedDate.ToString("dd.MM.yyyy");
-                        var _tmpRecord = _tmpData.FirstOrDefault(d => d.Date == _tmpDateKey);
-                        var _tmpSessions = _tmpRecord?.Sessions ?? new List<Session>();
+                        // 1. Завантажуємо сесії з JSON
+                        var TimerData = JsonProcessing.LoadTimerData();
+                        string dateKey = selectedDate.ToString("dd.MM.yyyy");
+                        var reccProj = TimerData.FirstOrDefault(d => d.Date == dateKey);
+                        var sessionsList = reccProj?.Sessions ?? new List<Session>();
 
-                        buildDailyChart<Session>(_tmpSessions, selectedDate, session =>
-                        {
-                            if (DateTime.TryParseExact(session.Start, "HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var startTime)
-                                && DateTime.TryParseExact(session.Stop, "HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var endTime))
+                        // 2. Перетворюємо кожен Session у (DateTime Start, DateTime Stop)
+                        //    і одразу викликаємо новий buildDailyChartWithDateTime
+                        buildDailyChartWithDateTime<Session>(
+                            sessionsList,
+                            selectedDate,
+                            session =>
                             {
-                                var start = selectedDate.Date.Add(startTime.TimeOfDay);
-                                var stop = selectedDate.Date.Add(endTime.TimeOfDay);
-                                if (stop < start) stop = stop.AddDays(1); // нічний перехід
-                                return (start, stop);
+                                if (DateTime.TryParseExact(session.Start, "HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var t1)
+                                    && DateTime.TryParseExact(session.Stop, "HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var t2))
+                                {
+                                    var start = selectedDate.Date.Add(t1.TimeOfDay);
+                                    var stop = selectedDate.Date.Add(t2.TimeOfDay);
+                                    if (stop < start)
+                                        stop = stop.AddDays(1); // перехід через північ
+                    return (start, stop);
+                                }
+                                return null;
                             }
-                            return null;
-                        });
+                        );
 
-                        if (_tmpRecord != null
-                            && TimeSpan.TryParseExact(_tmpRecord.Time, @"hh\:mm\:ss", CultureInfo.InvariantCulture, out var _tmpTotal))
+                        // 3. Оновлюємо підписи label9 і label10 так само, як у вас було:
+                        if (reccProj != null
+                            && TimeSpan.TryParseExact(reccProj.Time, @"hh\:mm\:ss", CultureInfo.InvariantCulture, out var totalProj))
                         {
-                            label9.Text = $"Усього витрачено на роботу: {_tmpTotal.Hours} год. {_tmpTotal.Minutes} хв. {_tmpTotal.Seconds} сек.";
+                            label9.Text = $"Усього витрачено на роботу: {totalProj.Hours} год. {totalProj.Minutes} хв. {totalProj.Seconds} сек.";
                         }
                         else
                         {
                             label9.Text = "Усього витрачено на роботу: 0 год. 0 хв. 0 сек.";
                         }
-
                         label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
                         break;
                     }
 
                 case "за браузером":
                     {
-                        var _tmpData = JsonProcessing.LoadUrlData();
-
-                        // Фільтруємо записи лише на поточний день
-                        var _tmpDayData = _tmpData
-                            .Where(d => d.Timestamp.Date == selectedDate.Date)
+                        // 1. Завантажуємо всю UrlData та фільтруємо по дню
+                        var LUrlData = JsonProcessing.LoadUrlData();
+                        var dailyUrlData = LUrlData
+                            .Where(u => u.Timestamp.Date == selectedDate.Date)
                             .ToList();
 
-                        // Побудова графіка
-                        buildDailyChart<UrlData>(_tmpDayData, selectedDate, record =>
-                        {
-                            var start = record.Timestamp;
-                            var stop = start.Add(TimeSpan.FromSeconds(record.TimeSpent));
-                            return (start, stop);
-                        });
+                        // 2. Викликаємо buildDailyChartWithDateTime<UrlData>, передаючи кожен UrlData у інтервал (Start, Stop)
+                        buildDailyChartWithDateTime<UrlData>(
+                            dailyUrlData,
+                            selectedDate,
+                            record =>
+                            {
+                                var start = record.Timestamp;
+                                var stop = record.Timestamp.AddSeconds(record.TimeSpent);
+                // обрізаємо до межі доби, якщо потрібно
+                if (start < selectedDate.Date)
+                                    start = selectedDate.Date;
+                                if (stop > selectedDate.Date.AddDays(1))
+                                    stop = selectedDate.Date.AddDays(1);
+                                return (start, stop);
+                            }
+                        );
 
-                        // Обчислення загального часу
-                        string _tmpTotalTime = statistic.CalculateTotalTime<UrlData>(
-                            _tmpDayData,
+                        // 3. Рахуємо загальний час у браузері за допомогою вашого statistic.CalculateTotalTime
+                        string totalBrowserTime = statistic.CalculateTotalTime<UrlData>(
+                            dailyUrlData,
                             nameof(UrlData.TimeSpent)
                         );
 
-                        // Оновлення підписів
-                        label9.Text = $"Усього витрачено на роботу: {_tmpTotalTime}";
+                        label9.Text = $"Усього витрачено на роботу: {totalBrowserTime}";
                         label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
-
                         break;
                     }
 
@@ -243,18 +257,10 @@ namespace diplom
                     var selectedDatee = DateTime.Today.AddDays(currentDayOffset);
                     var dateKeyy = selectedDatee.ToString("dd.MM.yyyy");
 
-                    // 1) Завантажуємо проєктні сесії:
                     var allTimerData = JsonProcessing.LoadTimerData();
                     var recProj = allTimerData.FirstOrDefault(d => d.Date == dateKeyy);
                     var sessionss = recProj?.Sessions ?? new List<Session>();
 
-                    // 2) Завантажуємо записи браузера (UrlData) тільки за обраний день:
-                    var allUrlData = JsonProcessing.LoadUrlData();
-                    var dayUrlData = allUrlData
-                        .Where(u => u.Timestamp.Date == selectedDatee.Date)
-                        .ToList();
-
-                    // 3) Перетворюємо проєктні сесії в інтервали (DateTime, DateTime)
                     var projectIntervals = sessionss
                         .Select(s =>
                         {
@@ -271,14 +277,18 @@ namespace diplom
                         .Where(x => x.Start != DateTime.MinValue)
                         .ToList();
 
-                    // 4) Перетворюємо UrlData в інтервали (DateTime, DateTime)
+                    // 2) Завантажуємо браузерні записи та перетворюємо в інтервали (DateTime,DateTime)
+                    var allUrlData = JsonProcessing.LoadUrlData();
+                    var dayUrlData = allUrlData
+                        .Where(u => u.Timestamp.Date == selectedDatee.Date)
+                        .ToList();
+
                     var browserIntervals = dayUrlData
                         .Select(u =>
                         {
                             var stBr = u.Timestamp;
                             var spBr = u.Timestamp.AddSeconds(u.TimeSpent);
-            // обрізати, щоб не виходило за межі доби
-            if (stBr < selectedDatee.Date)
+                            if (stBr < selectedDatee.Date)
                                 stBr = selectedDatee.Date;
                             if (spBr > selectedDatee.Date.AddDays(1))
                                 spBr = selectedDatee.Date.AddDays(1);
@@ -287,13 +297,17 @@ namespace diplom
                         .Where(x => x.Stop > x.Start)
                         .ToList();
 
-                    // 5) Поєднуємо обидва списки:
+                    // 3) Поєднуємо обидва списки інтервалів
                     var allIntervals = new List<(DateTime Start, DateTime Stop)>();
                     allIntervals.AddRange(projectIntervals);
                     allIntervals.AddRange(browserIntervals);
 
-                    BuildMergedLineChart(selectedDatee, allIntervals);
-
+                    // 4) Викликаємо buildDailyChartWithDateTime, передаючи єдину колекцію інтервалів
+                    buildDailyChartWithDateTime<(DateTime Start, DateTime Stop)>(
+                        allIntervals,
+                        selectedDatee,
+                        interval => interval  // просто віддає кортеж, адже в allIntervals він уже (Start, Stop)
+                    );
                     break;
 
                 default:

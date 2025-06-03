@@ -623,16 +623,23 @@ namespace diplom
 
         private void buildChart(List<DateTime> xPoints, List<int> yPoints)
         {
+            // 1) Створюємо PlotView / PlotModel
             var plotView = CreatePlotView();
             var plotModel = plotView.Model;
 
+            // 2) Лінійна серія з маркерами (кружечки), X у вигляді DateTimeAxis
             var lineSeries = new LineSeries
             {
                 MarkerType = MarkerType.Circle,
-                Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
-                TrackerFormatString = "\u200B"
+                MarkerSize = 4,
+                Color = Form1.settings.ColorTheme == "dark"
+                            ? OxyColor.FromRgb(159, 183, 213)
+                            : OxyColor.FromRgb(82, 82, 82),
+                StrokeThickness = 2,
+                TrackerFormatString = "\u200B" // можна залишити пустий тултіп, або зробити власний
             };
 
+            // 3) Додаємо точки: X = DateTime → DateTimeAxis.ToDouble, Y = кількість секунд у цю годину
             for (int i = 0; i < xPoints.Count; i++)
             {
                 double dateAsDouble = DateTimeAxis.ToDouble(xPoints[i]);
@@ -641,20 +648,28 @@ namespace diplom
 
             plotModel.Series.Add(lineSeries);
 
+            // 4) Вимикаємо пана/зум по лівому кліку
             var ctrl = plotView.Controller ?? plotView.ActualController;
-
             ctrl.UnbindMouseDown(
                 OxyPlot.OxyMouseButton.Left,
                 OxyPlot.OxyModifierKeys.None,
                 clickCount: 1
             );
-
             plotView.Controller = ctrl;
 
-            var yMin = yPoints.Min();
-            var yMax = yPoints.Max();
-            double range = yMax - yMin;
-            double majorStep = Math.Ceiling(range / 5.0 / 100.0) * 100;
+            // 5) Задаємо межі та кроки для Y-осі (секунди → хвилини/години у LabelFormatter)
+            int yMin = yPoints.Min();
+            int yMax = yPoints.Max();
+            // Якщо всі yPoints == 0, зробимо yMin=0, yMax=1, щоб було чітко видно горизонтальну лінію «по нулю»
+            if (yMax == 0 && yMin == 0)
+            {
+                yMin = 0;
+                yMax = 1;
+            }
+
+            int range = yMax - yMin;
+            // Обчислимо MajorStep так, як у вас було: округлимо “range/5” до найближчих 100, як частину
+            double majorStep = Math.Ceiling((range / 5.0) / 100.0) * 100.0;
             if (majorStep == 0) majorStep = 10;
             double minorStep = majorStep / 5.0;
 
@@ -662,73 +677,111 @@ namespace diplom
             {
                 Position = AxisPosition.Left,
                 Title = "Час",
-                Minimum = yMin - 2,
-                Maximum = yMax + 2,
+                Minimum = yMin - 2,       // трохи запасу «знизу»
+                Maximum = yMax + 2,       // і «зверху»
                 MajorStep = majorStep,
                 MinorStep = minorStep,
-                LabelFormatter = value => FormatTimeForY((int)Math.Round(value))
+                TitleColor = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(159, 183, 213)
+                                 : OxyColor.FromRgb(82, 82, 82),
+                TextColor = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(159, 183, 213)
+                                 : OxyColor.FromRgb(82, 82, 82),
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(81, 99, 119)
+                                 : OxyColor.FromRgb(82, 82, 82),
+                MinorGridlineColor = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(81, 99, 119)
+                                 : OxyColor.FromRgb(82, 82, 82)
             };
 
+            // 6) LabelFormatter → якщо менше ніж 60 с, друкуємо “N сек.”,
+            //    якщо ≥ 60, ділить на години/хвилини:
             axisY.LabelFormatter = value =>
             {
                 int totalSeconds = (int)Math.Round(value);
                 if (totalSeconds < 60)
+                {
                     return $"{totalSeconds} сек.";
+                }
                 int hours = totalSeconds / 3600;
                 int minutes = (totalSeconds % 3600) / 60;
 
                 if (hours > 0)
-                    return minutes > 0
-                        ? $"{hours} год. {minutes} хв."
-                        : $"{hours} год.";
-                return $"{minutes} хв.";
+                {
+                    if (minutes > 0)
+                        return $"{hours} год. {minutes} хв.";
+                    else
+                        return $"{hours} год.";
+                }
+                else
+                {
+                    return $"{minutes} хв.";
+                }
             };
 
-            var minDate = xPoints.Min();
-            var maxDate = xPoints.Max();
+            StyleAxis(axisY);
+            plotModel.Axes.Add(axisY);
 
-            var minimumX = DateTimeAxis.ToDouble(minDate.AddHours(-2));
-            var maximumX = DateTimeAxis.ToDouble(maxDate.AddHours(+2));
+            // 7) Задаємо межі для X-осі (трохи розширимо на ±2 години від мін/макс дат)
+            DateTime minDate = xPoints.Min();
+            DateTime maxDate = xPoints.Max();
+            double minimumX = DateTimeAxis.ToDouble(minDate.AddHours(-2));
+            double maximumX = DateTimeAxis.ToDouble(maxDate.AddHours(+2));
 
-            var totalDays = maximumX - minimumX;
+            // 8) Крок для X залежно від того, наскільки розтягнені дати (в нашому випадку це 1 день, але лишимо загальну логіку)
+            double totalDays = maximumX - minimumX;
             double step;
-            if (totalDays <= 10)
-                step = 1;
-            else if (totalDays <= 30)
-                step = 2;
-            else if (totalDays <= 90)
-                step = 7;
-            else if (totalDays <= 365)
-                step = 30;
-            else
-                step = 90;
+            if (totalDays <= 10) step = 1;
+            else if (totalDays <= 30) step = 2;
+            else if (totalDays <= 90) step = 7;
+            else if (totalDays <= 365) step = 30;
+            else step = 90;
 
             var axisX = new DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
-                Title = "Дата",
+                Title = "Дата / Час",
                 Minimum = minimumX,
                 Maximum = maximumX,
-                StringFormat = "dd.MM",
+                StringFormat = "dd.MM HH:mm",
                 MajorStep = step,
                 Angle = 45,
-                AxisTitleDistance = 10
+                AxisTitleDistance = 10,
+                TitleColor = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(159, 183, 213)
+                                 : OxyColor.FromRgb(82, 82, 82),
+                TextColor = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(159, 183, 213)
+                                 : OxyColor.FromRgb(82, 82, 82),
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.None,
+                MajorGridlineColor = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(81, 99, 119)
+                                 : OxyColor.FromRgb(82, 82, 82),
+                MinorGridlineColor = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(81, 99, 119)
+                                 : OxyColor.FromRgb(82, 82, 82)
             };
 
+            StyleAxis(axisX);
+            plotModel.Axes.Add(axisX);
+
+            // 9) Якщо потрібно, підключіть тултіп-обробники:
             _showDateInTooltip = true;
             plotView.MouseDown += PlotView_MouseDown;
             plotView.MouseUp += PlotView_MouseUp;
 
+            // 10) Додаємо PlotView на форму
             this.Controls.Add(plotView);
-
-            StyleAxis(axisX);
-            StyleAxis(axisY);
-            plotModel.Axes.Add(axisX);
-            plotModel.Axes.Add(axisY);
-
-            this.label9 = CreateMainLabel("label9", "label9", 545, 550, new Size(530, 50));
             plotView.Model = plotModel;
-            this.Controls.Add(plotView);
+
+            // 11) Стандартний підпис “Загальний час” (можна тут чи раніше)
+            this.label9 = CreateMainLabel("label9", "label9", 545, 550, new Size(530, 50));
+            int totalAllSeconds = yPoints.Sum();
+            label9.Text = $"Загальний час: {statistic.HumanizeSeconds(totalAllSeconds)}";
         }
 
         private void buildDailyChartWithDateTime<T>(

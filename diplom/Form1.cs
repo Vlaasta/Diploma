@@ -13,6 +13,7 @@ namespace diplom
         private HandButton handButton;
         public static Form1 Instance { get; private set; }
         public Func<string> GetLabel1Text { get; set; }
+        public static bool AutostartEnabled { get; set; } = false;
 
         private DateTime lastUpdated = DateTime.MinValue;
         private readonly object lockObject = new object();
@@ -33,8 +34,6 @@ namespace diplom
 
         private int currentOffset = 0;
         private const int visibleItemsCount = 8; // label3–9 + label11 = 8
-
-        private bool isPersonChoose;
 
         private ToolTip toolTip;
 
@@ -78,21 +77,6 @@ namespace diplom
             settings = new DataSettings();
             //ListInstalledFonts();
 
-           /* label3.MouseEnter += Label1_MouseEnter;
-            label4.MouseEnter += Label1_MouseEnter;
-            label5.MouseEnter += Label1_MouseEnter;
-            label6.MouseEnter += Label1_MouseEnter;
-            label7.MouseEnter += Label1_MouseEnter;
-            label8.MouseEnter += Label1_MouseEnter;
-
-            label3.MouseLeave += Label1_MouseLeave;
-            label4.MouseLeave += Label1_MouseLeave;
-            label5.MouseLeave += Label1_MouseLeave;
-            label6.MouseLeave += Label1_MouseLeave;
-            label7.MouseLeave += Label1_MouseLeave;
-            label8.MouseLeave += Label1_MouseLeave;*/
-
-            isPersonChoose = false;
 
             GetTimeAmount();
 
@@ -103,20 +87,16 @@ namespace diplom
         {
             var timerDataList = JsonProcessing.LoadTimerData();
 
-            // Отримуємо поточну дату
             string todayDate = DateTime.Now.ToString("dd.MM.yyyy");
 
-            // Шукаємо запис для поточної дати
             var entry = timerDataList.FirstOrDefault(data => data.Date == todayDate);
 
             if (entry != null)
             {
-                // Якщо знайдено, оновлюємо час на label2
                 label2.Text = TimeSpan.Parse(entry.Time).ToString(@"hh\:mm\:ss");
             }
             else
             {
-                // Якщо запису для поточної дати немає
                 label2.Text = "00:00:00";
             }
         }
@@ -260,75 +240,77 @@ namespace diplom
                     }
 
                 case "за браузером та проєктами":
-                    // 1) Обрана дата
                     var selectedDatee = DateTime.Today.AddDays(currentDayOffset);
-                    var dateKeyy = selectedDate.ToString("dd.MM.yyyy");
+                    var dateKeyy = selectedDatee.ToString("dd.MM.yyyy");
 
-                    // 2) Дані по проєктах:
+                    // 1) Завантажуємо проєктні сесії:
                     var allTimerData = JsonProcessing.LoadTimerData();
                     var recProj = allTimerData.FirstOrDefault(d => d.Date == dateKeyy);
                     var sessionss = recProj?.Sessions ?? new List<Session>();
 
-                    // 3) Дані по браузеру:
+                    // 2) Завантажуємо записи браузера (UrlData) тільки за обраний день:
                     var allUrlData = JsonProcessing.LoadUrlData();
-                    var dayUrlData = allUrlData.Where(u => u.Timestamp.Date == selectedDate.Date).ToList();
-
-                    // 4) Розраховуємо хвилини по годинах 0..23 для кожного джерела
-                    var intervals = Enumerable.Range(0, 96); // 96 інтервалів по 15 хвилин
-
-                    var projMinutes = intervals
-                        .Select(i =>
-                        {
-                            double sec = 0;
-                            var segStart = selectedDatee.Date.AddMinutes(i * 15);
-                            var segEnd = segStart.AddMinutes(15);
-
-                            foreach (var s in sessionss)
-                            {
-                                if (!DateTime.TryParseExact(s.Start, "HH:mm:ss", null, DateTimeStyles.None, out var t1)) continue;
-                                if (!DateTime.TryParseExact(s.Stop, "HH:mm:ss", null, DateTimeStyles.None, out var t2)) continue;
-
-                                var dt1 = selectedDatee.Date.Add(t1.TimeOfDay);
-                                var dt2 = selectedDatee.Date.Add(t2.TimeOfDay);
-                                if (dt2 < dt1) dt2 = dt2.AddDays(1);
-
-                                var a = dt1 > segStart ? dt1 : segStart;
-                                var b = dt2 < segEnd ? dt2 : segEnd;
-
-                                if (b > a) sec += (b - a).TotalSeconds;
-                            }
-
-                            return sec / 60.0; // хвилини
-    })
+                    var dayUrlData = allUrlData
+                        .Where(u => u.Timestamp.Date == selectedDatee.Date)
                         .ToList();
 
-                    var browserMinutes = intervals
-                        .Select(i =>
+                    // 3) Перетворюємо проєктні сесії в інтервали (DateTime, DateTime)
+                    var projectIntervals = sessionss
+                        .Select(s =>
                         {
-                            int hour = (i * 15) / 60;
-                            int minute = (i * 15) % 60;
-                            var segStart = selectedDatee.Date.AddHours(hour).AddMinutes(minute);
-                            var segEnd = segStart.AddMinutes(15);
+                            if (!DateTime.TryParseExact(s.Start, "HH:mm:ss", null, DateTimeStyles.None, out var t1))
+                                return (Start: DateTime.MinValue, Stop: DateTime.MinValue);
+                            if (!DateTime.TryParseExact(s.Stop, "HH:mm:ss", null, DateTimeStyles.None, out var t2))
+                                return (Start: DateTime.MinValue, Stop: DateTime.MinValue);
 
-                            double totalSec = 0;
-                            foreach (var u in dayUrlData)
-                            {
-                                var timestamp = u.Timestamp;
-                                if (timestamp >= segStart && timestamp < segEnd)
-                                {
-                                    totalSec += u.TimeSpent;
-                                }
-                            }
-                            return totalSec / 60.0;
+                            var st = selectedDatee.Date.Add(t1.TimeOfDay);
+                            var sp = selectedDatee.Date.Add(t2.TimeOfDay);
+                            if (sp < st) sp = sp.AddDays(1);
+                            return (Start: st, Stop: sp);
                         })
+                        .Where(x => x.Start != DateTime.MinValue)
                         .ToList();
 
-                    BuildMergedPlotModel(projMinutes, browserMinutes, selectedDatee);
+                    // 4) Перетворюємо UrlData в інтервали (DateTime, DateTime)
+                    var browserIntervals = dayUrlData
+                        .Select(u =>
+                        {
+                            var stBr = u.Timestamp;
+                            var spBr = u.Timestamp.AddSeconds(u.TimeSpent);
+            // обрізати, щоб не виходило за межі доби
+            if (stBr < selectedDatee.Date)
+                                stBr = selectedDatee.Date;
+                            if (spBr > selectedDatee.Date.AddDays(1))
+                                spBr = selectedDatee.Date.AddDays(1);
+                            return (Start: stBr, Stop: spBr);
+                        })
+                        .Where(x => x.Stop > x.Start)
+                        .ToList();
+
+                    // 5) Поєднуємо обидва списки:
+                    var allIntervals = new List<(DateTime Start, DateTime Stop)>();
+                    allIntervals.AddRange(projectIntervals);
+                    allIntervals.AddRange(browserIntervals);
+
+                    BuildMergedLineChart(selectedDatee, allIntervals);
+
                     break;
 
                 default:
                     break;
             }
+        }
+
+        private void BuildMergedLineChart(DateTime selectedDate,
+                                  List<(DateTime Start, DateTime Stop)> allIntervals)
+        {
+            // Використовуємо той самий buildDailyChart, тільки з типовим T = (DateTime, DateTime).
+            // Для цього передамо адаптер convertToInterval, який віддасть кортеж (Start, Stop).
+            buildDailyChart<(DateTime Start, DateTime Stop)>(
+                allIntervals,
+                selectedDate,
+                interval => (interval.Start, interval.Stop)  // просто повертаємо те, що нам дали
+            );
         }
 
         private void CurrentWeek()
@@ -482,7 +464,7 @@ namespace diplom
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Filter = "All Files (*.*)|*.*";
-                openFileDialog.Title = "Виберіть проект для додавання";
+                openFileDialog.Title = "Виберіть проєкт для додавання";
                 openFileDialog.CheckFileExists = true;
                 openFileDialog.CheckPathExists = true;
 
@@ -553,140 +535,13 @@ namespace diplom
         {
             return nonActiveTime;
         }
-
-        private void LoadBrowserDataIntoLabels()
-        {
-           /* string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
-            if (!File.Exists(filePath)) return;
-
-            string json = File.ReadAllText(filePath);
-            List<UrlData> records = JsonConvert.DeserializeObject<List<UrlData>>(json);
-
-            // Обрізаємо записи згідно поточного offset
-            var visibleRecords = records.Skip(currentOffset).Take(visibleItemsCount).ToList();
-
-            // Масиви лейблів
-            Label[] urlLabels = { label3, label4, label5, label6, label7, label8, label9, label11 };
-            Label[] titleLabels = { label12, label13, label14, label15, label16, label17, label18, label19 };
-
-            for (int i = 0; i < urlLabels.Length; i++)
-            {
-                if (i < visibleRecords.Count)
-                {
-                    urlLabels[i].Text = visibleRecords[i].Url;
-                    titleLabels[i].Text = visibleRecords[i].PageTitle;
-                }
-                else
-                {
-                    urlLabels[i].Text = "";
-                    titleLabels[i].Text = "";
-                }
-            }
-
-            // Кнопка "вниз" зникає, якщо останній елемент на екрані — останній у файлі
-            button39.Visible = currentOffset + visibleItemsCount < records.Count;
-
-            // Кнопка "вгору" зникає, якщо ми на початку
-            button38.Visible = currentOffset > 0;*/
-        }
-
-        private void DeleteRecordAndRefreshLabels(int indexOnPage)
-        {
-            string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
-
-            if (!File.Exists(filePath))
-            {
-                MessageBox.Show("Файл не знайдено.");
-                return;
-            }
-
-            string json = File.ReadAllText(filePath);
-            List<UrlData> records = JsonConvert.DeserializeObject<List<UrlData>>(json);
-
-            int actualIndex = currentOffset + indexOnPage; // ВАЖЛИВО: зсув
-
-            if (actualIndex < 0 || actualIndex >= records.Count)
-            {
-                MessageBox.Show("Недійсний індекс.");
-                return;
-            }
-
-            records.RemoveAt(actualIndex);
-
-            // Якщо після видалення ми вийшли за межу, зменшуємо offset
-            if (currentOffset > 0 && currentOffset >= records.Count - visibleItemsCount + 1)
-            {
-                currentOffset--;
-            }
-
-            string updatedJson = JsonConvert.SerializeObject(records, Formatting.Indented);
-            File.WriteAllText(filePath, updatedJson);
-
-            LoadBrowserDataIntoLabels();
-        }
-
-        private void button30_Click(object sender, EventArgs e)
-        {
-            DeleteRecordAndRefreshLabels(0);
-        }
-        private void button31_Click(object sender, EventArgs e)
-        {
-            DeleteRecordAndRefreshLabels(1);
-        }
-        private void button32_Click(object sender, EventArgs e)
-        {
-            DeleteRecordAndRefreshLabels(2);
-        }
-        private void button33_Click(object sender, EventArgs e)
-        {
-            DeleteRecordAndRefreshLabels(3);
-        }
-        private void button34_Click(object sender, EventArgs e)
-        {
-            DeleteRecordAndRefreshLabels(4);
-        }
-        private void button35_Click(object sender, EventArgs e)
-        {
-            DeleteRecordAndRefreshLabels(5);
-        }
-        private void button36_Click(object sender, EventArgs e)
-        {
-            DeleteRecordAndRefreshLabels(6);
-        }
-        private void button37_Click(object sender, EventArgs e)
-        {
-            DeleteRecordAndRefreshLabels(7);
-        }
-        private void button38_Click(object sender, EventArgs e)
-        {
-            if (currentOffset > 0)
-            {
-                currentOffset--;
-                LoadBrowserDataIntoLabels();
-            }
-        }
-        private void button39_Click(object sender, EventArgs e)
-        {
-            string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json";
-            if (!File.Exists(filePath)) return;
-
-            string json = File.ReadAllText(filePath);
-            List<UrlData> records = JsonConvert.DeserializeObject<List<UrlData>>(json);
-
-            if (currentOffset + visibleItemsCount < records.Count)
-            {
-                currentOffset++;
-                LoadBrowserDataIntoLabels();
-            }
-        }
+        
         private void button13_Click(object sender, EventArgs e) //дані в браузері
         {
             this.Controls.Clear();
             InitializeComponentMain();
             BrowserInfo();
-            LoadBrowserDataIntoLabels();
             ExitButton();
-            //label10.Text = "Дані активності в браузері"; 
         }
 
         private void button14_Click(object sender, EventArgs e) //вихід з даних в браузері
@@ -712,22 +567,6 @@ namespace diplom
             InitializeComponentMain();
             SetActivePanel(panel3);
             AboutProgram();
-        }
-
-        private void Label1_MouseEnter(object sender, EventArgs e)
-        {
-            if (sender is Label label)
-            {
-                toolTip.SetToolTip(label, label.Text);
-            }
-        }
-
-        private void Label1_MouseLeave(object sender, EventArgs e)
-        {
-            if (sender is Label label)
-            {
-                toolTip.Hide(label);
-            }
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -770,16 +609,43 @@ namespace diplom
 
         public void EnableAutoStart()
         {
-            string startupFolder =
-                Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+            if (!AutostartEnabled)
+                DisableAutoStart();
+
+            string startupFolder = Environment.GetFolderPath(
+                Environment.SpecialFolder.Startup);
             string shortcutPath = Path.Combine(startupFolder, "MyApp.lnk");
 
-            var wsh = new WshShell();
-            IWshShortcut shortcut = (IWshShortcut)wsh.CreateShortcut(shortcutPath);
+            var wshType = Type.GetTypeFromProgID("WScript.Shell");
+            dynamic wsh = Activator.CreateInstance(wshType);
+            dynamic shortcut = wsh.CreateShortcut(shortcutPath);
+
             shortcut.TargetPath = Application.ExecutablePath;
             shortcut.WorkingDirectory = Application.StartupPath;
             shortcut.Description = "Auto-start MyApp";
             shortcut.Save();
+        }
+
+        public void DisableAutoStart()
+        {
+            string startupFolder = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+
+            string shortcutPath = Path.Combine(startupFolder, "MyApp.lnk");
+
+            try
+            {
+                if (File.Exists(shortcutPath))
+                    File.Delete(shortcutPath);
+            }
+            catch (Exception ex)
+            {
+                /*MessageBox.Show(
+                    $"Не вдалося вимкнути автозапуск: {ex.Message}",
+                    "DisableAutoStart",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );*/
+            }
         }
     }
 }

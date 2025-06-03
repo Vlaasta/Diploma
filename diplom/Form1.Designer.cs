@@ -54,6 +54,9 @@ namespace diplom
         private const int spacing = 6;
         private readonly ToolTip _labelToolTip = new ToolTip { ShowAlways = true };
 
+        private double _currentScaleFactor = 1.0;
+        private string _currentUnitLabel = "хв.";
+
         // Заздалегідь визначаємо список прямокутників (x,y,width,height)
         /* private readonly List<Rectangle> _blueRects = new List<Rectangle>
          {
@@ -123,12 +126,6 @@ namespace diplom
             this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox10.TabStop = false;
             this.pictureBox10.Visible = true;
-
-            //this.panel1.Controls.Add(this.pictureBox10);
-            /* this.panel7.Controls.Add(this.pictureBox10);
-             this.panel7.Location = new System.Drawing.Point(0, 7);
-             this.panel7.Name = "panel7";
-             this.panel7.Size = new System.Drawing.Size(130, 65);*/
 
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button7.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
@@ -607,23 +604,6 @@ namespace diplom
             axis.IsZoomEnabled = false; 
         }
 
-        private string FormatTime(int totalSeconds)
-        {
-            if (totalSeconds < 60)
-                return $"{totalSeconds} сек.";
-
-            int hours = totalSeconds / 3600;
-            int minutes = (totalSeconds % 3600) / 60;
-            int seconds = totalSeconds % 60;
-
-            var parts = new List<string>();
-            if (hours > 0) parts.Add($"{hours} год.");
-            if (minutes > 0) parts.Add($"{minutes} хв.");
-            if (seconds > 0) parts.Add($"{seconds} сек.");
-
-            return string.Join(" ", parts);
-        }
-
         private string FormatTimeForY(int totalSeconds)
         {
             if (totalSeconds < 60)
@@ -681,7 +661,7 @@ namespace diplom
             var axisY = new LinearAxis
             {
                 Position = AxisPosition.Left,
-                Title = "Час роботи (сек)",
+                Title = "Час",
                 Minimum = yMin - 2,
                 Maximum = yMax + 2,
                 MajorStep = majorStep,
@@ -691,24 +671,16 @@ namespace diplom
 
             axisY.LabelFormatter = value =>
             {
-                // округлюємо до цілих секунд
                 int totalSeconds = (int)Math.Round(value);
-
-                // якщо менше хвилини — показуємо тільки секунди
                 if (totalSeconds < 60)
                     return $"{totalSeconds} сек.";
-
-                // інакше переводимо в хвилини (і години, якщо треба)
                 int hours = totalSeconds / 3600;
                 int minutes = (totalSeconds % 3600) / 60;
 
-                // якщо є години — показуємо години і хвилини
                 if (hours > 0)
                     return minutes > 0
                         ? $"{hours} год. {minutes} хв."
                         : $"{hours} год.";
-
-                // якщо годин нема, але є хвилини — тільки хвилини (без секунд!)
                 return $"{minutes} хв.";
             };
 
@@ -759,35 +731,98 @@ namespace diplom
             this.Controls.Add(plotView);
         }
 
-        private string GetToolTipText(DateTime dt, int seconds, bool showDate)
+        private void buildDailyChartWithDateTime<T>(
+    List<T> dataList,
+    DateTime selectedDate,
+    Func<T, (DateTime Start, DateTime Stop)?> convertToInterval
+)
         {
-            var timePart = $"Час: {FormatTime(seconds)}";
-            if (!showDate)
-                return timePart;
-            var datePart = $"Дата: {dt:dd.MM.yyyy}";
-            return $"{datePart}\n{timePart}";
+            DateTime today = selectedDate.Date;
+
+            // 1) Розбираємо інтервали з dataList
+            var parsed = dataList
+                .Select(convertToInterval)
+                .Where(interval => interval.HasValue && interval.Value.Start != DateTime.MinValue)
+                .Select(interval => interval.Value)
+                .ToList();
+
+            // 2) Створюємо масив minutesPerHour[0..23]
+            double[] minutesPerHour = new double[24];
+            foreach (var interval in parsed)
+            {
+                DateTime start = interval.Start;
+                DateTime stop = interval.Stop;
+
+                if (stop < today || start >= today.AddDays(1))
+                    continue;
+
+                if (start < today)
+                    start = today;
+                if (stop > today.AddDays(1))
+                    stop = today.AddDays(1);
+
+                while (start < stop)
+                {
+                    int hour = start.Hour;
+                    DateTime nextHour = new DateTime(start.Year, start.Month, start.Day, hour, 0, 0).AddHours(1);
+                    DateTime segmentEnd = (stop < nextHour) ? stop : nextHour;
+
+                    double minutes = (segmentEnd - start).TotalMinutes;
+                    minutesPerHour[hour] += minutes;
+
+                    start = segmentEnd;
+                }
+            }
+
+            // 3) Переводимо хвилини кожної години в секунди (int), щоб віддати в buildChart
+            var xPoints = new List<DateTime>();
+            var yPoints = new List<int>();
+
+            for (int h = 0; h < 24; h++)
+            {
+                // X → початок відповідної години (наприклад, 10 → “yyyy-MM-dd 10:00:00”)
+                xPoints.Add(today.AddHours(h));
+
+                // Y → скільки секунд (хвилин[h] * 60)
+                double rawMinutes = minutesPerHour[h];
+                int rawSeconds = (int)Math.Round(rawMinutes * 60.0);
+                yPoints.Add(rawSeconds);
+            }
+
+            // 4) Викликаємо buildChart із готовими списками
+            buildChart(xPoints, yPoints);
         }
 
         private void PlotView_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button != MouseButtons.Left) return;
-            var view = sender as PlotView;
-            var model = view?.Model;
-            if (view == null || model == null) return;
+            if (e.Button != MouseButtons.Left)
+                return;
+
+            if (!(sender is OxyPlot.WindowsForms.PlotView view))
+                return;
+            var model = view.Model;
+            if (model == null)
+                return;
+
             _customToolTip.Hide(view);
 
             var series = model.Series.OfType<LineSeries>().FirstOrDefault();
-            if (series == null) return;
+            if (series == null)
+                return;
 
             var sp = new ScreenPoint(e.X, e.Y);
             var nearest = series.GetNearestPoint(sp, interpolate: false);
-            if (nearest == null || nearest.Position.DistanceTo(sp) >= 10)
+            if (nearest == null)
+                return;
+            if (nearest.Position.DistanceTo(sp) >= 10)
                 return;
 
             var dp = nearest.DataPoint;
             var dt = DateTimeAxis.ToDateTime(dp.X, TimeSpan.FromSeconds(1));
 
-            string text = GetToolTipText(dt, (int)dp.Y, _showDateInTooltip);
+            double rawMinutes = dp.Y / _currentScaleFactor;
+
+            string text = GetToolTipText(dt, rawMinutes, _showDateInTooltip);
 
             _customToolTip.Show(text, view, e.X + 10, e.Y + 10);
         }
@@ -798,28 +833,62 @@ namespace diplom
                 _customToolTip.Hide(view);
         }
 
+        private string FormatHoursMinutes(double totalMinutes)
+        {
+            if (totalMinutes < 1.0)
+            {
+                int totalSeconds = (int)Math.Round(totalMinutes * 60.0);
+
+                if (totalSeconds <= 0)
+                    totalSeconds = 1;
+                return $"{totalSeconds} с";
+            }
+
+            int wholeMinutes = (int)Math.Round(totalMinutes);
+            int hours = wholeMinutes / 60;
+            int minutes = wholeMinutes % 60;
+
+            if (hours > 0)
+            {
+                return $"{hours} год. {minutes:D2} хв.";
+            }
+            else
+            {
+                return $"{minutes} хв.";
+            }
+        }
+
+        private string GetToolTipText(DateTime dt, double rawMinutes, bool showDate)
+        {
+            string timePart = $"Час: {FormatHoursMinutes(rawMinutes)}";
+            if (!showDate)
+                return timePart;
+
+            string datePart = $"Дата: {dt:dd.MM.yyyy}";
+            return $"{datePart}\n{timePart}";
+        }
+
         private void buildDailyChart<T>(List<T> dataList, DateTime selectedDate, Func<T, (DateTime Start, DateTime Stop)?> convertToInterval)
         {
-            var today = selectedDate.Date;
+            DateTime today = selectedDate.Date;
 
+            // 1) Розбираємо інтервали з dataList
             var parsed = dataList
                 .Select(convertToInterval)
                 .Where(interval => interval.HasValue && interval.Value.Start != DateTime.MinValue)
                 .Select(interval => interval.Value)
                 .ToList();
 
-            // Групуємо тривалість активності по годинах доби
+            // 2) Підраховуємо хвилини по кожній годині
             double[] minutesPerHour = new double[24];
-
             foreach (var interval in parsed)
             {
                 DateTime start = interval.Start;
                 DateTime stop = interval.Stop;
 
                 if (stop < today || start >= today.AddDays(1))
-                    continue; // ігноруємо, якщо не сьогодні
+                    continue;
 
-                // Обмежуємо діапазон в межах обраного дня
                 if (start < today)
                     start = today;
                 if (stop > today.AddDays(1))
@@ -829,7 +898,7 @@ namespace diplom
                 {
                     int hour = start.Hour;
                     DateTime nextHour = new DateTime(start.Year, start.Month, start.Day, hour, 0, 0).AddHours(1);
-                    DateTime segmentEnd = stop < nextHour ? stop : nextHour;
+                    DateTime segmentEnd = (stop < nextHour) ? stop : nextHour;
 
                     double minutes = (segmentEnd - start).TotalMinutes;
                     minutesPerHour[hour] += minutes;
@@ -838,33 +907,78 @@ namespace diplom
                 }
             }
 
+            // 3) Визначаємо масштаб і підпис одиниць по Y
+            double rawMax = minutesPerHour.Max();
+            double scaleFactor;
+            string unitLabel;
+
+            // Якщо жодних даних немає (усі хвилини = 0), виводимо "просто лінію по 0"
+            if (rawMax <= 0.0)
+            {
+                // Застосуємо “хвилини” як одиницю за замовчуванням:
+                scaleFactor = 1.0;
+                unitLabel = "хв.";
+            }
+            else
+            {
+                if (rawMax < 1.0)
+                {
+                    scaleFactor = 60.0; // показувати в секундах
+                    unitLabel = "с";
+                }
+                else if (rawMax < 60.0)
+                {
+                    scaleFactor = 1.0;  // показувати в хвилинах
+                    unitLabel = "хв.";
+                }
+                else
+                {
+                    scaleFactor = 1.0 / 60.0; // показувати в годинах
+                    unitLabel = "год.";
+                }
+            }
+
+            _currentScaleFactor = scaleFactor;
+            _currentUnitLabel = unitLabel;
+
+            // 4) Розраховуємо розміри осі Y у підхожих одиницях
+            double maxInUnit = rawMax * scaleFactor;
+            double maxY = maxInUnit;
+            if (maxY <= 0)
+                maxY = 1;  // навіть при відсутності даних залишаємо хоча б 1 одиницю
+
+            double majorY = Math.Max(1.0, Math.Ceiling(maxY / 10.0));
+            double minorY = majorY / 2.0;
+            double axisMaxY = maxY * 1.05;
+
+            // 5) Створюємо PlotView / PlotModel
             var plotView = CreatePlotView();
             var plotModel = plotView.Model;
 
+            // 6) Створюємо серію з точками
             var series = new LineSeries
             {
-                MarkerType = MarkerType.None,
-                Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
-                StrokeThickness = 2
+                MarkerType = MarkerType.Circle,
+                MarkerSize = 4,
+                MarkerFill = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(159, 183, 213)
+                                 : OxyColor.FromRgb(82, 82, 82),
+                Color = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(159, 183, 213)
+                                 : OxyColor.FromRgb(82, 82, 82),
+                StrokeThickness = 2,
+                TrackerFormatString = $"Година: {{2:0}}\nЧас: {{4:0.##}} {unitLabel}"
             };
-
-            var ctrl = plotView.Controller ?? plotView.ActualController;
-
-            ctrl.UnbindMouseDown(
-                OxyPlot.OxyMouseButton.Left,
-                OxyPlot.OxyModifierKeys.None,
-                clickCount: 1
-            );
-
-            plotView.Controller = ctrl;
 
             for (int h = 0; h < 24; h++)
             {
-                series.Points.Add(new DataPoint(h, minutesPerHour[h]));
+                double yValue = minutesPerHour[h] * scaleFactor;
+                // Якщо немає даних зовсім, series все одно отримає точки (h, 0)
+                series.Points.Add(new DataPoint(h, yValue));
             }
-
             plotModel.Series.Add(series);
 
+            // 7) X-вісь — години 0..23
             var axisX = new LinearAxis
             {
                 Position = AxisPosition.Bottom,
@@ -874,157 +988,122 @@ namespace diplom
                 MajorStep = 1,
                 MinorStep = 1,
                 LabelFormatter = v => TimeSpan.FromHours(v).ToString(@"hh\:mm"),
-                Angle = -45
+                Angle = -45,
+                TitleColor = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(159, 183, 213)
+                                 : OxyColor.FromRgb(82, 82, 82),
+                TextColor = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(159, 183, 213)
+                                 : OxyColor.FromRgb(82, 82, 82),
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.None
             };
+            StyleAxis(axisX);
+            plotModel.Axes.Add(axisX);
 
-            double maxY = Math.Ceiling(minutesPerHour.Max() + 1);
-            double majorY = Math.Max(1, Math.Ceiling(maxY / 10.0));
-            double minorY = majorY / 2.0;
-
+            // 8) Y-вісь із динамічним LabelFormatter
             var axisY = new LinearAxis
             {
                 Position = AxisPosition.Left,
                 Title = "Час",
-                Minimum = -1,
-                Maximum = maxY,
+                Minimum = 0,
+                Maximum = axisMaxY,
                 MajorStep = majorY,
                 MinorStep = minorY,
-                LabelFormatter = value => FormatTimeForY((int)Math.Round(value))
+                TitleColor = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(159, 183, 213)
+                                 : OxyColor.FromRgb(82, 82, 82),
+                TextColor = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(159, 183, 213)
+                                 : OxyColor.FromRgb(82, 82, 82),
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(81, 99, 119)
+                                 : OxyColor.FromRgb(82, 82, 82),
+                MinorGridlineColor = Form1.settings.ColorTheme == "dark"
+                                 ? OxyColor.FromRgb(81, 99, 119)
+                                 : OxyColor.FromRgb(82, 82, 82),
+                IsZoomEnabled = false,
+
+                LabelFormatter = value =>
+                {
+                    // Якщо немає даних (rawMax <= 0), всередині ми вже поклали scaleFactor=1, unitLabel="хв."
+                    if (unitLabel == "с")
+                    {
+                        int sec = (int)Math.Round(value);
+                        return $"{sec} с";
+                    }
+                    else if (unitLabel == "хв.")
+                    {
+                        int min = (int)Math.Round(value);
+                        return $"{min} хв.";
+                    }
+                    else // "год."
+                    {
+                        if (Math.Abs(value - Math.Round(value)) < 0.0001)
+                            return $"{(int)Math.Round(value)} год";
+                        else
+                            return $"{value:0.#} год";
+                    }
+                }
             };
-
-            _showDateInTooltip = false;
-            plotView.MouseDown += PlotView_MouseDown;
-            plotView.MouseUp += PlotView_MouseUp;
-
-            StyleAxis(axisX);
             StyleAxis(axisY);
-            plotModel.Axes.Add(axisX);
             plotModel.Axes.Add(axisY);
 
-            // Вертикальні лінії на кожну годину
+            // 9) Вимикаємо стандартну обробку лівого кліку/зуму
+            var ctrl = plotView.Controller ?? plotView.ActualController;
+            ctrl.UnbindMouseDown(
+                OxyPlot.OxyMouseButton.Left,
+                OxyPlot.OxyModifierKeys.None,
+                clickCount: 1
+            );
+            plotView.Controller = ctrl;
+
+            // 10) Додаємо вертикальні лінії-сітку на кожну годину
             for (int h = 0; h < 24; h++)
             {
                 plotModel.Annotations.Add(new LineAnnotation
                 {
                     Type = LineAnnotationType.Vertical,
                     X = h,
-                    Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82),
+                    Color = Form1.settings.ColorTheme == "dark"
+                                    ? OxyColor.FromRgb(81, 99, 119)
+                                    : OxyColor.FromRgb(82, 82, 82),
                     StrokeThickness = 1.5,
                     LineStyle = LineStyle.Solid
                 });
             }
 
-            // Горизонтальні лінії
-            for (double y = 0; y <= maxY; y += minorY)
+            // 11) Додаємо горизонтальні лінії-сітку для Y
+            for (double y = 0; y <= axisMaxY; y += minorY)
             {
                 plotModel.Annotations.Add(new LineAnnotation
                 {
                     Type = LineAnnotationType.Horizontal,
                     Y = y,
-                    Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82),
-                    StrokeThickness = (y % majorY == 0) ? 1.5 : 0.5,
-                    LineStyle = (y % majorY == 0) ? LineStyle.Solid : LineStyle.Dot
+                    Color = Form1.settings.ColorTheme == "dark"
+                                    ? OxyColor.FromRgb(81, 99, 119)
+                                    : OxyColor.FromRgb(82, 82, 82),
+                    StrokeThickness = (Math.Abs(y % majorY) < 0.0001) ? 1.5 : 0.5,
+                    LineStyle = (Math.Abs(y % majorY) < 0.0001) ? LineStyle.Solid : LineStyle.Dot
                 });
             }
 
+            // 12) Підписи “Загальний час” та “Статистика за ...”
             this.label9 = CreateMainLabel("label9", "label9", 545, 550, new Size(530, 50));
+            double totalSeconds = parsed.Sum(iv => (iv.Stop - iv.Start).TotalSeconds);
+            label9.Text = $"Загальний час: {statistic.HumanizeSeconds(totalSeconds)}";
+            label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
+
+            // 13) Додаємо PlotView на форму
             plotView.Model = plotModel;
             this.Controls.Add(plotView);
-        }
 
-        private void BuildMergedPlotModel(List<double> projMinutes, List<double> browserMinutes, DateTime selectedDate)
-        {
-            bool isDarkTheme = Form1.settings.ColorTheme == "dark"; 
-            var merged = projMinutes.Zip(browserMinutes, (p, b) => p + b).ToList();
-
-            var model = new PlotModel
-            {
-                PlotAreaBorderColor = isDarkTheme ? OxyColor.FromRgb(2, 14, 25) : OxyColor.FromRgb(82, 82, 82),
-                PlotAreaBorderThickness = new OxyThickness(1)
-            };
-
-            var series = new LineSeries
-            {
-                MarkerType = MarkerType.Circle,
-                Color = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
-                StrokeThickness = 2
-            };
-
-            for (int i = 0; i < 96; i++)
-            {
-                series.Points.Add(new DataPoint(i, merged[i]));
-            }
-
-            model.Series.Add(series);
-
-            model.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Bottom,
-                Title = "Час",
-                Minimum = -0.5,
-                Maximum = 95.5,
-                MajorStep = 4,
-                MinorStep = 1,
-                LabelFormatter = v =>
-                {
-                    if (v < 0 || v > 95) return "";
-                    var time = TimeSpan.FromMinutes(v * 15);
-                    return time.ToString(@"hh\:mm");
-                },
-                Angle = -45,
-                TitleColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
-                TextColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.None,
-                MajorGridlineColor = isDarkTheme ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82),
-                IsZoomEnabled = false
-            });
-
-            double maxY = Math.Ceiling(merged.Max() + 1);
-            double stepY = Math.Max(1, Math.Ceiling(maxY / 10.0));
-            model.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Left,
-                Title = "Хвилини",
-                Minimum = 0,
-                Maximum = maxY,
-                MajorStep = stepY,
-                MinorStep = stepY / 2,
-                TitleColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
-                TextColor = isDarkTheme ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.Dot,
-                MajorGridlineColor = isDarkTheme ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82),
-                MinorGridlineColor = isDarkTheme ? OxyColor.FromRgb(81, 99, 119) : OxyColor.FromRgb(82, 82, 82),
-                IsZoomEnabled = false
-            });
-
-            var plotView = new PlotView
-            {
-                Dock = DockStyle.None,
-                Size = new Size(600, 400),
-                Location = new Point(230, 150),
-                Model = model
-            };
-            this.Controls.Add(plotView);
-
-            var ctrl = plotView.Controller ?? plotView.ActualController;
-
-            ctrl.UnbindMouseDown(
-                OxyPlot.OxyMouseButton.Left,
-                OxyPlot.OxyModifierKeys.None,
-                clickCount: 1
-            );
-
-            plotView.Controller = ctrl;
-
+            // 14) Підключаємо тултіп-обробники (як у вас раніше)
             _showDateInTooltip = false;
             plotView.MouseDown += PlotView_MouseDown;
             plotView.MouseUp += PlotView_MouseUp;
-
-            this.label9 = CreateMainLabel("label9", "label9", 545, 550, new Size(530, 50));
-            label9.Text = $"Загальний час: {statistic.HumanizeSeconds(merged.Sum() * 60)}";
-            label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
         }
 
         private void RemoveChart()
@@ -1273,7 +1352,7 @@ namespace diplom
             checkBox1 = CreateCheckBox(new Point(250, 150), "checkBox1", "Темна тема");
             checkBox2 = CreateCheckBox(new Point(450, 150), "checkBox2", "Світла тема");
             checkBox3 = CreateCheckBox(new Point(250, 200), "checkBox3", "Автозапуск програми");
-            checkBox4 = CreateCheckBox(new Point(250, 250), "checkBox4", "Дозволити програмі надсилати сповіщення:");
+            checkBox4 = CreateCheckBox(new Point(250, 250), "checkBox4", "Дозволити програмі надсилати сповіщення");
             checkBox5 = CreateCheckBox(new Point(250, 400), "checkBox5", "5 хв");
             checkBox6 = CreateCheckBox(new Point(450, 400), "checkBox6", "10 хв");
             checkBox7 = CreateCheckBox(new Point(650, 400), "checkBox7", "15 хв");
@@ -1585,13 +1664,74 @@ namespace diplom
             this.PerformLayout();
         }
 
+        private RichTextBox CreateRichTextLabel(Point location, string name, string text, Size size)
+        {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+
+            // Встановлюємо кольори
+            Color backColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225);
+            Color foreColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
+
+            // Створюємо RichTextBox
+            var richText = new RichTextBox
+            {
+                Name = name,
+                Location = location,
+                Size = size,
+                ReadOnly = true,
+                BorderStyle = BorderStyle.None,
+                BackColor = backColor,
+                Font = new Font("Segoe UI", 12),
+                TabStop = false,
+                Cursor = Cursors.Default,
+                EnableAutoDragDrop = false,
+                DetectUrls = false,
+                ScrollBars = RichTextBoxScrollBars.None
+            };
+
+            // Генеруємо RTF з вирівнюванням по ширині і кольором тексту
+            string rtfColor = $@"\red{foreColor.R}\green{foreColor.G}\blue{foreColor.B}";
+            string rtfText = text.Replace("\n", @"\par ");
+
+            richText.Rtf =
+                @"{\rtf1\ansi\deff0" +
+                $@"{{\colortbl ;{rtfColor};}}" +  // перший — ignore, другий — наш
+                @"{\fonttbl{\f0 Segoe UI;}}" +
+                @"\fs24\cf1\qj " + rtfText + "}";
+
+            // Заборонити зміну масштабу колесиком миші
+            richText.MouseWheel += (s, e) => ((HandledMouseEventArgs)e).Handled = true;
+
+            this.Controls.Add(richText);
+            return richText;
+        }
+
         private void AboutProgram()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            CreateMainLabel("label10", "Про програму", 550, 30, new Size(500, 50));
+
+            CreateRichTextLabel(new Point(250, 100), "label11",
+                "Даний додаток призначений для автоматизованого тайм-трекінгу.", new Size(600, 40));
+
+            CreateRichTextLabel(new Point(250, 150), "label12",
+                "Для того, щоб скористатися функцією автоматичного трекінгу, потрібно додати у систему робочі файли, які відстежуватимуться. " +
+                "Для таких файлів буде фіксуватися час, який ви в них проводите. Ці результати виводимуться на головному меню на основному лічильнику та враховуватимуться під час підведення статистики.",
+                new Size(600, 100));
+
+            CreateRichTextLabel(new Point(250, 250), "label13",
+                "Додатково додаток має функцію інтелектуального аналізу вашої діяльності в браузері. Це відбувається шляхом порівняння вмісту ваших проєктів з відвідуваними сторінками. " +
+                "Якщо схожість виявлено — діяльність класифікується як робоча. Результати ви можете переглянути на панелі статистики.",
+                new Size(600, 100));
+
+            CreateRichTextLabel(new Point(250, 350), "label14",
+                "У вас також є можливість налаштувати моніторинг активності вашої діяльності. " +
+                "Оберіть у панелі налаштування потрібний час, і як тільки він мине — лічильник буде вимкнено.",
+                new Size(600, 100));
 
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
 
         private void buttonDelete_Click2(object sender, EventArgs e)
         {

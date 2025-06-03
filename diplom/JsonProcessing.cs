@@ -483,6 +483,8 @@ namespace diplom
             Console.WriteLine("Завершено.");
         }
 
+
+
         public static void LoadSettings()
         {
             if (File.Exists(fileThirdPath))
@@ -522,11 +524,19 @@ namespace diplom
                     Form1.CheckBox1Active = false;
                     Form1.CheckBox2Active = true;
                 }
+                if (Form1.settings.Autostart == true)
+                {
+                    Form1.CheckBox3Active = true;
+                }
+                if (Form1.settings.Autostart == false)
+                {
+                    Form1.CheckBox3Active = false;
+                    Form1.autoStart = false;
+                }
                 if (Form1.settings.NotificatonOnOff == true)
                 {
                     Form1.notificationsOnOff = true;
-                    Form1.CheckBox4Active = true;
-                    // Form1.NotificationsOn();
+                    Form1.autoStart = true;
                 }
                 if (Form1.settings.NotificatonOnOff == false)
                 {
@@ -534,6 +544,7 @@ namespace diplom
                     Form1.CheckBox4Active = false;
                 }
                 Notifications.NotificationsEnabled = Form1.notificationsOnOff;
+                Form1.AutostartEnabled = Form1.autoStart;
                 if (Form1.settings.TextBoxValue != 0)
                 {
                     Form1.nonActiveTime = Form1.settings.TextBoxValue;

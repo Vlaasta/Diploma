@@ -709,6 +709,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="License-LGPL.txt" />
+    <None Include="Resources\LightLogo.jpg" />
     <None Include="Resources\Logos4.jpg" />
     <None Include="Resources\Logos3.jpg" />
     <None Include="Resources\Logos2.jpg" />

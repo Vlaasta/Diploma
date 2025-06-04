@@ -76,12 +76,14 @@ namespace diplom
 
             settings = new DataSettings();
             //ListInstalledFonts();
-
+            
 
             GetTimeAmount();
 
             JsonProcessing.LoadSettings();
         }
+
+
 
         private void GetTimeAmount()
         {
@@ -168,7 +170,7 @@ namespace diplom
         }
 
         private void CurrentDay()
-        {           
+        {
             RemoveChart();
 
             DateTime selectedDate = DateTime.Today.AddDays(currentDayOffset);
@@ -177,79 +179,65 @@ namespace diplom
             {
                 case "за проєктами":
                     {
-                        // 1. Завантажуємо сесії з JSON
-                        var TimerData = JsonProcessing.LoadTimerData();
-                        string dateKey = selectedDate.ToString("dd.MM.yyyy");
-                        var reccProj = TimerData.FirstOrDefault(d => d.Date == dateKey);
-                        var sessionsList = reccProj?.Sessions ?? new List<Session>();
+                        var _tmpData = JsonProcessing.LoadTimerData();
+                        string _tmpDateKey = selectedDate.ToString("dd.MM.yyyy");
+                        var _tmpRecord = _tmpData.FirstOrDefault(d => d.Date == _tmpDateKey);
+                        var _tmpSessions = _tmpRecord?.Sessions ?? new List<Session>();
 
-                        // 2. Перетворюємо кожен Session у (DateTime Start, DateTime Stop)
-                        //    і одразу викликаємо новий buildDailyChartWithDateTime
-                        buildDailyChartWithDateTime<Session>(
-                            sessionsList,
-                            selectedDate,
-                            session =>
-                            {
-                                if (DateTime.TryParseExact(session.Start, "HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var t1)
-                                    && DateTime.TryParseExact(session.Stop, "HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var t2))
-                                {
-                                    var start = selectedDate.Date.Add(t1.TimeOfDay);
-                                    var stop = selectedDate.Date.Add(t2.TimeOfDay);
-                                    if (stop < start)
-                                        stop = stop.AddDays(1); // перехід через північ
-                    return (start, stop);
-                                }
-                                return null;
-                            }
-                        );
-
-                        // 3. Оновлюємо підписи label9 і label10 так само, як у вас було:
-                        if (reccProj != null
-                            && TimeSpan.TryParseExact(reccProj.Time, @"hh\:mm\:ss", CultureInfo.InvariantCulture, out var totalProj))
+                        buildDailyChart<Session>(_tmpSessions, selectedDate, session =>
                         {
-                            label9.Text = $"Усього витрачено на роботу: {totalProj.Hours} год. {totalProj.Minutes} хв. {totalProj.Seconds} сек.";
+                            if (DateTime.TryParseExact(session.Start, "HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var startTime)
+                                && DateTime.TryParseExact(session.Stop, "HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var endTime))
+                            {
+                                var start = selectedDate.Date.Add(startTime.TimeOfDay);
+                                var stop = selectedDate.Date.Add(endTime.TimeOfDay);
+                                if (stop < start) stop = stop.AddDays(1); // нічний перехід
+                                return (start, stop);
+                            }
+                            return null;
+                        });
+
+                        if (_tmpRecord != null
+                            && TimeSpan.TryParseExact(_tmpRecord.Time, @"hh\:mm\:ss", CultureInfo.InvariantCulture, out var _tmpTotal))
+                        {
+                            label9.Text = $"Усього витрачено на роботу: {_tmpTotal.Hours} год. {_tmpTotal.Minutes} хв. {_tmpTotal.Seconds} сек.";
                         }
                         else
                         {
                             label9.Text = "Усього витрачено на роботу: 0 год. 0 хв. 0 сек.";
                         }
+
                         label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
                         break;
                     }
 
                 case "за браузером":
                     {
-                        // 1. Завантажуємо всю UrlData та фільтруємо по дню
-                        var LUrlData = JsonProcessing.LoadUrlData();
-                        var dailyUrlData = LUrlData
-                            .Where(u => u.Timestamp.Date == selectedDate.Date)
+                        var _tmpData = JsonProcessing.LoadUrlData();
+
+                        // Фільтруємо записи лише на поточний день
+                        var _tmpDayData = _tmpData
+                            .Where(d => d.Timestamp.Date == selectedDate.Date)
                             .ToList();
 
-                        // 2. Викликаємо buildDailyChartWithDateTime<UrlData>, передаючи кожен UrlData у інтервал (Start, Stop)
-                        buildDailyChartWithDateTime<UrlData>(
-                            dailyUrlData,
-                            selectedDate,
-                            record =>
-                            {
-                                var start = record.Timestamp;
-                                var stop = record.Timestamp.AddSeconds(record.TimeSpent);
-                // обрізаємо до межі доби, якщо потрібно
-                if (start < selectedDate.Date)
-                                    start = selectedDate.Date;
-                                if (stop > selectedDate.Date.AddDays(1))
-                                    stop = selectedDate.Date.AddDays(1);
-                                return (start, stop);
-                            }
-                        );
+                        // Побудова графіка
+                        buildDailyChart<UrlData>(_tmpDayData, selectedDate, record =>
+                        {
+                            var start = record.Timestamp;
+                            var stop = start.Add(TimeSpan.FromSeconds(record.TimeSpent));
+                            return (start, stop);
+                        });
 
-                        // 3. Рахуємо загальний час у браузері за допомогою вашого statistic.CalculateTotalTime
-                        string totalBrowserTime = statistic.CalculateTotalTime<UrlData>(
-                            dailyUrlData,
+                        // Обчислення загального часу
+                        string _tmpTotalTime = statistic.CalculateTotalTime<UrlData>(
+                            _tmpDayData,
                             nameof(UrlData.TimeSpent)
                         );
 
-                        label9.Text = $"Усього витрачено на роботу: {totalBrowserTime}";
+                        // Оновлення підписів
+                        label9.Text = $"Усього витрачено на роботу: {_tmpTotalTime}";
                         label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
+
                         break;
                     }
 
@@ -257,10 +245,18 @@ namespace diplom
                     var selectedDatee = DateTime.Today.AddDays(currentDayOffset);
                     var dateKeyy = selectedDatee.ToString("dd.MM.yyyy");
 
+                    // 1) Завантажуємо проєктні сесії:
                     var allTimerData = JsonProcessing.LoadTimerData();
                     var recProj = allTimerData.FirstOrDefault(d => d.Date == dateKeyy);
                     var sessionss = recProj?.Sessions ?? new List<Session>();
 
+                    // 2) Завантажуємо записи браузера (UrlData) тільки за обраний день:
+                    var allUrlData = JsonProcessing.LoadUrlData();
+                    var dayUrlData = allUrlData
+                        .Where(u => u.Timestamp.Date == selectedDatee.Date)
+                        .ToList();
+
+                    // 3) Перетворюємо проєктні сесії в інтервали (DateTime, DateTime)
                     var projectIntervals = sessionss
                         .Select(s =>
                         {
@@ -277,17 +273,13 @@ namespace diplom
                         .Where(x => x.Start != DateTime.MinValue)
                         .ToList();
 
-                    // 2) Завантажуємо браузерні записи та перетворюємо в інтервали (DateTime,DateTime)
-                    var allUrlData = JsonProcessing.LoadUrlData();
-                    var dayUrlData = allUrlData
-                        .Where(u => u.Timestamp.Date == selectedDatee.Date)
-                        .ToList();
-
+                    // 4) Перетворюємо UrlData в інтервали (DateTime, DateTime)
                     var browserIntervals = dayUrlData
                         .Select(u =>
                         {
                             var stBr = u.Timestamp;
                             var spBr = u.Timestamp.AddSeconds(u.TimeSpent);
+                            // обрізати, щоб не виходило за межі доби
                             if (stBr < selectedDatee.Date)
                                 stBr = selectedDatee.Date;
                             if (spBr > selectedDatee.Date.AddDays(1))
@@ -297,17 +289,13 @@ namespace diplom
                         .Where(x => x.Stop > x.Start)
                         .ToList();
 
-                    // 3) Поєднуємо обидва списки інтервалів
+                    // 5) Поєднуємо обидва списки:
                     var allIntervals = new List<(DateTime Start, DateTime Stop)>();
                     allIntervals.AddRange(projectIntervals);
                     allIntervals.AddRange(browserIntervals);
 
-                    // 4) Викликаємо buildDailyChartWithDateTime, передаючи єдину колекцію інтервалів
-                    buildDailyChartWithDateTime<(DateTime Start, DateTime Stop)>(
-                        allIntervals,
-                        selectedDatee,
-                        interval => interval  // просто віддає кортеж, адже в allIntervals він уже (Start, Stop)
-                    );
+                    BuildMergedLineChart(selectedDatee, allIntervals);
+
                     break;
 
                 default:
@@ -430,7 +418,7 @@ namespace diplom
                     break;
 
                 case "за браузером та проєктами":
-                    label10.Text = "Статистика за " + startOfMonth.ToString("MMMM yyyy", ukrCulture) + " (обʼєднана)";
+                    label10.Text = "Статистика за " + startOfMonth.ToString("MMMM yyyy", ukrCulture);
                     break;
             }
         }
@@ -542,7 +530,8 @@ namespace diplom
             InitializeComponentMainMenu();
             SetActivePanel(panel6);
             GetTimeAmount();
-            PopulateProjects(); 
+            PopulateProjects();
+            RemoveBlueRectangles();
         }
 
         public static int GetNonActiveTime()
@@ -554,8 +543,10 @@ namespace diplom
         {
             this.Controls.Clear();
             InitializeComponentMain();
+            SetActivePanel(panel2);
             BrowserInfo();
             ExitButton();
+            RemoveBlueRectangles();
         }
 
         private void button14_Click(object sender, EventArgs e) //вихід з даних в браузері
@@ -563,7 +554,7 @@ namespace diplom
             this.Controls.Clear();
             InitializeComponentMain();
             StatisticsMainMenu();
-            CurrentDay(); 
+            CurrentDay();
         }
 
         private void button27_Click(object sender, EventArgs e) //налаштування на панелі
@@ -573,6 +564,7 @@ namespace diplom
             SetActivePanel(panel4);
             SettingsMenu();
             textBox1.KeyPress += textBox1_KeyPress;
+            RemoveBlueRectangles();
         }
 
         private void button28_Click(object sender, EventArgs e) //про програму
@@ -581,6 +573,8 @@ namespace diplom
             InitializeComponentMain();
             SetActivePanel(panel3);
             AboutProgram();
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
+            this.Invalidate();
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)

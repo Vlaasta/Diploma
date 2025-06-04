@@ -49,32 +49,12 @@ namespace diplom
         private List<DateTime> availableDates;
         private int currentIndex;
 
-        // Задаємо тут, щоб RecalcScrollbar міг порахувати SmallChange
         private const int rowH = 37;
         private const int spacing = 6;
         private readonly ToolTip _labelToolTip = new ToolTip { ShowAlways = true };
 
         private double _currentScaleFactor = 1.0;
         private string _currentUnitLabel = "хв.";
-
-        // Заздалегідь визначаємо список прямокутників (x,y,width,height)
-        /* private readonly List<Rectangle> _blueRects = new List<Rectangle>
-         {
-             new Rectangle(245, 145, 570, 30),
-             new Rectangle(245, 195, 570, 30),
-             new Rectangle(245, 295, 570, 30),  // під другим
-             new Rectangle(245, 245, 570, 30),
-             new Rectangle(245, 395, 570, 30) // під третім
-             // … і так далі, під усі потрібні координати
-         };*/
-
-        /* private readonly List<Rectangle> _blueRects = new List<Rectangle>
-         {
-             new Rectangle(245, 95, 570, 30),
-             new Rectangle(245, 345, 570, 30),
-             new Rectangle(245, 445, 570, 30),  // під другим// під третім
-             // … і так далі, під усі потрібні координати
-         };*/
 
         private void InitializeComponentMain()
         {
@@ -121,14 +101,14 @@ namespace diplom
             this.panel3.Size = new System.Drawing.Size(225, 46);
             this.panel3.TabIndex = 23;
 
-            this.pictureBox10.Image = isDarkTheme ? Properties.Resources.Logos4 : Properties.Resources.ClockForLightTheme;
+            this.pictureBox10.Image = isDarkTheme ? Properties.Resources.Logos4 : Properties.Resources.LightLogo;
             this.ConfigurePictureBox(pictureBox10, new Point(23, 15), new Size(170, 100));
             this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox10.TabStop = false;
             this.pictureBox10.Visible = true;
 
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button7.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
+            this.button7.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0);
             this.button7.Location = new System.Drawing.Point(-8, 0);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(200, 45);
@@ -145,7 +125,7 @@ namespace diplom
             this.panel2.Size = new System.Drawing.Size(225, 46);
 
             this.button27.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button27.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
+            this.button27.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0);
             this.button27.Location = new System.Drawing.Point(-8, 0);
             this.button27.Name = "button27";
             this.button27.Size = new System.Drawing.Size(200, 45);
@@ -162,7 +142,7 @@ namespace diplom
             this.panel6.Size = new System.Drawing.Size(225, 46);
 
             this.button28.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button28.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
+            this.button28.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0);
             this.button28.Location = new System.Drawing.Point(-8, 0);
             this.button28.Name = "button28";
             this.button28.Size = new System.Drawing.Size(200, 45);
@@ -181,7 +161,7 @@ namespace diplom
 
             this.button8.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button8.BackgroundImage")));
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button8.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
+            this.button8.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0);
             this.button8.Location = new System.Drawing.Point(-8, 0);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(200, 45);
@@ -194,12 +174,12 @@ namespace diplom
 
             if (CheckBox2Active == true || Form1.settings.ColorTheme == "light")
             {
-                this.BackColor = Color.FromArgb(212, 220, 225);
-                this.panel1.BackColor = Color.FromArgb(171, 176, 180);
-                this.button7.ForeColor = Color.FromArgb(82, 82, 82);
-                this.button8.ForeColor = Color.FromArgb(82, 82, 82);
-                this.button27.ForeColor = Color.FromArgb(82, 82, 82);
-                this.button28.ForeColor = Color.FromArgb(82, 82, 82);
+                this.BackColor = Color.FromArgb(255, 255, 255);
+                this.panel1.BackColor = Color.FromArgb(249, 249, 249);
+                this.button7.ForeColor = Color.FromArgb(0, 0, 0);
+                this.button8.ForeColor = Color.FromArgb(0, 0, 0);
+                this.button27.ForeColor = Color.FromArgb(0, 0, 0);
+                this.button28.ForeColor = Color.FromArgb(0, 0, 0);
             }
 
             if (CheckBox1Active == true || Form1.settings.ColorTheme == "dark")
@@ -223,23 +203,16 @@ namespace diplom
             this.PerformLayout();
         }
 
-        private void ListInstalledFonts()
-        {
-            var fonts = new InstalledFontCollection();
-            foreach (var ff in fonts.Families)
-                Console.WriteLine(ff.Name);
-        }
-
         private void SetActivePanel(Panel panel)
         {
             bool isDarkTheme = Form1.settings.ColorTheme == "dark";
 
             if (activePanel != null)
             {
-                activePanel.BackColor = !isDarkTheme ? Color.FromArgb(171, 176, 180) : Color.FromArgb(4, 26, 44);
+                activePanel.BackColor = !isDarkTheme ? Color.FromArgb(249, 249, 249) : Color.FromArgb(4, 26, 44);
             }
 
-            panel.BackColor = isDarkTheme ? Color.FromArgb(30, 60, 90) : Color.FromArgb(145, 150, 153); 
+            panel.BackColor = isDarkTheme ? Color.FromArgb(30, 60, 90) : Color.FromArgb(235, 235, 235); 
             activePanel = panel;
         }
 
@@ -301,7 +274,7 @@ namespace diplom
                 Name = "panel2",
                 Location = new Point(280, 413),       
                 Size = new Size(540, 168),      
-                BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225), 
+                BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(255, 255, 255), 
                 AutoScroll = true
             };
 
@@ -486,8 +459,8 @@ namespace diplom
                 Name = name,
                 Location = location,
                 Size = size,
-                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82),
-                BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196),
+                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0),
+                BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(235, 235, 235),
                 AutoSize = false,
                 TextAlign = ContentAlignment.MiddleLeft, 
                 Font = new Font("Segoe UI", 12),
@@ -529,10 +502,10 @@ namespace diplom
             {
                 label.Image = image;
             }
-            label.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
+            label.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(249, 249, 249);
             if (label != label2)
             {
-                label.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
+                label.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0);
             }
             label.Font = new Font("Segoe UI", 12);
             label.AutoEllipsis = true;  // Додає "..." якщо текст не влізе
@@ -551,7 +524,7 @@ namespace diplom
             {
                 pictureBox.BackgroundImage = backgroundImage ;
             }
-            pictureBox.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
+            pictureBox.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(249, 249, 249);
             pictureBox.TabStop = false;
         }
 
@@ -623,23 +596,16 @@ namespace diplom
 
         private void buildChart(List<DateTime> xPoints, List<int> yPoints)
         {
-            // 1) Створюємо PlotView / PlotModel
             var plotView = CreatePlotView();
             var plotModel = plotView.Model;
 
-            // 2) Лінійна серія з маркерами (кружечки), X у вигляді DateTimeAxis
             var lineSeries = new LineSeries
             {
                 MarkerType = MarkerType.Circle,
-                MarkerSize = 4,
-                Color = Form1.settings.ColorTheme == "dark"
-                            ? OxyColor.FromRgb(159, 183, 213)
-                            : OxyColor.FromRgb(82, 82, 82),
-                StrokeThickness = 2,
-                TrackerFormatString = "\u200B" // можна залишити пустий тултіп, або зробити власний
+                Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
+                TrackerFormatString = "\u200B"
             };
 
-            // 3) Додаємо точки: X = DateTime → DateTimeAxis.ToDouble, Y = кількість секунд у цю годину
             for (int i = 0; i < xPoints.Count; i++)
             {
                 double dateAsDouble = DateTimeAxis.ToDouble(xPoints[i]);
@@ -648,28 +614,20 @@ namespace diplom
 
             plotModel.Series.Add(lineSeries);
 
-            // 4) Вимикаємо пана/зум по лівому кліку
             var ctrl = plotView.Controller ?? plotView.ActualController;
+
             ctrl.UnbindMouseDown(
                 OxyPlot.OxyMouseButton.Left,
                 OxyPlot.OxyModifierKeys.None,
                 clickCount: 1
             );
+
             plotView.Controller = ctrl;
 
-            // 5) Задаємо межі та кроки для Y-осі (секунди → хвилини/години у LabelFormatter)
-            int yMin = yPoints.Min();
-            int yMax = yPoints.Max();
-            // Якщо всі yPoints == 0, зробимо yMin=0, yMax=1, щоб було чітко видно горизонтальну лінію «по нулю»
-            if (yMax == 0 && yMin == 0)
-            {
-                yMin = 0;
-                yMax = 1;
-            }
-
-            int range = yMax - yMin;
-            // Обчислимо MajorStep так, як у вас було: округлимо “range/5” до найближчих 100, як частину
-            double majorStep = Math.Ceiling((range / 5.0) / 100.0) * 100.0;
+            var yMin = yPoints.Min();
+            var yMax = yPoints.Max();
+            double range = yMax - yMin;
+            double majorStep = Math.Ceiling(range / 5.0 / 100.0) * 100;
             if (majorStep == 0) majorStep = 10;
             double minorStep = majorStep / 5.0;
 
@@ -677,173 +635,73 @@ namespace diplom
             {
                 Position = AxisPosition.Left,
                 Title = "Час",
-                Minimum = yMin - 2,       // трохи запасу «знизу»
-                Maximum = yMax + 2,       // і «зверху»
+                Minimum = yMin - 2,
+                Maximum = yMax + 2,
                 MajorStep = majorStep,
                 MinorStep = minorStep,
-                TitleColor = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(159, 183, 213)
-                                 : OxyColor.FromRgb(82, 82, 82),
-                TextColor = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(159, 183, 213)
-                                 : OxyColor.FromRgb(82, 82, 82),
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.Dot,
-                MajorGridlineColor = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(81, 99, 119)
-                                 : OxyColor.FromRgb(82, 82, 82),
-                MinorGridlineColor = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(81, 99, 119)
-                                 : OxyColor.FromRgb(82, 82, 82)
+                LabelFormatter = value => FormatTimeForY((int)Math.Round(value))
             };
 
-            // 6) LabelFormatter → якщо менше ніж 60 с, друкуємо “N сек.”,
-            //    якщо ≥ 60, ділить на години/хвилини:
             axisY.LabelFormatter = value =>
             {
                 int totalSeconds = (int)Math.Round(value);
                 if (totalSeconds < 60)
-                {
                     return $"{totalSeconds} сек.";
-                }
                 int hours = totalSeconds / 3600;
                 int minutes = (totalSeconds % 3600) / 60;
 
                 if (hours > 0)
-                {
-                    if (minutes > 0)
-                        return $"{hours} год. {minutes} хв.";
-                    else
-                        return $"{hours} год.";
-                }
-                else
-                {
-                    return $"{minutes} хв.";
-                }
+                    return minutes > 0
+                        ? $"{hours} год. {minutes} хв."
+                        : $"{hours} год.";
+                return $"{minutes} хв.";
             };
 
-            StyleAxis(axisY);
-            plotModel.Axes.Add(axisY);
+            var minDate = xPoints.Min();
+            var maxDate = xPoints.Max();
 
-            // 7) Задаємо межі для X-осі (трохи розширимо на ±2 години від мін/макс дат)
-            DateTime minDate = xPoints.Min();
-            DateTime maxDate = xPoints.Max();
-            double minimumX = DateTimeAxis.ToDouble(minDate.AddHours(-2));
-            double maximumX = DateTimeAxis.ToDouble(maxDate.AddHours(+2));
+            var minimumX = DateTimeAxis.ToDouble(minDate.AddHours(-2));
+            var maximumX = DateTimeAxis.ToDouble(maxDate.AddHours(+2));
 
-            // 8) Крок для X залежно від того, наскільки розтягнені дати (в нашому випадку це 1 день, але лишимо загальну логіку)
-            double totalDays = maximumX - minimumX;
+            var totalDays = maximumX - minimumX;
             double step;
-            if (totalDays <= 10) step = 1;
-            else if (totalDays <= 30) step = 2;
-            else if (totalDays <= 90) step = 7;
-            else if (totalDays <= 365) step = 30;
-            else step = 90;
+            if (totalDays <= 10)
+                step = 1;
+            else if (totalDays <= 30)
+                step = 2;
+            else if (totalDays <= 90)
+                step = 7;
+            else if (totalDays <= 365)
+                step = 30;
+            else
+                step = 90;
 
             var axisX = new DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
-                Title = "Дата / Час",
+                Title = "Дата",
                 Minimum = minimumX,
                 Maximum = maximumX,
-                StringFormat = "dd.MM HH:mm",
+                StringFormat = "dd.MM",
                 MajorStep = step,
                 Angle = 45,
-                AxisTitleDistance = 10,
-                TitleColor = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(159, 183, 213)
-                                 : OxyColor.FromRgb(82, 82, 82),
-                TextColor = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(159, 183, 213)
-                                 : OxyColor.FromRgb(82, 82, 82),
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.None,
-                MajorGridlineColor = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(81, 99, 119)
-                                 : OxyColor.FromRgb(82, 82, 82),
-                MinorGridlineColor = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(81, 99, 119)
-                                 : OxyColor.FromRgb(82, 82, 82)
+                AxisTitleDistance = 10
             };
 
-            StyleAxis(axisX);
-            plotModel.Axes.Add(axisX);
-
-            // 9) Якщо потрібно, підключіть тултіп-обробники:
             _showDateInTooltip = true;
             plotView.MouseDown += PlotView_MouseDown;
             plotView.MouseUp += PlotView_MouseUp;
 
-            // 10) Додаємо PlotView на форму
             this.Controls.Add(plotView);
-            plotView.Model = plotModel;
 
-            // 11) Стандартний підпис “Загальний час” (можна тут чи раніше)
+            StyleAxis(axisX);
+            StyleAxis(axisY);
+            plotModel.Axes.Add(axisX);
+            plotModel.Axes.Add(axisY);
+
             this.label9 = CreateMainLabel("label9", "label9", 545, 550, new Size(530, 50));
-            int totalAllSeconds = yPoints.Sum();
-            label9.Text = $"Загальний час: {statistic.HumanizeSeconds(totalAllSeconds)}";
-        }
-
-        private void buildDailyChartWithDateTime<T>(
-    List<T> dataList,
-    DateTime selectedDate,
-    Func<T, (DateTime Start, DateTime Stop)?> convertToInterval
-)
-        {
-            DateTime today = selectedDate.Date;
-
-            // 1) Розбираємо інтервали з dataList
-            var parsed = dataList
-                .Select(convertToInterval)
-                .Where(interval => interval.HasValue && interval.Value.Start != DateTime.MinValue)
-                .Select(interval => interval.Value)
-                .ToList();
-
-            // 2) Створюємо масив minutesPerHour[0..23]
-            double[] minutesPerHour = new double[24];
-            foreach (var interval in parsed)
-            {
-                DateTime start = interval.Start;
-                DateTime stop = interval.Stop;
-
-                if (stop < today || start >= today.AddDays(1))
-                    continue;
-
-                if (start < today)
-                    start = today;
-                if (stop > today.AddDays(1))
-                    stop = today.AddDays(1);
-
-                while (start < stop)
-                {
-                    int hour = start.Hour;
-                    DateTime nextHour = new DateTime(start.Year, start.Month, start.Day, hour, 0, 0).AddHours(1);
-                    DateTime segmentEnd = (stop < nextHour) ? stop : nextHour;
-
-                    double minutes = (segmentEnd - start).TotalMinutes;
-                    minutesPerHour[hour] += minutes;
-
-                    start = segmentEnd;
-                }
-            }
-
-            // 3) Переводимо хвилини кожної години в секунди (int), щоб віддати в buildChart
-            var xPoints = new List<DateTime>();
-            var yPoints = new List<int>();
-
-            for (int h = 0; h < 24; h++)
-            {
-                // X → початок відповідної години (наприклад, 10 → “yyyy-MM-dd 10:00:00”)
-                xPoints.Add(today.AddHours(h));
-
-                // Y → скільки секунд (хвилин[h] * 60)
-                double rawMinutes = minutesPerHour[h];
-                int rawSeconds = (int)Math.Round(rawMinutes * 60.0);
-                yPoints.Add(rawSeconds);
-            }
-
-            // 4) Викликаємо buildChart із готовими списками
-            buildChart(xPoints, yPoints);
+            plotView.Model = plotModel;
+            this.Controls.Add(plotView);
         }
 
         private void PlotView_MouseDown(object sender, MouseEventArgs e)
@@ -925,14 +783,14 @@ namespace diplom
         {
             DateTime today = selectedDate.Date;
 
-            // 1) Розбираємо інтервали з dataList
+            // 1) Збираємо інтервали
             var parsed = dataList
                 .Select(convertToInterval)
-                .Where(interval => interval.HasValue && interval.Value.Start != DateTime.MinValue)
-                .Select(interval => interval.Value)
+                .Where(i => i.HasValue && i.Value.Start != DateTime.MinValue)
+                .Select(i => i.Value)
                 .ToList();
 
-            // 2) Підраховуємо хвилини по кожній годині
+            // 2) Підраховуємо хвилини по годинах
             double[] minutesPerHour = new double[24];
             foreach (var interval in parsed)
             {
@@ -941,7 +799,6 @@ namespace diplom
 
                 if (stop < today || start >= today.AddDays(1))
                     continue;
-
                 if (start < today)
                     start = today;
                 if (stop > today.AddDays(1))
@@ -960,128 +817,110 @@ namespace diplom
                 }
             }
 
-            // 3) Визначаємо масштаб і підпис одиниць по Y
+            // 3) Знаходимо максимум (у хвилинах) для вибору одиниць Y
             double rawMax = minutesPerHour.Max();
+
+            // 4) Вибираємо масштаб (сек/хв/год) і unitLabel
             double scaleFactor;
             string unitLabel;
 
-            // Якщо жодних даних немає (усі хвилини = 0), виводимо "просто лінію по 0"
             if (rawMax <= 0.0)
             {
-                // Застосуємо “хвилини” як одиницю за замовчуванням:
-                scaleFactor = 1.0;
+                scaleFactor = 1.0;   // показувати в «хв.» навіть якщо усе нульове
+                unitLabel = "хв.";
+            }
+            else if (rawMax < 1.0)
+            {
+                scaleFactor = 60.0;  // показувати в «сек.»
+                unitLabel = "с";
+            }
+            else if (rawMax < 60.0)
+            {
+                scaleFactor = 1.0;   // показувати в «хв.»
                 unitLabel = "хв.";
             }
             else
             {
-                if (rawMax < 1.0)
-                {
-                    scaleFactor = 60.0; // показувати в секундах
-                    unitLabel = "с";
-                }
-                else if (rawMax < 60.0)
-                {
-                    scaleFactor = 1.0;  // показувати в хвилинах
-                    unitLabel = "хв.";
-                }
-                else
-                {
-                    scaleFactor = 1.0 / 60.0; // показувати в годинах
-                    unitLabel = "год.";
-                }
+                scaleFactor = 1.0 / 60.0;  // показувати в «год.»
+                unitLabel = "год.";
             }
 
             _currentScaleFactor = scaleFactor;
             _currentUnitLabel = unitLabel;
 
-            // 4) Розраховуємо розміри осі Y у підхожих одиницях
+            // 5) Обчислюємо граничні значення для Y
             double maxInUnit = rawMax * scaleFactor;
-            double maxY = maxInUnit;
-            if (maxY <= 0)
-                maxY = 1;  // навіть при відсутності даних залишаємо хоча б 1 одиницю
-
+            // Якщо всі дані нульові → мінімальна одиниця = 1,
+            // щоб потім при відображенні осі Y точка y=0 не «зникала» під дном.
+            double maxY = (maxInUnit <= 0) ? 1.0 : maxInUnit;
             double majorY = Math.Max(1.0, Math.Ceiling(maxY / 10.0));
             double minorY = majorY / 2.0;
             double axisMaxY = maxY * 1.05;
 
-            // 5) Створюємо PlotView / PlotModel
+            // 6) Створюємо PlotView / PlotModel
             var plotView = CreatePlotView();
             var plotModel = plotView.Model;
 
-            // 6) Створюємо серію з точками
+            // 7) Створюємо LineSeries (лінія + маркери)
             var series = new LineSeries
             {
+                LineStyle = LineStyle.Solid,
+                StrokeThickness = 2,
+                Color = Form1.settings.ColorTheme == "dark"
+                            ? OxyColor.FromRgb(159, 183, 213)
+                            : OxyColor.FromRgb(82, 82, 82),
                 MarkerType = MarkerType.Circle,
-                MarkerSize = 4,
+                MarkerSize = 3,   // зменшені кружечки
                 MarkerFill = Form1.settings.ColorTheme == "dark"
                                  ? OxyColor.FromRgb(159, 183, 213)
                                  : OxyColor.FromRgb(82, 82, 82),
-                Color = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(159, 183, 213)
-                                 : OxyColor.FromRgb(82, 82, 82),
-                StrokeThickness = 2,
                 TrackerFormatString = $"Година: {{2:0}}\nЧас: {{4:0.##}} {unitLabel}"
             };
 
+            // 8) Додаємо точки у серію – по одній на годину
             for (int h = 0; h < 24; h++)
             {
                 double yValue = minutesPerHour[h] * scaleFactor;
-                // Якщо немає даних зовсім, series все одно отримає точки (h, 0)
-                series.Points.Add(new DataPoint(h, yValue));
+                double xValue = h;
+                series.Points.Add(new DataPoint(xValue, yValue));
             }
             plotModel.Series.Add(series);
 
-            // 7) X-вісь — години 0..23
+            // 9) Налаштовуємо X-вісь (підписи кожні 2 години, дрібні лінії щогодини)
             var axisX = new LinearAxis
             {
                 Position = AxisPosition.Bottom,
                 Title = "Година",
                 Minimum = -0.5,
                 Maximum = 23.5,
-                MajorStep = 1,
-                MinorStep = 1,
-                LabelFormatter = v => TimeSpan.FromHours(v).ToString(@"hh\:mm"),
+                MajorStep = 2,  // підписи (00:00, 02:00, 04:00 …)
+                MinorStep = 1,  // дрібні вертикальні лінії щогодини
+                LabelFormatter = v =>
+                {
+                    if (v < 0 || v > 23) return "";
+                    int iv = (int)Math.Round(v);
+                    if (Math.Abs(v - iv) > 0.001) return "";
+                    return TimeSpan.FromHours(iv).ToString(@"hh\:mm");
+                },
                 Angle = -45,
-                TitleColor = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(159, 183, 213)
-                                 : OxyColor.FromRgb(82, 82, 82),
-                TextColor = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(159, 183, 213)
-                                 : OxyColor.FromRgb(82, 82, 82),
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.None
             };
             StyleAxis(axisX);
             plotModel.Axes.Add(axisX);
 
-            // 8) Y-вісь із динамічним LabelFormatter
+            // 10) Налаштовуємо Y-вісь (рідша сітка по majorY)
             var axisY = new LinearAxis
             {
                 Position = AxisPosition.Left,
                 Title = "Час",
-                Minimum = 0,
+                // Тепер нижня межа динамічно: якщо нема даних — трохи від’ємна,
+                // інакше завжди нуль:
+                Minimum = (rawMax <= 0) ? -1 * majorY : 0,
                 Maximum = axisMaxY,
-                MajorStep = majorY,
-                MinorStep = minorY,
-                TitleColor = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(159, 183, 213)
-                                 : OxyColor.FromRgb(82, 82, 82),
-                TextColor = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(159, 183, 213)
-                                 : OxyColor.FromRgb(82, 82, 82),
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.Dot,
-                MajorGridlineColor = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(81, 99, 119)
-                                 : OxyColor.FromRgb(82, 82, 82),
-                MinorGridlineColor = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(81, 99, 119)
-                                 : OxyColor.FromRgb(82, 82, 82),
-                IsZoomEnabled = false,
+                MajorStep = majorY * 2,
+                MinorStep = majorY,
 
                 LabelFormatter = value =>
                 {
-                    // Якщо немає даних (rawMax <= 0), всередині ми вже поклали scaleFactor=1, unitLabel="хв."
                     if (unitLabel == "с")
                     {
                         int sec = (int)Math.Round(value);
@@ -1104,7 +943,22 @@ namespace diplom
             StyleAxis(axisY);
             plotModel.Axes.Add(axisY);
 
-            // 9) Вимикаємо стандартну обробку лівого кліку/зуму
+            // 11) Якщо немає жодної хвилини (rawMax == 0), додаємо явну лінію Y = 0
+            if (rawMax <= 0.0)
+            {
+                plotModel.Annotations.Add(new LineAnnotation
+                {
+                    Type = LineAnnotationType.Horizontal,
+                    Y = 0,
+                    Color = Form1.settings.ColorTheme == "dark"
+                                           ? OxyColor.FromRgb(159, 183, 213)
+                                           : OxyColor.FromRgb(82, 82, 82),
+                    StrokeThickness = 2,
+                    LineStyle = LineStyle.Solid
+                });
+            }
+
+            // 12) Вимикаємо пан/зум по лівому кліку
             var ctrl = plotView.Controller ?? plotView.ActualController;
             ctrl.UnbindMouseDown(
                 OxyPlot.OxyMouseButton.Left,
@@ -1113,47 +967,17 @@ namespace diplom
             );
             plotView.Controller = ctrl;
 
-            // 10) Додаємо вертикальні лінії-сітку на кожну годину
-            for (int h = 0; h < 24; h++)
-            {
-                plotModel.Annotations.Add(new LineAnnotation
-                {
-                    Type = LineAnnotationType.Vertical,
-                    X = h,
-                    Color = Form1.settings.ColorTheme == "dark"
-                                    ? OxyColor.FromRgb(81, 99, 119)
-                                    : OxyColor.FromRgb(82, 82, 82),
-                    StrokeThickness = 1.5,
-                    LineStyle = LineStyle.Solid
-                });
-            }
-
-            // 11) Додаємо горизонтальні лінії-сітку для Y
-            for (double y = 0; y <= axisMaxY; y += minorY)
-            {
-                plotModel.Annotations.Add(new LineAnnotation
-                {
-                    Type = LineAnnotationType.Horizontal,
-                    Y = y,
-                    Color = Form1.settings.ColorTheme == "dark"
-                                    ? OxyColor.FromRgb(81, 99, 119)
-                                    : OxyColor.FromRgb(82, 82, 82),
-                    StrokeThickness = (Math.Abs(y % majorY) < 0.0001) ? 1.5 : 0.5,
-                    LineStyle = (Math.Abs(y % majorY) < 0.0001) ? LineStyle.Solid : LineStyle.Dot
-                });
-            }
-
-            // 12) Підписи “Загальний час” та “Статистика за ...”
+            // 13) Підписи “Загальний час” і “Статистика за …”
             this.label9 = CreateMainLabel("label9", "label9", 545, 550, new Size(530, 50));
             double totalSeconds = parsed.Sum(iv => (iv.Stop - iv.Start).TotalSeconds);
             label9.Text = $"Загальний час: {statistic.HumanizeSeconds(totalSeconds)}";
             label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
 
-            // 13) Додаємо PlotView на форму
+            // 14) Додаємо PlotView на форму
             plotView.Model = plotModel;
             this.Controls.Add(plotView);
 
-            // 14) Підключаємо тултіп-обробники (як у вас раніше)
+            // 15) Підключаємо тултіп-обробники
             _showDateInTooltip = false;
             plotView.MouseDown += PlotView_MouseDown;
             plotView.MouseUp += PlotView_MouseUp;
@@ -1185,7 +1009,6 @@ namespace diplom
             comboBox.Items.Add("За день");
             comboBox.Items.Add("За тиждень");
             comboBox.Items.Add("За місяць");
-            comboBox.Items.Add("За рік");
             comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox.Location = new Point(245, 100);
             comboBox.Size = new Size(150, 30);
@@ -1298,8 +1121,8 @@ namespace diplom
                 Text = text,
                 Location = location,
                 Size = size,
-                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82),
-                BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196),
+                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0),
+                BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(235, 235, 235),
                 FlatStyle = System.Windows.Forms.FlatStyle.Flat,
                 UseVisualStyleBackColor = true,
             };
@@ -1324,8 +1147,8 @@ namespace diplom
                 Size = size,
                 Font = new Font("Segoe UI", 16),
                 TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82),
-                BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225)
+                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0),
+                BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(255, 255, 255)
             };
             this.Controls.Add(label);
 
@@ -1339,7 +1162,7 @@ namespace diplom
             var label = new Label
             {
                 AutoSize = true,
-                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82),
+                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0),
                 BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225),
                 Location = location,
                 Name = name,
@@ -1360,7 +1183,7 @@ namespace diplom
             var checkBox = new CheckBox
             {
                 AutoSize = true,
-                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82),
+                ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0),
                 Location = location,
                 Name = name,
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
@@ -1372,17 +1195,6 @@ namespace diplom
             this.Controls.Add(checkBox);
             return checkBox;
         }
-
-       /* private void Form1_Paint(object sender, PaintEventArgs e)
-        {
-            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
-
-            using (var brush = new SolidBrush(isDarkTheme ? Color.FromArgb(30, 60, 90) : Color.FromArgb(145, 150, 153)))
-            {
-                foreach (var r in _blueRects)
-                    e.Graphics.FillRectangle(brush, r);
-            }
-        }*/
 
         #endregion
 
@@ -1417,8 +1229,8 @@ namespace diplom
             this.textBox1.Location = new Point(250, 500); 
             this.textBox1.AutoSize = false;
             this.textBox1.Size = new Size(150, 20);
-            this.textBox1.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196); 
-            this.textBox1.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
+            this.textBox1.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(235, 235, 235); 
+            this.textBox1.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0);
             this.textBox1.Font = new Font("Segoe UI", 12); 
             this.textBox1.Text = "Введіть число";
             this.textBox1.BorderStyle = BorderStyle.None;
@@ -1725,7 +1537,7 @@ namespace diplom
             Color backColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225);
             Color foreColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
 
-            // Створюємо RichTextBox
+            // Створюємо сам RichTextBox
             var richText = new RichTextBox
             {
                 Name = name,
@@ -1734,6 +1546,7 @@ namespace diplom
                 ReadOnly = true,
                 BorderStyle = BorderStyle.None,
                 BackColor = backColor,
+                ForeColor = foreColor,
                 Font = new Font("Segoe UI", 12),
                 TabStop = false,
                 Cursor = Cursors.Default,
@@ -1742,15 +1555,21 @@ namespace diplom
                 ScrollBars = RichTextBoxScrollBars.None
             };
 
-            // Генеруємо RTF з вирівнюванням по ширині і кольором тексту
+            // Підготувати RTF-текст з justify + 1.5 міжрядковим інтервалом
             string rtfColor = $@"\red{foreColor.R}\green{foreColor.G}\blue{foreColor.B}";
+            // Заміна "\n" на "\par " для коректного переходу на новий абзац
             string rtfText = text.Replace("\n", @"\par ");
 
+            // \sl360 -> 360 twips міжрядкового інтервалу = ~1.5 для 12pt (240twips)
+            // \slmult1 -> застосувати цей інтервал точно
             richText.Rtf =
                 @"{\rtf1\ansi\deff0" +
-                $@"{{\colortbl ;{rtfColor};}}" +  // перший — ignore, другий — наш
+                $@"{{\colortbl ;{rtfColor};}}" +
                 @"{\fonttbl{\f0 Segoe UI;}}" +
-                @"\fs24\cf1\qj " + rtfText + "}";
+                // \fs24 = 12pt, \sl360\slmult1 = інтервал 1.5, \cf1 = колір, \qj = justify
+                @"\fs24\sl360\slmult1\cf1\qj " +
+                rtfText +
+                "}";
 
             // Заборонити зміну масштабу колесиком миші
             richText.MouseWheel += (s, e) => ((HandledMouseEventArgs)e).Handled = true;
@@ -1759,45 +1578,129 @@ namespace diplom
             return richText;
         }
 
+        private void SetJustifiedText(RichTextBox rtb, string text, Color foreColor)
+        {
+            // Заміна "\n" на "\par " для коректних абзаців
+            string rtfText = text.Replace("\n", @"\par ");
+
+            string rtfColor = $@"\red{foreColor.R}\green{foreColor.G}\blue{foreColor.B}";
+            string rtf =
+                @"{\rtf1\ansi\deff0" +
+                $@"{{\colortbl ;{rtfColor};}}" +
+                @"{\fonttbl{\f0 Segoe UI;}}" +
+                // Додаємо \sl360\slmult1 для 1.5‐інтервалу
+                @"\fs24\sl360\slmult1\cf1\qj " +
+                rtfText +
+                "}";
+
+            rtb.Rtf = rtf;
+        }
+
         private void AboutProgram()
         {
             CreateMainLabel("label10", "Про програму", 550, 30, new Size(500, 50));
 
-            CreateRichTextLabel(new Point(250, 100), "label11",
-                "Даний додаток призначений для автоматизованого тайм-трекінгу.", new Size(600, 40));
+            ComboBox comboBox = new ComboBox();
+            comboBox.BackColor = Color.FromArgb(186, 192, 196);
+            comboBox.Items.Add("Як скористатися автоматизованим трекінгом?");
+            comboBox.Items.Add("Чи є можливість ручного трекінгу?");
+            comboBox.Items.Add("Як працює інтелектуальний аналіз?");
+            comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox.Location = new Point(250, 250);
+            comboBox.Size = new Size(450, 30);
+            comboBox.ItemHeight = 30;
+            comboBox.Font = new Font("Microsoft Sans Serif", 12);
 
-            CreateRichTextLabel(new Point(250, 150), "label12",
-                "Для того, щоб скористатися функцією автоматичного трекінгу, потрібно додати у систему робочі файли, які відстежуватимуться. " +
-                "Для таких файлів буде фіксуватися час, який ви в них проводите. Ці результати виводимуться на головному меню на основному лічильнику та враховуватимуться під час підведення статистики.",
-                new Size(600, 100));
+            comboBox.SelectedIndex = 0;
 
-            CreateRichTextLabel(new Point(250, 250), "label13",
-                "Додатково додаток має функцію інтелектуального аналізу вашої діяльності в браузері. Це відбувається шляхом порівняння вмісту ваших проєктів з відвідуваними сторінками. " +
-                "Якщо схожість виявлено — діяльність класифікується як робоча. Результати ви можете переглянути на панелі статистики.",
-                new Size(600, 100));
+            this.Controls.Add(comboBox);
 
-            CreateRichTextLabel(new Point(250, 350), "label14",
-                "У вас також є можливість налаштувати моніторинг активності вашої діяльності. " +
-                "Оберіть у панелі налаштування потрібний час, і як тільки він мине — лічильник буде вимкнено.",
-                new Size(600, 100));
+            CreateRichTextLabel(new Point(250, 100), "label11", "Даний додаток призначений для автоматизованого тайм-трекінгу. Програма дозволяє користувачу зосередитися на роботі, автоматично фіксуючи робочу активність без потреби вручну запускати або зупиняти таймер.", new Size(600, 90));
+
+            RichTextBox label12 = CreateRichTextLabel(
+                new Point(250, 300),
+                "label12",
+                "Додайте у систему Ваші робочі файли. Для таких файлів буде фіксуватися час, який ви в них проводите. " +
+                "За відсутності активності у файлі протягом певного часу — таймер зупиняється. " +
+                "Ви також можете додатково підключити функцію інтелектуального трекінгу, яка доступна у вікні налаштування програми. " +
+                "Результати виводитимуться на головному меню на основному лічильнику та відкриті до перегляду у вікні статистики.",
+                new Size(600, 150)
+            );
+
+            RichTextBox label14 = CreateRichTextLabel(new Point(250, 220), "label13", "Найпоширеніші запитання та відповіді до них: ", new Size(600, 30));
+
+            comboBox.SelectionChangeCommitted += (sender, e) =>
+            {
+                string selected = comboBox.SelectedItem.ToString();
+                bool isDarkTheme = Form1.settings.ColorTheme == "dark";
+                Color fore = isDarkTheme
+                              ? Color.FromArgb(186, 192, 196)
+                              : Color.FromArgb(82, 82, 82);
+
+                switch (selected)
+                {
+                    case "Як скористатися автоматизованим трекінгом?":
+                        SetJustifiedText(label12,
+                            "Додайте у систему Ваші робочі файли. Для таких файлів буде фіксуватися час, який ви в них проводите. " +
+                            "За відсутності активності у файлі протягом певного часу — таймер зупиняється. " +
+                            "Ви також можете додатково підключити функцію інтелектуального трекінгу, яка доступна у вікні налаштування програми. " +
+                            "Результати виводитимуться на головному меню на основному лічильнику та відкриті до перегляду у вікні статистики.",
+                            fore);
+                        break;
+
+                    case "Чи є можливість ручного трекінгу?":
+                        SetJustifiedText(label12,
+                            "Так. Натисніть кнопку «Запустити таймер» у головному меню програми. " +
+                            "Щоб зупинити трекінг, скористайтесь кнопкою «Зупинити таймер». " +
+                            "Результати зберігатимуться в системі та будуть доступні для перегляду у вікні статистики.",
+                            fore);
+                        break;
+
+                    case "Як працює інтелектуальний аналіз?":
+                        SetJustifiedText(label12,
+                            "Додаток відстежує вашу активність у браузері та порівнює її з файлами, доданими в програму. " +
+                            "Якщо буде виявлено схожість, активність класифікується як робоча й додається до статистики.",
+                            fore);
+                        break;
+                }
+            };
+
+            /* CreateRichTextLabel(new Point(250, 400), "label15",
+                 "Виникли додаткові запитання чи труднощі? Пишіть лист на пошту - 7411641@stud.kai.edu.ua ",
+                 new Size(600, 100));*/
+
+            
+
+            this.label13 = CreateMainLabel("label15", "Виникли додаткові запитання чи труднощі? Пишіть лист на пошту - 7411641@stud.kai.edu.ua ", 550, 500, new Size(700, 100));
+            label13.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            label13.BackColor = Color.Transparent;
+
 
             this.ResumeLayout(false);
             this.PerformLayout();
         }
 
-
-        private void buttonDelete_Click2(object sender, EventArgs e)
+        private readonly List<Rectangle> _blueRects = new List<Rectangle>
         {
-            var projects = JsonProcessing.LoadProjects();
+            new Rectangle(250, 525, 600, 50)
+        };
 
-            // Видаляємо вибрані з кінця, щоб індекси не зіпсувались
-            foreach (int idx in selectedRows.OrderByDescending(i => i))
-                projects.RemoveAt(idx);
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            bool isDarkTheme = Form1.settings.ColorTheme == "dark";
 
-            JsonProcessing.SaveProjects(projects);
+            using (var brush = new SolidBrush(isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(249, 249, 249)))
+            {
+                foreach (var r in _blueRects)
+                    e.Graphics.FillRectangle(brush, r);
+            }
+        }
 
-            // Перебудовуємо UI
-            PopulateProjects();
+        private void RemoveBlueRectangles()
+        {
+            _blueRects.Clear();
+
+            this.Invalidate();
         }
 
         private void InitBrowserInfo()

@@ -256,7 +256,7 @@ namespace diplom
             this.button1 = CreateButton("button1", "Додати проєкт", new Point(280, 327), new Size(515, 37), this.button1_Click);
             this.button2 = CreateButton("button2", "Запустити таймер", new Point(438, 250), new Size(200, 38), this.button2_Click);
 
-            this.pictureBox1.Image = isDarkTheme ? Properties.Resources.ClockForDarkTheme : Properties.Resources.ClockForLightTheme;
+            this.pictureBox1.Image = isDarkTheme ? Properties.Resources.ClockForDarkTheme : Properties.Resources.LightClock;
             this.ConfigurePictureBox(pictureBox1, new Point(456, 58), new Size(164, 164));
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabStop = false;
@@ -266,7 +266,7 @@ namespace diplom
             this.ConfigurePictureBox(pictureBox9, new Point(540, 370), new Size(255, 37), backgroundImage: (Image)resources.GetObject("pictureBox2.BackgroundImage")); //шлях
 
             this.label2 = ConfigureLabel(new Point(498, 123), new Size(100, 36), "00:00:00");
-            label2.BackColor = Color.FromArgb(186, 192, 196);
+            label2.BackColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(235, 235, 235);
             label2.ForeColor = Color.FromArgb(0, 0, 0);
 
             panel2 = new Panel
@@ -366,8 +366,8 @@ namespace diplom
             // Перефарбовуємо обидва Label-і цього рядка
             bool isSelected = selectedRows.Contains(rowIndex);
             Color bg = isSelected
-                ? isDarkTheme ? Color.FromArgb(30, 60, 90) : Color.FromArgb(145, 150, 153)   // ваш колір “відзначено”
-                : isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);            // колір “звичайний”
+                ? isDarkTheme ? Color.FromArgb(30, 60, 90) : Color.FromArgb(220, 220, 220)   // ваш колір “відзначено”
+                : isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(235, 235, 235);            // колір “звичайний”
 
             foreach (Control c in panel2.Controls)
                 if (c is Label l && (int)l.Tag == rowIndex)
@@ -502,7 +502,7 @@ namespace diplom
             {
                 label.Image = image;
             }
-            label.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(249, 249, 249);
+            label.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(235, 235, 235);
             if (label != label2)
             {
                 label.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0);
@@ -524,7 +524,7 @@ namespace diplom
             {
                 pictureBox.BackgroundImage = backgroundImage ;
             }
-            pictureBox.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(249, 249, 249);
+            pictureBox.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(235, 235, 235);
             pictureBox.TabStop = false;
         }
 
@@ -584,14 +584,24 @@ namespace diplom
 
             int hours = totalSeconds / 3600;
             int minutes = (totalSeconds % 3600) / 60;
+            int seconds = totalSeconds % 60;
 
             if (hours > 0)
             {
-                return minutes > 0
-                    ? $"{hours} год. {minutes} хв."
-                    : $"{hours} год.";
+                if (minutes > 0 || seconds > 0)
+                    return $"{hours} год. {minutes} хв. {seconds} сек.";
+                else
+                    return $"{hours} год.";
             }
-            return $"{minutes} хв.";
+            else
+            {
+                if (minutes > 0)
+                    return seconds > 0
+                        ? $"{minutes} хв. {seconds} сек."
+                        : $"{minutes} хв.";
+                else
+                    return $"{seconds} сек.";
+            }
         }
 
         private void buildChart(List<DateTime> xPoints, List<int> yPoints)
@@ -689,7 +699,7 @@ namespace diplom
             };
 
             _showDateInTooltip = true;
-            plotView.MouseDown += PlotView_MouseDown;
+            plotView.MouseDown += PlotView_MouseDown2;
             plotView.MouseUp += PlotView_MouseUp;
 
             this.Controls.Add(plotView);
@@ -702,6 +712,41 @@ namespace diplom
             this.label9 = CreateMainLabel("label9", "label9", 545, 550, new Size(530, 50));
             plotView.Model = plotModel;
             this.Controls.Add(plotView);
+        }
+
+        private void PlotView_MouseDown2(object sender, MouseEventArgs e) //для тижневої/місячної
+        {
+            if (e.Button != MouseButtons.Left)
+                return;
+
+            if (!(sender is OxyPlot.WindowsForms.PlotView view))
+                return;
+            var model = view.Model;
+            if (model == null)
+                return;
+
+            _customToolTip.Hide(view);
+
+            var series = model.Series.OfType<LineSeries>().FirstOrDefault();
+            if (series == null)
+                return;
+
+            var sp = new ScreenPoint(e.X, e.Y);
+            var nearest = series.GetNearestPoint(sp, interpolate: false);
+            if (nearest == null)
+                return;
+            if (nearest.Position.DistanceTo(sp) >= 10) 
+                return;
+
+            var dp = nearest.DataPoint;
+            var dt = DateTimeAxis.ToDateTime(dp.X, TimeSpan.FromSeconds(1));
+
+            double raw = dp.Y / _currentScaleFactor;
+            int totalSeconds = (int)Math.Round(raw);
+
+            double totalMinutes = totalSeconds / 60.0;
+            string text = GetToolTipText(dt, totalMinutes, _showDateInTooltip);
+            _customToolTip.Show(text, view, e.X + 10, e.Y + 10);
         }
 
         private void PlotView_MouseDown(object sender, MouseEventArgs e)
@@ -783,12 +828,25 @@ namespace diplom
         {
             DateTime today = selectedDate.Date;
 
+            // Діагностика selectedDate
+            Console.WriteLine($"[DEBUG] selectedDate = {selectedDate:yyyy-MM-dd HH:mm:ss} (Kind={selectedDate.Kind}), " +
+                              $"selectedDate.Date = {selectedDate.Date:yyyy-MM-dd HH:mm:ss} (Kind={selectedDate.Date.Kind})");
+
             // 1) Збираємо інтервали
             var parsed = dataList
                 .Select(convertToInterval)
                 .Where(i => i.HasValue && i.Value.Start != DateTime.MinValue)
                 .Select(i => i.Value)
                 .ToList();
+
+            // Друк усіх parsed-інтервалів
+            Console.WriteLine("[DEBUG] --- Intervals for " + selectedDate.ToString("yyyy-MM-dd") + " ---");
+            foreach (var iv in parsed)
+            {
+                Console.WriteLine($"[DEBUG] Interval: Start = {iv.Start:yyyy-MM-dd HH:mm:ss} (Kind={iv.Start.Kind}), " +
+                                  $"Stop = {iv.Stop:yyyy-MM-dd HH:mm:ss} (Kind={iv.Stop.Kind})");
+            }
+            Console.WriteLine("[DEBUG] -----------------------------");
 
             // 2) Підраховуємо хвилини по годинах
             double[] minutesPerHour = new double[24];
@@ -797,12 +855,25 @@ namespace diplom
                 DateTime start = interval.Start;
                 DateTime stop = interval.Stop;
 
+                // Діагностика на вході
+                Console.WriteLine($"[DEBUG] Обробляємо raw-інтервал: start = {start:yyyy-MM-dd HH:mm:ss} (Kind={start.Kind}), " +
+                                  $"stop = {stop:yyyy-MM-dd HH:mm:ss} (Kind={stop.Kind})");
+
                 if (stop < today || start >= today.AddDays(1))
+                {
+                    Console.WriteLine($"[DEBUG]   → Ігноруємо, бо інтервал поза сьогоднішньою добою.");
                     continue;
+                }
                 if (start < today)
+                {
+                    Console.WriteLine($"[DEBUG]   → Початок до {today:yyyy-MM-dd}, замінюємо start на {today:yyyy-MM-dd HH:mm:ss}.");
                     start = today;
+                }
                 if (stop > today.AddDays(1))
+                {
+                    Console.WriteLine($"[DEBUG]   → Кінець після {today.AddDays(1):yyyy-MM-dd HH:mm:ss}, замінюємо stop на {today.AddDays(1):yyyy-MM-dd HH:mm:ss}.");
                     stop = today.AddDays(1);
+                }
 
                 while (start < stop)
                 {
@@ -813,9 +884,24 @@ namespace diplom
                     double minutes = (segmentEnd - start).TotalMinutes;
                     minutesPerHour[hour] += minutes;
 
+                    // Виводимо крок
+                    Console.WriteLine($"[DEBUG]   → Сегмент: початок {start:HH:mm:ss}, " +
+                                      $"кінець сегменту {segmentEnd:HH:mm:ss}, " +
+                                      $"година = {hour}, додали = {minutes:0.##} хв.");
+
                     start = segmentEnd;
                 }
             }
+
+            // Виведемо результат masksPerHour
+            Console.WriteLine("[DEBUG] —————————————————————————");
+            Console.WriteLine("[DEBUG] Результат підрахунку minutesPerHour:");
+            for (int i = 0; i < 24; i++)
+            {
+                Console.WriteLine($"[DEBUG]   Година {i:00}:00 → {minutesPerHour[i]:0.##} хв.");
+            }
+            Console.WriteLine("[DEBUG] —————————————————————————");
+
 
             // 3) Знаходимо максимум (у хвилинах) для вибору одиниць Y
             double rawMax = minutesPerHour.Max();
@@ -885,6 +971,13 @@ namespace diplom
                 series.Points.Add(new DataPoint(xValue, yValue));
             }
             plotModel.Series.Add(series);
+
+            Console.WriteLine("[DEBUG] — точки, які ми малюємо у LineSeries:");
+            foreach (var pt in series.Points)
+            {
+                Console.WriteLine($"[DEBUG]   DataPoint → X = {pt.X}, Y = {pt.Y}");
+            }
+            Console.WriteLine("[DEBUG] — завершення списку точок");
 
             // 9) Налаштовуємо X-вісь (підписи кожні 2 години, дрібні лінії щогодини)
             var axisX = new LinearAxis
@@ -1086,7 +1179,7 @@ namespace diplom
             this.button13 = CreateButton("button13", "Продивитися дані", new Point(647, 100), new Size(150, 30), this.button13_Click);
             this.label10 = CreateMainLabel("label10", "label10", 545, 30, new Size(530, 50));
 
-            if (CheckBox2Active == true)
+            /*if (CheckBox2Active == true)
             {
                 this.label10.ForeColor = Color.FromArgb(82, 82, 82);
                 this.label10.BackColor = Color.FromArgb(212, 220, 225);
@@ -1097,7 +1190,7 @@ namespace diplom
             {
                 this.label10.ForeColor = Color.FromArgb(186, 192, 196);
                 this.label10.BackColor = Color.FromArgb(2, 14, 25);
-            }
+            }*/
 
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1222,8 +1315,6 @@ namespace diplom
             checkBox6 = CreateCheckBox(new Point(450, 400), "checkBox6", "10 хв");
             checkBox7 = CreateCheckBox(new Point(650, 400), "checkBox7", "15 хв");
             checkBox8 = CreateCheckBox(new Point(250, 300), "checkBox8", "Відстежувати активність в браузері");
-
-           // this.Paint += Form1_Paint;
 
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox1.Location = new Point(250, 500); 
@@ -1355,11 +1446,12 @@ namespace diplom
                     label13.BackColor = Color.FromArgb(2, 14, 25);
                     label10.BackColor = Color.FromArgb(2, 14, 25);
 
-                    textBox1.BackColor = Color.FromArgb(6, 40, 68);// Розмір поля
+                    textBox1.BackColor = Color.FromArgb(6, 40, 68);
                     textBox1.ForeColor = Color.FromArgb(186, 192, 196);
 
                     button3.BackColor = Color.FromArgb(2, 14, 25);
                     pictureBox2.BackColor = Color.FromArgb(2, 14, 25);
+                    this.pictureBox10.Image = Properties.Resources.Logos4;
 
                     SetActivePanel(panel4);
 
@@ -1383,43 +1475,44 @@ namespace diplom
 
                     UpdateColorTheme(this, themeColor);
 
-                    BackColor = Color.FromArgb(212, 220, 225);
-                    panel1.BackColor = Color.FromArgb(171, 176, 180);
-                    button7.ForeColor = Color.FromArgb(82, 82, 82);
-                    button8.ForeColor = Color.FromArgb(82, 82, 82);
-                    button27.ForeColor = Color.FromArgb(82, 82, 82);
-                    button28.ForeColor = Color.FromArgb(82, 82, 82);
+                    BackColor = Color.FromArgb(255, 255, 255);
+                    panel1.BackColor = Color.FromArgb(249, 249, 249);
+                    button7.ForeColor = Color.FromArgb(0, 0, 0);
+                    button8.ForeColor = Color.FromArgb(0, 0, 0);
+                    button27.ForeColor = Color.FromArgb(0, 0, 0);
+                    button28.ForeColor = Color.FromArgb(0, 0, 0);
 
-                    checkBox1.ForeColor = Color.FromArgb(82, 82, 82);
-                    checkBox2.ForeColor = Color.FromArgb(82, 82, 82);
-                    checkBox3.ForeColor = Color.FromArgb(82, 82, 82);
-                    checkBox4.ForeColor = Color.FromArgb(82, 82, 82);
-                    checkBox5.ForeColor = Color.FromArgb(82, 82, 82);
-                    checkBox6.ForeColor = Color.FromArgb(82, 82, 82);
-                    checkBox7.ForeColor = Color.FromArgb(82, 82, 82);
-                    checkBox8.ForeColor = Color.FromArgb(82, 82, 82);
+                    checkBox1.ForeColor = Color.FromArgb(0, 0, 0);
+                    checkBox2.ForeColor = Color.FromArgb(0, 0, 0);
+                    checkBox3.ForeColor = Color.FromArgb(0, 0, 0);
+                    checkBox4.ForeColor = Color.FromArgb(0, 0, 0);
+                    checkBox5.ForeColor = Color.FromArgb(0, 0, 0);
+                    checkBox6.ForeColor = Color.FromArgb(0, 0, 0);
+                    checkBox7.ForeColor = Color.FromArgb(0, 0, 0);
+                    checkBox8.ForeColor = Color.FromArgb(0, 0, 0);
 
-                    checkBox1.BackColor = Color.FromArgb(212, 220, 225);
-                    checkBox2.BackColor = Color.FromArgb(212, 220, 225);
-                    checkBox3.BackColor = Color.FromArgb(212, 220, 225);
-                    checkBox4.BackColor = Color.FromArgb(212, 220, 225);
-                    checkBox5.BackColor = Color.FromArgb(212, 220, 225);
-                    checkBox6.BackColor = Color.FromArgb(212, 220, 225);
-                    checkBox7.BackColor = Color.FromArgb(212, 220, 225);
-                    checkBox8.BackColor = Color.FromArgb(212, 220, 225);
+                    checkBox1.BackColor = Color.FromArgb(255, 255, 255);
+                    checkBox2.BackColor = Color.FromArgb(255, 255, 255);
+                    checkBox3.BackColor = Color.FromArgb(255, 255, 255);
+                    checkBox4.BackColor = Color.FromArgb(255, 255, 255);
+                    checkBox5.BackColor = Color.FromArgb(255, 255, 255);
+                    checkBox6.BackColor = Color.FromArgb(255, 255, 255);
+                    checkBox7.BackColor = Color.FromArgb(255, 255, 255);
+                    checkBox8.BackColor = Color.FromArgb(255, 255, 255);
 
-                    label11.BackColor = Color.FromArgb(212, 220, 225);
-                    label12.BackColor = Color.FromArgb(212, 220, 225);
-                    label13.BackColor = Color.FromArgb(212, 220, 225);
-                    label10.BackColor = Color.FromArgb(212, 220, 225);
+                    label11.BackColor = Color.FromArgb(255, 255, 255);
+                    label12.BackColor = Color.FromArgb(255, 255, 255);
+                    label13.BackColor = Color.FromArgb(255, 255, 255);
+                    label10.BackColor = Color.FromArgb(255, 255, 255);
 
-                    label11.ForeColor = Color.FromArgb(82, 82, 82);
-                    label12.ForeColor = Color.FromArgb(82, 82, 82);
-                    label13.ForeColor = Color.FromArgb(82, 82, 82);
-                    label10.ForeColor = Color.FromArgb(82, 82, 82);
+                    label11.ForeColor = Color.FromArgb(0, 0, 0);
+                    label12.ForeColor = Color.FromArgb(0, 0, 0);
+                    label13.ForeColor = Color.FromArgb(0, 0, 0);
+                    label10.ForeColor = Color.FromArgb(0, 0, 0);
 
-                    textBox1.BackColor = Color.FromArgb(171, 176, 180);
-                    textBox1.ForeColor = Color.FromArgb(82, 82, 82);
+                    textBox1.BackColor = Color.FromArgb(235, 235, 235);
+                    textBox1.ForeColor = Color.FromArgb(0, 0, 0);
+                    this.pictureBox10.Image = Properties.Resources.LightLogo;
 
                     SetActivePanel(panel4);
                 }
@@ -1533,11 +1626,9 @@ namespace diplom
         {
             bool isDarkTheme = Form1.settings.ColorTheme == "dark";
 
-            // Встановлюємо кольори
-            Color backColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225);
-            Color foreColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
+            Color backColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(255, 255, 255);
+            Color foreColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0);
 
-            // Створюємо сам RichTextBox
             var richText = new RichTextBox
             {
                 Name = name,
@@ -1555,13 +1646,10 @@ namespace diplom
                 ScrollBars = RichTextBoxScrollBars.None
             };
 
-            // Підготувати RTF-текст з justify + 1.5 міжрядковим інтервалом
             string rtfColor = $@"\red{foreColor.R}\green{foreColor.G}\blue{foreColor.B}";
-            // Заміна "\n" на "\par " для коректного переходу на новий абзац
+
             string rtfText = text.Replace("\n", @"\par ");
 
-            // \sl360 -> 360 twips міжрядкового інтервалу = ~1.5 для 12pt (240twips)
-            // \slmult1 -> застосувати цей інтервал точно
             richText.Rtf =
                 @"{\rtf1\ansi\deff0" +
                 $@"{{\colortbl ;{rtfColor};}}" +
@@ -1571,7 +1659,6 @@ namespace diplom
                 rtfText +
                 "}";
 
-            // Заборонити зміну масштабу колесиком миші
             richText.MouseWheel += (s, e) => ((HandledMouseEventArgs)e).Handled = true;
 
             this.Controls.Add(richText);
@@ -1580,7 +1667,7 @@ namespace diplom
 
         private void SetJustifiedText(RichTextBox rtb, string text, Color foreColor)
         {
-            // Заміна "\n" на "\par " для коректних абзаців
+
             string rtfText = text.Replace("\n", @"\par ");
 
             string rtfColor = $@"\red{foreColor.R}\green{foreColor.G}\blue{foreColor.B}";
@@ -1588,7 +1675,6 @@ namespace diplom
                 @"{\rtf1\ansi\deff0" +
                 $@"{{\colortbl ;{rtfColor};}}" +
                 @"{\fonttbl{\f0 Segoe UI;}}" +
-                // Додаємо \sl360\slmult1 для 1.5‐інтервалу
                 @"\fs24\sl360\slmult1\cf1\qj " +
                 rtfText +
                 "}";
@@ -1785,8 +1871,8 @@ namespace diplom
                     "lblUrl" + i);
                 lblUrl.Text = urls[i].Url;
                 lblUrl.Tag = i;
-                lblUrl.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
-                lblUrl.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
+                lblUrl.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0);
+                lblUrl.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(235, 235, 235);
                 lblUrl.Click += Label_Click;
                 lblUrl.Text = TrimWithEllipsis(urls[i].Url, lblUrl.Font, lblUrl.Width);
 
@@ -1796,8 +1882,8 @@ namespace diplom
                     "lblPageTitle" + i);
                 lblPageTitle.Text = urls[i].PageTitle;
                 lblPageTitle.Tag = i;
-                lblPageTitle.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
-                lblPageTitle.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(182, 192, 196);
+                lblPageTitle.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0);
+                lblPageTitle.BackColor = isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(235, 235, 235);
                 lblPageTitle.Click += Label_Click;
                 lblPageTitle.Text = TrimWithEllipsis(urls[i].PageTitle, lblPageTitle.Font, lblPageTitle.Width);
 
@@ -1818,14 +1904,14 @@ namespace diplom
             this.panel2 = new System.Windows.Forms.Panel();
 
             this.label10 = CreateMainLabel("label10", "label10", 545, 30, new Size(530, 50));
-            this.label10.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(82, 82, 82);
+            this.label10.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0);
 
             this.panel2 = new Panel
             {
                 Name = "panel2",
                 Location = new Point(270, 100),
                 Size = new Size(550, 377),
-                BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(212, 220, 225),
+                BackColor = isDarkTheme ? Color.FromArgb(2, 14, 25) : Color.FromArgb(255, 255, 255),
                 AutoScroll = true
             };
             this.Controls.Add(panel2);

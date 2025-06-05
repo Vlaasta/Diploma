@@ -283,18 +283,32 @@ namespace diplom
 
         public static void SaveSessionStop()
         {
+            Console.WriteLine($"[DEBUG] > SaveSessionStop() почато o {DateTime.Now:HH:mm:ss}");
             var data = LoadTimerData();
             string today = DateTime.Now.ToString("dd.MM.yyyy");
             var todayData = data.Find(d => d.Date == today);
-            if (todayData == null) return;
+            if (todayData == null)
+            {
+                Console.WriteLine($"[DEBUG] > Для {today} запису немає, вихід");
+                return;
+            }
 
             var lastSession = todayData.Sessions.LastOrDefault(s => s.Stop == null);
-            if (lastSession != null)
+            if (lastSession == null)
             {
-                lastSession.Stop = DateTime.Now.ToString("HH:mm:ss");
-                EnqueueSaveData(data);
+                Console.WriteLine($"[DEBUG] > Немає відкритої сесії, вихід");
+                return;
             }
+
+            lastSession.Stop = DateTime.Now.ToString("HH:mm:ss");
+            Console.WriteLine($"[DEBUG] > Встановлено Stop = \"{lastSession.Stop}\" для Start = \"{lastSession.Start}\"");
+
+            SaveData(data);
+
+            Console.WriteLine("[DEBUG] > Сесія записана в JSON (Stop синхронно збережено)");
         }
+
+
 
         public static void AddProject(string filePath)
         {

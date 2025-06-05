@@ -128,13 +128,15 @@ namespace diplom
 
         public void HandButton_OnTimeUpdated(TimeSpan elapsed)
         {
+            // Форматуємо elapsed у "hh:mm:ss" для виводу та UI
             string currentTime = elapsed.ToString(@"hh\:mm\:ss");
 
+            // Оновлюємо не частіше ніж раз на секунду
             if (DateTime.Now - lastUpdated > TimeSpan.FromSeconds(1))
             {
                 lock (lockObject)
                 {
-                    // Оновлюємо UI елемент
+                    // 1) Оновлюємо UI-лібел
                     if (label2.InvokeRequired)
                     {
                         label2.Invoke(new Action(() => label2.Text = currentTime));
@@ -144,20 +146,44 @@ namespace diplom
                         label2.Text = currentTime;
                     }
 
+                    // 2) Виводимо в консоль діагностичну інформацію
+                    Console.WriteLine($"[DEBUG] {DateTime.Now:yyyy-MM-dd HH:mm:ss} → HandButton_OnTimeUpdated: elapsed = {currentTime}");
+
                     try
                     {
-                        JsonProcessing.SaveSessionStart(); 
+                        // 3) Виклик SaveSessionStart()
+                        Console.WriteLine("[DEBUG] → Викликаємо JsonProcessing.SaveSessionStart()");
+                        JsonProcessing.SaveSessionStart();
+
+                        // 4) Виклик SaveCurrentDayTime(elapsed)
+                        Console.WriteLine($"[DEBUG] → Викликаємо JsonProcessing.SaveCurrentDayTime(elapsed = {currentTime})");
                         JsonProcessing.SaveCurrentDayTime(elapsed);
+
+                        // 5) Після збереження підвантажуємо дані і дивимось, що реально записалося
+                        var allData = JsonProcessing.LoadTimerData();
+                        string todayKey = DateTime.Now.ToString("dd.MM.yyyy");
+                        var todayRecord = allData.FirstOrDefault(d => d.Date == todayKey);
+
+                        if (todayRecord != null)
+                        {
+                            Console.WriteLine($"[DEBUG] → Після SaveCurrentDayTime: знайдено запис для {todayRecord.Date}, Time = \"{todayRecord.Time}\"");
+                        }
+                        else
+                        {
+                            Console.WriteLine("[DEBUG] → Після SaveCurrentDayTime: запису для сьогоднішньої дати немає");
+                        }
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Помилка при збереженні часу в JSON: {ex.Message}");
+                        Console.WriteLine($"[ERROR] Помилка при збереженні часу в JSON: {ex.Message}");
                     }
 
+                    // 6) Оновлюємо lastUpdated, щоб чекати ще 1 секунду
                     lastUpdated = DateTime.Now;
                 }
             }
         }
+
 
         private void button7_Click(object sender, EventArgs e) //графік поточного тижня
         {
@@ -186,19 +212,46 @@ namespace diplom
 
                         buildDailyChart<Session>(_tmpSessions, selectedDate, session =>
                         {
-                            if (DateTime.TryParseExact(session.Start, "HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var startTime)
-                                && DateTime.TryParseExact(session.Stop, "HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var endTime))
+                            // Перед парсингом можемо вивести вихідні рядки:
+                            Console.WriteLine($"[DEBUG] Сесію розбираємо: Start = \"{session.Start}\", Stop = \"{session.Stop}\"");
+
+                            if (DateTime.TryParseExact(
+                                    session.Start,
+                                    "HH:mm:ss",
+                                    CultureInfo.InvariantCulture,
+                                    DateTimeStyles.None,
+                                    out var startTime)
+                                && DateTime.TryParseExact(
+                                    session.Stop ?? string.Empty,
+                                    "HH:mm:ss",
+                                    CultureInfo.InvariantCulture,
+                                    DateTimeStyles.None,
+                                    out var endTime))
                             {
                                 var start = selectedDate.Date.Add(startTime.TimeOfDay);
                                 var stop = selectedDate.Date.Add(endTime.TimeOfDay);
-                                if (stop < start) stop = stop.AddDays(1); // нічний перехід
+
+                                // Якщо стоп раніше старту — вважаємо, що перехід через північ
+                                if (stop < start)
+                                    stop = stop.AddDays(1);
+
+                                // Виведемо результати, що йдуть у графік:
+                                Console.WriteLine($"[DEBUG]   --> parsed start = {start:yyyy-MM-dd HH:mm:ss}, stop = {stop:yyyy-MM-dd HH:mm:ss}");
+
                                 return (start, stop);
                             }
+
+                            // Якщо stop == null або не вдалось спарсити — повідомимо про це:
+                            Console.WriteLine($"[DEBUG]   --> не змогли спарсити Stop або Stop = null, повертаємо null");
                             return null;
                         });
 
                         if (_tmpRecord != null
-                            && TimeSpan.TryParseExact(_tmpRecord.Time, @"hh\:mm\:ss", CultureInfo.InvariantCulture, out var _tmpTotal))
+                            && TimeSpan.TryParseExact(
+                                   _tmpRecord.Time,
+                                   @"hh\:mm\:ss",
+                                   CultureInfo.InvariantCulture,
+                                   out var _tmpTotal))
                         {
                             label9.Text = $"Усього витрачено на роботу: {_tmpTotal.Hours} год. {_tmpTotal.Minutes} хв. {_tmpTotal.Seconds} сек.";
                         }

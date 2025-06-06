@@ -5,20 +5,21 @@ namespace diplom
 {
     public class HandButton
     {
-        private Timer timer;               // Таймер для відліку часу
-        private TimeSpan totalTime;        // Загальний час, що пройшов
-        private DateTime startTime;        // Час початку (для вимірювання часу кожного циклу)
-        private bool isRunning;            // Статус таймера (запущено чи ні)
+        private Timer timer;               //Таймер для відліку часу
+        private TimeSpan totalTime;        //Загальний час, що пройшов
+        private DateTime startTime;        //Час початку (для вимірювання часу кожного циклу)
+        private bool isRunning;            //Статус таймера 
+
+        public event Action<TimeSpan> OnTimeUpdated;
 
         public HandButton()
         {
-            timer = new Timer(1000);        // Таймер, що спрацьовує кожну секунду
-            timer.Elapsed += Timer_Elapsed; // Підключення обробника події
-            totalTime = TimeSpan.Zero;      // Початковий час
-            isRunning = false;              // Таймер не запущено
+            timer = new Timer(1000);       
+            timer.Elapsed += Timer_Elapsed; 
+            totalTime = TimeSpan.Zero;      
+            isRunning = false;              
         }
 
-        // Метод для запуску таймера
         public void Start()
         {
             if (!isRunning)
@@ -39,63 +40,42 @@ namespace diplom
             }
         }
 
-
-        // Публічна властивість для перевірки статусу таймера
         public bool IsRunning
         {
             get { return isRunning; }
         }
 
-        // Обробник події Elapsed (кожну секунду)
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             TimeSpan elapsed = totalTime + (DateTime.Now - startTime);
-            OnTimeUpdated?.Invoke(elapsed);  // Викликаємо подію для оновлення часу
+            OnTimeUpdated?.Invoke(elapsed); 
         }
 
-        // Подія для оновлення часу
-        public event Action<TimeSpan> OnTimeUpdated;
-
-        // Метод для отримання поточного часу
-        public string GetCurrentTime()
-        {
-            return (totalTime + (isRunning ? (DateTime.Now - startTime) : TimeSpan.Zero)).ToString(@"hh\:mm\:ss");
-        }
-
-        // Метод для отримання загального часу
         public TimeSpan GetAccumulatedTime()
         {
             return totalTime + (isRunning ? (DateTime.Now - startTime) : TimeSpan.Zero);
         }
 
-        // Метод для запуску таймера з заданим часом
         public void StartWithTime(TimeSpan time)
         {
             if (!isRunning)
             {
-                totalTime = time;          // Встановлюємо початковий час
-                startTime = DateTime.Now;   // Фіксуємо час початку
-                timer.Start();              // Запускаємо таймер
+                totalTime = time;          
+                startTime = DateTime.Now;   
+                timer.Start();             
                 isRunning = true;
             }
         }
 
-        // Метод для встановлення часу вручну
         public void SetElapsedTime(TimeSpan elapsedTime)
         {
-            totalTime = elapsedTime; // Встановлюємо накопичений час
-            Console.WriteLine($"Час встановлено: {totalTime}");
+            totalTime = elapsedTime; 
             if (isRunning)
             {
-                startTime = DateTime.Now; // Оновлюємо час початку
-                Console.WriteLine("Таймер запущено після встановлення часу.");
+                startTime = DateTime.Now; 
             }
         }
 
-        public TimeSpan ElapsedTime
-        {
-            get { return GetAccumulatedTime(); }
-        }
     }
 }
 

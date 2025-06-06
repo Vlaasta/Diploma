@@ -44,12 +44,8 @@ namespace diplom
         {
             try
             {
-                DateTime lastRun = File.Exists(lastRunFilePath)
-                    ? DateTime.Parse(File.ReadAllText(lastRunFilePath))
-                    : DateTime.MinValue;
+                DateTime lastRun = File.Exists(lastRunFilePath) ? DateTime.Parse(File.ReadAllText(lastRunFilePath)) : DateTime.MinValue;
                 DateTime today = DateTime.Today;
-
-                Console.WriteLine($"LastRun: {lastRun:yyyy-MM-dd}, Today: {today:yyyy-MM-dd}");
 
                 if (lastRun < today && JsonProcessing.IfWasModifiedToday())
                 {
@@ -61,7 +57,6 @@ namespace diplom
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Помилка в CanSendRequest:");
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.StackTrace);
             }
@@ -114,7 +109,7 @@ namespace diplom
                         return text.ToString();
 
                     case ".pdf":
-                        using (var document = PdfDocument.Open(filePath)) // PdfPig
+                        using (var document = PdfDocument.Open(filePath)) 
                         {
                             foreach (var page in document.GetPages())
                             {
@@ -130,7 +125,6 @@ namespace diplom
                         }
                         else
                         {
-                            // Для невідомих типів — спроба прочитати як текст
                             return File.ReadAllText(filePath);
                         }
                 }
@@ -188,7 +182,6 @@ namespace diplom
                 {
                     if (!File.Exists(project.Path))
                     {
-                        Console.WriteLine($"Файл не знайдено: {project.Path}");
                         allResponses.Add(new { Project = project.Name, Error = "Файл не знайдено" });
                         continue;
                     }
@@ -206,7 +199,6 @@ namespace diplom
 
                     if (success)
                     {
-                        Console.WriteLine($"Response for {project.Name}: {aiResponse}");
                         allResponses.Add(new
                         {
                             Project = project.Name,
@@ -217,7 +209,6 @@ namespace diplom
                     }
                     else
                     {
-                        Console.WriteLine($"Помилка при обробці проєкту {project.Name}: {aiResponse}");
                         allResponses.Add(new { Project = project.Name, Error = aiResponse });
                         break;
                     }
@@ -238,16 +229,10 @@ namespace diplom
         {
             try
             {
-                Console.WriteLine("=== ПОЧАТОК АНАЛІЗУ URL ===");
-                Console.WriteLine($"📥 Шлях до JSON-файлу: {outputJsonPath}");
-                Console.WriteLine($"📌 Всього URL на вхід: {urls.Count}");
-
                 List<dynamic> allResponses;
 
-                // Завантажуємо існуючі результати або ініціалізуємо порожній список
                 if (File.Exists(outputJsonPath))
                 {
-                    Console.WriteLine("📂 JSON-файл існує. Завантаження вмісту...");
                     var existingContent = File.ReadAllText(outputJsonPath).Trim();
 
                     if (!string.IsNullOrWhiteSpace(existingContent))
@@ -255,56 +240,40 @@ namespace diplom
                         try
                         {
                             allResponses = JsonConvert.DeserializeObject<List<dynamic>>(existingContent) ?? new List<dynamic>();
-                            Console.WriteLine($"✅ Завантажено {allResponses.Count} попередніх записів.");
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"❌ Помилка десеріалізації: {ex.Message}");
+                            Console.WriteLine($"Помилка десеріалізації: {ex.Message}");
                             allResponses = new List<dynamic>();
                         }
                     }
                     else
                     {
-                        Console.WriteLine("⚠️ Файл порожній.");
                         allResponses = new List<dynamic>();
                     }
                 }
                 else
                 {
-                    Console.WriteLine("📄 JSON-файл ще не створено.");
                     allResponses = new List<dynamic>();
                 }
 
-                // URL, які вже аналізувалися
                 var analyzedUrls = new HashSet<string>(
                     allResponses
                     .Where(r => r.Response != null && r.Error == null)
                     .Select(r => (string)r.Url)
                 );
 
-                Console.WriteLine($"🧾 Вже проаналізовано URL: {analyzedUrls.Count}");
-
                 var urlsToAnalyze = urls.Where(u => !analyzedUrls.Contains(u.Url)).ToList();
-                Console.WriteLine($"🔍 Нових URL для аналізу: {urlsToAnalyze.Count}");
 
-                // Розбиття по категоріях
-                // Визначити YouTube URL серед нових URL для аналізу
                 var youtubeUrls = urlsToAnalyze
                     .Where(u => u.Url.Contains("youtube.com") || u.Url.Contains("youtu.be"))
                     .ToList();
 
-                // Всі інші URL (окрім YouTube)
                 var otherUrls = urlsToAnalyze.Except(youtubeUrls).ToList();
 
-                // Для інших URL — розбиваємо по тексту
                 var urlsWithoutText = otherUrls.Where(u => string.IsNullOrWhiteSpace(u.Text)).ToList();
                 var urlsWithText = otherUrls.Where(u => !string.IsNullOrWhiteSpace(u.Text)).ToList();
 
-                Console.WriteLine($"YouTube URL (автоматичний запис): {youtubeUrls.Count}");
-                Console.WriteLine($"URL без тексту: {urlsWithoutText.Count}");
-                Console.WriteLine($"URL з текстом: {urlsWithText.Count}");
-
-                // YouTube: додаємо без AI, Response = PageTitle
                 foreach (var entry in youtubeUrls)
                 {
                     allResponses.Add(new
@@ -313,11 +282,8 @@ namespace diplom
                         Response = entry.PageTitle,
                         AnalysisDate = DateTime.Now.ToString("dd.MM.yyyy")
                     });
-
-                    Console.WriteLine($"✔ YouTube URL додано без аналізу: {entry.Url} (PageTitle)");
                 }
 
-                // Інші URL без тексту — можеш або додати з PageTitle, або обробити інакше
                 foreach (var entry in urlsWithoutText)
                 {
                     allResponses.Add(new
@@ -326,18 +292,12 @@ namespace diplom
                         Response = entry.PageTitle,
                         AnalysisDate = DateTime.Now.ToString("dd.MM.yyyy")
                     });
-
-                    Console.WriteLine($"✔ URL без тексту додано без аналізу: {entry.Url} (PageTitle)");
                 }
 
-                // URL з текстом — аналіз через AI
                 foreach (var entry in urlsWithText)
                 {
                     var userMessage = $"Аналіз веб-сторінки: {Path.GetFileName(entry.Url)}\n\n{entry.Text}";
-                    Console.WriteLine($"🤖 Аналізую текст для: {entry.Url}");
                     var responseSuccess = SendMessageToAI(userMessage, out string aiResponse);
-                    Console.WriteLine($"✅ AI відповідь: {(responseSuccess ? "успішна" : "❌ помилка")}");
-                    Console.WriteLine($"=== AI Output ===\n{aiResponse}\n=================");
 
                     if (responseSuccess)
                     {
@@ -355,18 +315,13 @@ namespace diplom
                         allResponses.Add(new { Url = entry.Url, Error = aiResponse });
                     }
                 }
-
-                // Фінальна перевірка перед записом
-                Console.WriteLine($"💾 Загальна кількість записів до збереження: {allResponses.Count}");
                 var resultJson = JsonConvert.SerializeObject(allResponses, Formatting.Indented);
                 File.WriteAllText(outputJsonPath, resultJson);
-                Console.WriteLine($"✅ Результати збережено у файл: {outputJsonPath}");
 
                 return $"Обробка завершена. Результати збережено в {outputJsonPath}";
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"🔥 Виняток: {ex.Message}");
                 return $"Загальна помилка: {ex.Message}";
             }
         }
@@ -375,9 +330,8 @@ namespace diplom
         {
             try
             {
-                Console.WriteLine("Читання файлів...");
                 if (!File.Exists(projectsAnalysisPath) || !File.Exists(webpagesAnalysisPath))
-                    return "Файл(и) не знайдено.";
+                    return "Файл не знайдено.";
 
                 var projectsText = File.ReadAllText(projectsAnalysisPath);
                 var webpagesText = File.ReadAllText(webpagesAnalysisPath);
@@ -404,7 +358,6 @@ namespace diplom
 
                 foreach (var proj in projects)
                 {
-                    // === 1. Обробка YouTube URL ===
                     var youtubePages = pages
                         .Where(p => p.Url.Contains("youtube") && !string.IsNullOrWhiteSpace(p.Response))
                         .Where(p => !completedPairs.Contains($"{proj.Project}||{p.Url}"))
@@ -466,7 +419,6 @@ namespace diplom
                         }
                     }
 
-                    // === 2. Обробка решти сторінок (не YouTube) ===
                     foreach (var page in pages)
                     {
                         if (page.Url.Contains("youtube")) continue;
@@ -485,8 +437,6 @@ namespace diplom
                       "Вивід повинен складатися лише з одного речення: 'Схожість виявлено' або 'Схожість не виявлено'.\n\n"+
                             $"Текст проєкту:\n{proj.Response}\n\nТекст веб-сторінки:\n{page.Response}";
 
-                        Console.WriteLine($"Надсилання запиту для: {proj.Project} + {page.Url}");
-
                         bool success = SendMessageToAI(userMessage, out string aiResponse);
                         string similarity = success ? aiResponse.Trim().Replace("\"", "") : "Error";
 
@@ -504,7 +454,6 @@ namespace diplom
                     }
                 }
 
-                // === Запис результатів ===
                 List<SimilarityResult> allResults = new List<SimilarityResult>();
                 if (File.Exists(outputJsonPath))
                 {
@@ -514,7 +463,6 @@ namespace diplom
                 }
                 allResults.AddRange(results);
 
-                Console.WriteLine("Запис результатів у файл...");
                 File.WriteAllText(outputJsonPath, JsonConvert.SerializeObject(allResults, Formatting.Indented));
 
                 return $"Порівняння завершено. Додано {results.Count} нових записів у {outputJsonPath}";
@@ -525,8 +473,6 @@ namespace diplom
             }
         }
 
-
-
         public static void RunDailyTask()
         {
             try
@@ -534,7 +480,6 @@ namespace diplom
                 string projectsAnalysisPath = outputProjectsJson;
                 string webpagesAnalysisPath = outputUrlsJsonPath;
 
-                Console.WriteLine("Ініціалізація клієнта...");
                 CohereClient deepSeekClient = new CohereClient(apiKey);
 
                 var projects = JsonProcessing.todayProjects;
@@ -544,53 +489,25 @@ namespace diplom
                 {
                     if (!JsonProcessing.WasProjectAnalyzedToday(project.Name, outputProjectsJson))
                     {
-                        Console.WriteLine($"Проєкт '{project.Name}' ще не аналізувався сьогодні. Додаємо до черги.");
                         projectsToAnalyze.Add(project);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Пропускаємо вже проаналізований сьогодні проєкт: {project.Name}");
                     }
                 }
 
                 if (projectsToAnalyze.Count > 0)
                 {
-                    Console.WriteLine("Аналізуємо нові проєкти...");
                     string projectAnalysisResult = deepSeekClient.AnalyzeFiles(outputProjectsJson, projectsToAnalyze);
-                    Console.WriteLine("Результат аналізу проєктів:");
-                    Console.WriteLine(projectAnalysisResult);
-                }
-                else
-                {
-                    Console.WriteLine("Усі проєкти вже були проаналізовані сьогодні.");
                 }
 
                 var urls = JsonProcessing.todayUrls;
 
-                Console.WriteLine($"Всього URL сьогодні: {urls.Count}");
-
                 string urlAnalysisResult = deepSeekClient.AnalyzeBrowserUrls(outputUrlsJsonPath, urls);
-                Console.WriteLine("Результат аналізу URL:");
-                Console.WriteLine(urlAnalysisResult);
-
-
-                Console.WriteLine("Порівняння схожості між проєктами та сторінками...");
-                string resultMessage = deepSeekClient.CompareProjectWebpageSimilarities(projectsAnalysisPath, webpagesAnalysisPath, outputJsonPath);
-                Console.WriteLine("Результат порівняння:");
-                Console.WriteLine(resultMessage);
-                
-            
+                string resultMessage = deepSeekClient.CompareProjectWebpageSimilarities(projectsAnalysisPath, webpagesAnalysisPath, outputJsonPath);            
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Помилка під час виконання RunDailyTask:");
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace);
                 if (ex.InnerException != null)
                 {
-                    Console.WriteLine("Внутрішня помилка:");
-                    Console.WriteLine(ex.InnerException.Message);
-                    Console.WriteLine(ex.InnerException.StackTrace);
+
                 }
             }
         }

@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using System.IO;
 using System.Collections.Generic;
 using System.Globalization;
-using Newtonsoft.Json;
 using System.Linq;
 
 namespace diplom
@@ -58,9 +57,8 @@ namespace diplom
         public Form1()
         {
             InitializeComponentMainMenu();
-            // this.button3.Visible = false;
-            this.MaximumSize = this.Size;  // Фіксувати максимальний розмір форми
-            this.MinimumSize = this.Size;  // Фіксувати мінімальний розмір форми
+            this.MaximumSize = this.Size; 
+            this.MinimumSize = this.Size;
 
             toolTip = new ToolTip();
 
@@ -75,15 +73,11 @@ namespace diplom
             handButton.OnTimeUpdated += HandButton_OnTimeUpdated;
 
             settings = new DataSettings();
-            //ListInstalledFonts();
-            
 
             GetTimeAmount();
 
             JsonProcessing.LoadSettings();
         }
-
-
 
         private void GetTimeAmount()
         {
@@ -121,22 +115,19 @@ namespace diplom
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Помилка при завантаженні часу: {ex.Message}", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             }
             return TimeSpan.Zero;
         }
 
         public void HandButton_OnTimeUpdated(TimeSpan elapsed)
         {
-            // Форматуємо elapsed у "hh:mm:ss" для виводу та UI
             string currentTime = elapsed.ToString(@"hh\:mm\:ss");
 
-            // Оновлюємо не частіше ніж раз на секунду
             if (DateTime.Now - lastUpdated > TimeSpan.FromSeconds(1))
             {
                 lock (lockObject)
                 {
-                    // 1) Оновлюємо UI-лібел
                     if (label2.InvokeRequired)
                     {
                         label2.Invoke(new Action(() => label2.Text = currentTime));
@@ -146,51 +137,30 @@ namespace diplom
                         label2.Text = currentTime;
                     }
 
-                    // 2) Виводимо в консоль діагностичну інформацію
-                    Console.WriteLine($"[DEBUG] {DateTime.Now:yyyy-MM-dd HH:mm:ss} → HandButton_OnTimeUpdated: elapsed = {currentTime}");
-
                     try
                     {
-                        // 3) Виклик SaveSessionStart()
-                        Console.WriteLine("[DEBUG] → Викликаємо JsonProcessing.SaveSessionStart()");
                         JsonProcessing.SaveSessionStart();
-
-                        // 4) Виклик SaveCurrentDayTime(elapsed)
-                        Console.WriteLine($"[DEBUG] → Викликаємо JsonProcessing.SaveCurrentDayTime(elapsed = {currentTime})");
                         JsonProcessing.SaveCurrentDayTime(elapsed);
 
-                        // 5) Після збереження підвантажуємо дані і дивимось, що реально записалося
                         var allData = JsonProcessing.LoadTimerData();
                         string todayKey = DateTime.Now.ToString("dd.MM.yyyy");
                         var todayRecord = allData.FirstOrDefault(d => d.Date == todayKey);
-
-                        if (todayRecord != null)
-                        {
-                            Console.WriteLine($"[DEBUG] → Після SaveCurrentDayTime: знайдено запис для {todayRecord.Date}, Time = \"{todayRecord.Time}\"");
-                        }
-                        else
-                        {
-                            Console.WriteLine("[DEBUG] → Після SaveCurrentDayTime: запису для сьогоднішньої дати немає");
-                        }
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"[ERROR] Помилка при збереженні часу в JSON: {ex.Message}");
+
                     }
 
-                    // 6) Оновлюємо lastUpdated, щоб чекати ще 1 секунду
                     lastUpdated = DateTime.Now;
                 }
             }
         }
 
-
-        private void button7_Click(object sender, EventArgs e) //графік поточного тижня
+        private void button7_Click(object sender, EventArgs e) //Вікно Статистика
         {
             this.Controls.Clear();
             InitializeComponentMain();
             StatisticsMainMenu();
-            //ProperColorTheme();
             SetActivePanel(panel2);
             CurrentDay();
         }
@@ -212,9 +182,6 @@ namespace diplom
 
                         buildDailyChart<Session>(_tmpSessions, selectedDate, session =>
                         {
-                            // Перед парсингом можемо вивести вихідні рядки:
-                            Console.WriteLine($"[DEBUG] Сесію розбираємо: Start = \"{session.Start}\", Stop = \"{session.Stop}\"");
-
                             if (DateTime.TryParseExact(
                                     session.Start,
                                     "HH:mm:ss",
@@ -231,18 +198,10 @@ namespace diplom
                                 var start = selectedDate.Date.Add(startTime.TimeOfDay);
                                 var stop = selectedDate.Date.Add(endTime.TimeOfDay);
 
-                                // Якщо стоп раніше старту — вважаємо, що перехід через північ
                                 if (stop < start)
                                     stop = stop.AddDays(1);
-
-                                // Виведемо результати, що йдуть у графік:
-                                Console.WriteLine($"[DEBUG]   --> parsed start = {start:yyyy-MM-dd HH:mm:ss}, stop = {stop:yyyy-MM-dd HH:mm:ss}");
-
                                 return (start, stop);
                             }
-
-                            // Якщо stop == null або не вдалось спарсити — повідомимо про це:
-                            Console.WriteLine($"[DEBUG]   --> не змогли спарсити Stop або Stop = null, повертаємо null");
                             return null;
                         });
 
@@ -268,12 +227,10 @@ namespace diplom
                     {
                         var _tmpData = JsonProcessing.LoadUrlData();
 
-                        // Фільтруємо записи лише на поточний день
                         var _tmpDayData = _tmpData
                             .Where(d => d.Timestamp.Date == selectedDate.Date)
                             .ToList();
 
-                        // Побудова графіка
                         buildDailyChart<UrlData>(_tmpDayData, selectedDate, record =>
                         {
                             var start = record.Timestamp;
@@ -281,13 +238,11 @@ namespace diplom
                             return (start, stop);
                         });
 
-                        // Обчислення загального часу
                         string _tmpTotalTime = statistic.CalculateTotalTime<UrlData>(
                             _tmpDayData,
                             nameof(UrlData.TimeSpent)
                         );
 
-                        // Оновлення підписів
                         label9.Text = $"Усього витрачено на роботу: {_tmpTotalTime}";
                         label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
 
@@ -298,18 +253,15 @@ namespace diplom
                     var selectedDatee = DateTime.Today.AddDays(currentDayOffset);
                     var dateKeyy = selectedDatee.ToString("dd.MM.yyyy");
 
-                    // 1) Завантажуємо проєктні сесії:
                     var allTimerData = JsonProcessing.LoadTimerData();
                     var recProj = allTimerData.FirstOrDefault(d => d.Date == dateKeyy);
                     var sessionss = recProj?.Sessions ?? new List<Session>();
 
-                    // 2) Завантажуємо записи браузера (UrlData) тільки за обраний день:
                     var allUrlData = JsonProcessing.LoadUrlData();
                     var dayUrlData = allUrlData
                         .Where(u => u.Timestamp.Date == selectedDatee.Date)
                         .ToList();
 
-                    // 3) Перетворюємо проєктні сесії в інтервали (DateTime, DateTime)
                     var projectIntervals = sessionss
                         .Select(s =>
                         {
@@ -326,13 +278,12 @@ namespace diplom
                         .Where(x => x.Start != DateTime.MinValue)
                         .ToList();
 
-                    // 4) Перетворюємо UrlData в інтервали (DateTime, DateTime)
                     var browserIntervals = dayUrlData
                         .Select(u =>
                         {
                             var stBr = u.Timestamp;
                             var spBr = u.Timestamp.AddSeconds(u.TimeSpent);
-                            // обрізати, щоб не виходило за межі доби
+
                             if (stBr < selectedDatee.Date)
                                 stBr = selectedDatee.Date;
                             if (spBr > selectedDatee.Date.AddDays(1))
@@ -342,7 +293,6 @@ namespace diplom
                         .Where(x => x.Stop > x.Start)
                         .ToList();
 
-                    // 5) Поєднуємо обидва списки:
                     var allIntervals = new List<(DateTime Start, DateTime Stop)>();
                     allIntervals.AddRange(projectIntervals);
                     allIntervals.AddRange(browserIntervals);
@@ -356,15 +306,12 @@ namespace diplom
             }
         }
 
-        private void BuildMergedLineChart(DateTime selectedDate,
-                                  List<(DateTime Start, DateTime Stop)> allIntervals)
+        private void BuildMergedLineChart(DateTime selectedDate, List<(DateTime Start, DateTime Stop)> allIntervals)
         {
-            // Використовуємо той самий buildDailyChart, тільки з типовим T = (DateTime, DateTime).
-            // Для цього передамо адаптер convertToInterval, який віддасть кортеж (Start, Stop).
             buildDailyChart<(DateTime Start, DateTime Stop)>(
                 allIntervals,
                 selectedDate,
-                interval => (interval.Start, interval.Stop)  // просто повертаємо те, що нам дали
+                interval => (interval.Start, interval.Stop) 
             );
         }
 
@@ -372,12 +319,10 @@ namespace diplom
         {
             RemoveChart();
 
-            // Отримання діапазону тижня з урахуванням зсуву
             var weekRange = statistic.GetWeekRangeWithOffset(currentWeekOffset);
             var startOfWeek = weekRange.StartOfWeek;
             var endOfWeek = weekRange.EndOfWeek;
 
-            // Обробка даних згідно типу статистики
             List<TimerData> processedData;
             switch (typeOfStatictics)
             {
@@ -634,7 +579,7 @@ namespace diplom
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
-                e.Handled = true; // Блокуємо введення, якщо це не цифра
+                e.Handled = true; //Вводити лише цифри
             }
         }
 
@@ -700,12 +645,7 @@ namespace diplom
             }
             catch (Exception ex)
             {
-                /*MessageBox.Show(
-                    $"Не вдалося вимкнути автозапуск: {ex.Message}",
-                    "DisableAutoStart",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );*/
+
             }
         }
     }

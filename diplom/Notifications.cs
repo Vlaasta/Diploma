@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing; // Для іконки
+﻿using System.Drawing; 
 using System.Windows.Forms;
 
 namespace diplom
@@ -21,10 +20,11 @@ namespace diplom
                     Icon = SystemIcons.Information,
                     BalloonTipTitle = "Нове сповіщення",
                     BalloonTipIcon = ToolTipIcon.Info,
+                    Text = "TimeToTrack",
                     Visible = true
                 };
             }
-
+            notifyIcon.Icon = Properties.Resources.Icon;
             notifyIcon.BalloonTipText = message;
             notifyIcon.ShowBalloonTip(3000);
         }

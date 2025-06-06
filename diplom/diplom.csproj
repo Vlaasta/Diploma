@@ -68,6 +68,9 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AngleSharp, Version=1.1.2.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea, processorArchitecture=MSIL">
       <HintPath>..\packages\AngleSharp.1.1.2\lib\net472\AngleSharp.dll</HintPath>
@@ -709,6 +712,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="License-LGPL.txt" />
+    <None Include="Resources\Icon.ico" />
+    <None Include="Resources\Icon.png" />
+    <None Include="Resources\Icon.jpg" />
     <None Include="Resources\LightClock.jpg" />
     <None Include="Resources\LightLogo.jpg" />
     <None Include="Resources\Logos4.jpg" />

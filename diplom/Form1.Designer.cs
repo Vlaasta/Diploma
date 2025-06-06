@@ -8,8 +8,6 @@ using OxyPlot.WindowsForms;
 using OxyPlot.Axes;
 using System.Linq;
 using OxyPlot.Annotations;
-using System.Globalization;
-using System.Drawing.Text;
 
 namespace diplom
 {
@@ -359,21 +357,18 @@ namespace diplom
             var lbl = sender as Label;
             int rowIndex = (int)lbl.Tag;
 
-            // Тoggle у HashSet: якщо був – видаляємо, інакше додаємо
             if (!selectedRows.Remove(rowIndex))
                 selectedRows.Add(rowIndex);
 
-            // Перефарбовуємо обидва Label-і цього рядка
             bool isSelected = selectedRows.Contains(rowIndex);
             Color bg = isSelected
-                ? isDarkTheme ? Color.FromArgb(30, 60, 90) : Color.FromArgb(220, 220, 220)   // ваш колір “відзначено”
-                : isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(235, 235, 235);            // колір “звичайний”
+                ? isDarkTheme ? Color.FromArgb(30, 60, 90) : Color.FromArgb(220, 220, 220)   //колір “відзначено”
+                : isDarkTheme ? Color.FromArgb(6, 40, 68) : Color.FromArgb(235, 235, 235);            //колір “звичайний”
 
             foreach (Control c in panel2.Controls)
                 if (c is Label l && (int)l.Tag == rowIndex)
                     l.BackColor = bg;
 
-            // Показуємо кнопку видалення, якщо є хоч один вибраний
             button3.Visible = selectedRows.Count > 0;
         }
 
@@ -381,22 +376,20 @@ namespace diplom
         {
             var projects = JsonProcessing.LoadProjects();
 
-            // Видаляємо вибрані з кінця, щоб індекси не зіпсувались
             foreach (int idx in selectedRows.OrderByDescending(i => i))
                 projects.RemoveAt(idx);
 
             JsonProcessing.SaveProjects(projects);
 
-            // Перебудовуємо UI
             PopulateProjects();
         }
 
         private void buttonDelete2_Click(object sender, EventArgs e)
         {
             if (selectedRows.Count == 0)
-                return; // нічого не видаляти
+                return; 
 
-            // Запитуємо підтвердження у користувача
+            //підтвердження у користувача
             /*var result = MessageBox.Show(
                 $"Ви дійсно хочете видалити {selectedRows.Count} запис(и)?",
                 "Підтвердження видалення",
@@ -406,25 +399,20 @@ namespace diplom
             if (result != DialogResult.Yes)
                 return; */
 
-            // 1) Збираємо список URLData, які зараз показані на поточній сторінці (за date)
             var date = availableDates[currentIndex];
             var todaysUrls = allUrls
                 .Where(u => u.Timestamp.Date == date)
                 .ToList();
 
-            // 2) Визначаємо, які саме об’єкти потрібно видалити
             var toDelete = selectedRows
                 .Select(idx => todaysUrls[idx])
                 .ToList();
 
-            // 3) Видаляємо їх з головного списку
             foreach (var u in toDelete)
                 allUrls.Remove(u);
 
-            // 4) Записуємо оновлений список у файл
             JsonProcessing.SaveUrlListToJson(allUrls);
 
-            // 5) Оновлюємо список дат на випадок, якщо остання дата стала пустою
             availableDates = allUrls
                 .Select(u => u.Timestamp.Date)
                 .Distinct()
@@ -433,7 +421,6 @@ namespace diplom
 
             if (availableDates.Count == 0)
             {
-                // Якщо більше немає даних — очищаємо вивід
                 panel2.Controls.Clear();
                 label10.Text = "Немає даних";
                 button11.Visible = button12.Visible = false;
@@ -441,10 +428,8 @@ namespace diplom
                 return;
             }
 
-            // 6) Підганяємо currentIndex, щоб він був у межах нового списку дат
             currentIndex = Math.Min(currentIndex, availableDates.Count - 1);
 
-            // 7) Очищаємо виділення й оновлюємо вивід
             selectedRows.Clear();
             button3.Visible = false;
             UpdateDateView();
@@ -508,7 +493,7 @@ namespace diplom
                 label.ForeColor = isDarkTheme ? Color.FromArgb(186, 192, 196) : Color.FromArgb(0, 0, 0);
             }
             label.Font = new Font("Segoe UI", 12);
-            label.AutoEllipsis = true;  // Додає "..." якщо текст не влізе
+            label.AutoEllipsis = true;  // Додає "..." якщо текст не вміщається
             label.TextAlign = ContentAlignment.MiddleLeft;
             this.Controls.Add(label);
             return label;
@@ -565,8 +550,8 @@ namespace diplom
             axis.TicklineColor = axis.TitleColor;
             axis.AxislineColor = axis.TitleColor;
             var majorTransparent = isDarkTheme
-                 ? OxyColor.FromAColor(120, mainColor) // 120 ≈ 47% прозорості
-                 : OxyColor.FromAColor(100, OxyColor.FromRgb(82, 82, 82)); // трохи менше прозоре у світлій темі
+                 ? OxyColor.FromAColor(120, mainColor) // 120 = 47% прозорості
+                 : OxyColor.FromAColor(100, OxyColor.FromRgb(82, 82, 82)); 
 
             axis.MajorGridlineColor = majorTransparent;
             axis.MinorGridlineColor = minorTransparent;
@@ -828,50 +813,28 @@ namespace diplom
         {
             DateTime today = selectedDate.Date;
 
-            // Діагностика selectedDate
-            Console.WriteLine($"[DEBUG] selectedDate = {selectedDate:yyyy-MM-dd HH:mm:ss} (Kind={selectedDate.Kind}), " +
-                              $"selectedDate.Date = {selectedDate.Date:yyyy-MM-dd HH:mm:ss} (Kind={selectedDate.Date.Kind})");
-
-            // 1) Збираємо інтервали
             var parsed = dataList
                 .Select(convertToInterval)
                 .Where(i => i.HasValue && i.Value.Start != DateTime.MinValue)
                 .Select(i => i.Value)
                 .ToList();
 
-            // Друк усіх parsed-інтервалів
-            Console.WriteLine("[DEBUG] --- Intervals for " + selectedDate.ToString("yyyy-MM-dd") + " ---");
-            foreach (var iv in parsed)
-            {
-                Console.WriteLine($"[DEBUG] Interval: Start = {iv.Start:yyyy-MM-dd HH:mm:ss} (Kind={iv.Start.Kind}), " +
-                                  $"Stop = {iv.Stop:yyyy-MM-dd HH:mm:ss} (Kind={iv.Stop.Kind})");
-            }
-            Console.WriteLine("[DEBUG] -----------------------------");
-
-            // 2) Підраховуємо хвилини по годинах
             double[] minutesPerHour = new double[24];
             foreach (var interval in parsed)
             {
                 DateTime start = interval.Start;
                 DateTime stop = interval.Stop;
 
-                // Діагностика на вході
-                Console.WriteLine($"[DEBUG] Обробляємо raw-інтервал: start = {start:yyyy-MM-dd HH:mm:ss} (Kind={start.Kind}), " +
-                                  $"stop = {stop:yyyy-MM-dd HH:mm:ss} (Kind={stop.Kind})");
-
                 if (stop < today || start >= today.AddDays(1))
                 {
-                    Console.WriteLine($"[DEBUG]   → Ігноруємо, бо інтервал поза сьогоднішньою добою.");
                     continue;
                 }
                 if (start < today)
                 {
-                    Console.WriteLine($"[DEBUG]   → Початок до {today:yyyy-MM-dd}, замінюємо start на {today:yyyy-MM-dd HH:mm:ss}.");
                     start = today;
                 }
                 if (stop > today.AddDays(1))
                 {
-                    Console.WriteLine($"[DEBUG]   → Кінець після {today.AddDays(1):yyyy-MM-dd HH:mm:ss}, замінюємо stop на {today.AddDays(1):yyyy-MM-dd HH:mm:ss}.");
                     stop = today.AddDays(1);
                 }
 
@@ -884,86 +847,58 @@ namespace diplom
                     double minutes = (segmentEnd - start).TotalMinutes;
                     minutesPerHour[hour] += minutes;
 
-                    // Виводимо крок
-                    Console.WriteLine($"[DEBUG]   → Сегмент: початок {start:HH:mm:ss}, " +
-                                      $"кінець сегменту {segmentEnd:HH:mm:ss}, " +
-                                      $"година = {hour}, додали = {minutes:0.##} хв.");
-
                     start = segmentEnd;
                 }
             }
 
-            // Виведемо результат masksPerHour
-            Console.WriteLine("[DEBUG] —————————————————————————");
-            Console.WriteLine("[DEBUG] Результат підрахунку minutesPerHour:");
-            for (int i = 0; i < 24; i++)
-            {
-                Console.WriteLine($"[DEBUG]   Година {i:00}:00 → {minutesPerHour[i]:0.##} хв.");
-            }
-            Console.WriteLine("[DEBUG] —————————————————————————");
-
-
-            // 3) Знаходимо максимум (у хвилинах) для вибору одиниць Y
             double rawMax = minutesPerHour.Max();
-
-            // 4) Вибираємо масштаб (сек/хв/год) і unitLabel
             double scaleFactor;
             string unitLabel;
 
             if (rawMax <= 0.0)
             {
-                scaleFactor = 1.0;   // показувати в «хв.» навіть якщо усе нульове
+                scaleFactor = 1.0;   
                 unitLabel = "хв.";
             }
             else if (rawMax < 1.0)
             {
-                scaleFactor = 60.0;  // показувати в «сек.»
+                scaleFactor = 60.0;  
                 unitLabel = "с";
             }
             else if (rawMax < 60.0)
             {
-                scaleFactor = 1.0;   // показувати в «хв.»
+                scaleFactor = 1.0;   
                 unitLabel = "хв.";
             }
             else
             {
-                scaleFactor = 1.0 / 60.0;  // показувати в «год.»
+                scaleFactor = 1.0 / 60.0;  
                 unitLabel = "год.";
             }
 
             _currentScaleFactor = scaleFactor;
             _currentUnitLabel = unitLabel;
 
-            // 5) Обчислюємо граничні значення для Y
             double maxInUnit = rawMax * scaleFactor;
-            // Якщо всі дані нульові → мінімальна одиниця = 1,
-            // щоб потім при відображенні осі Y точка y=0 не «зникала» під дном.
             double maxY = (maxInUnit <= 0) ? 1.0 : maxInUnit;
             double majorY = Math.Max(1.0, Math.Ceiling(maxY / 10.0));
             double minorY = majorY / 2.0;
             double axisMaxY = maxY * 1.05;
 
-            // 6) Створюємо PlotView / PlotModel
             var plotView = CreatePlotView();
             var plotModel = plotView.Model;
 
-            // 7) Створюємо LineSeries (лінія + маркери)
             var series = new LineSeries
             {
                 LineStyle = LineStyle.Solid,
                 StrokeThickness = 2,
-                Color = Form1.settings.ColorTheme == "dark"
-                            ? OxyColor.FromRgb(159, 183, 213)
-                            : OxyColor.FromRgb(82, 82, 82),
+                Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
                 MarkerType = MarkerType.Circle,
-                MarkerSize = 3,   // зменшені кружечки
-                MarkerFill = Form1.settings.ColorTheme == "dark"
-                                 ? OxyColor.FromRgb(159, 183, 213)
-                                 : OxyColor.FromRgb(82, 82, 82),
+                MarkerSize = 3,  
+                MarkerFill = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
                 TrackerFormatString = $"Година: {{2:0}}\nЧас: {{4:0.##}} {unitLabel}"
             };
 
-            // 8) Додаємо точки у серію – по одній на годину
             for (int h = 0; h < 24; h++)
             {
                 double yValue = minutesPerHour[h] * scaleFactor;
@@ -972,22 +907,14 @@ namespace diplom
             }
             plotModel.Series.Add(series);
 
-            Console.WriteLine("[DEBUG] — точки, які ми малюємо у LineSeries:");
-            foreach (var pt in series.Points)
-            {
-                Console.WriteLine($"[DEBUG]   DataPoint → X = {pt.X}, Y = {pt.Y}");
-            }
-            Console.WriteLine("[DEBUG] — завершення списку точок");
-
-            // 9) Налаштовуємо X-вісь (підписи кожні 2 години, дрібні лінії щогодини)
             var axisX = new LinearAxis
             {
                 Position = AxisPosition.Bottom,
                 Title = "Година",
                 Minimum = -0.5,
                 Maximum = 23.5,
-                MajorStep = 2,  // підписи (00:00, 02:00, 04:00 …)
-                MinorStep = 1,  // дрібні вертикальні лінії щогодини
+                MajorStep = 2,  
+                MinorStep = 1, 
                 LabelFormatter = v =>
                 {
                     if (v < 0 || v > 23) return "";
@@ -1000,13 +927,10 @@ namespace diplom
             StyleAxis(axisX);
             plotModel.Axes.Add(axisX);
 
-            // 10) Налаштовуємо Y-вісь (рідша сітка по majorY)
             var axisY = new LinearAxis
             {
                 Position = AxisPosition.Left,
                 Title = "Час",
-                // Тепер нижня межа динамічно: якщо нема даних — трохи від’ємна,
-                // інакше завжди нуль:
                 Minimum = (rawMax <= 0) ? -1 * majorY : 0,
                 Maximum = axisMaxY,
                 MajorStep = majorY * 2,
@@ -1024,7 +948,7 @@ namespace diplom
                         int min = (int)Math.Round(value);
                         return $"{min} хв.";
                     }
-                    else // "год."
+                    else 
                     {
                         if (Math.Abs(value - Math.Round(value)) < 0.0001)
                             return $"{(int)Math.Round(value)} год";
@@ -1036,22 +960,18 @@ namespace diplom
             StyleAxis(axisY);
             plotModel.Axes.Add(axisY);
 
-            // 11) Якщо немає жодної хвилини (rawMax == 0), додаємо явну лінію Y = 0
             if (rawMax <= 0.0)
             {
                 plotModel.Annotations.Add(new LineAnnotation
                 {
                     Type = LineAnnotationType.Horizontal,
                     Y = 0,
-                    Color = Form1.settings.ColorTheme == "dark"
-                                           ? OxyColor.FromRgb(159, 183, 213)
-                                           : OxyColor.FromRgb(82, 82, 82),
+                    Color = Form1.settings.ColorTheme == "dark" ? OxyColor.FromRgb(159, 183, 213) : OxyColor.FromRgb(82, 82, 82),
                     StrokeThickness = 2,
                     LineStyle = LineStyle.Solid
                 });
             }
 
-            // 12) Вимикаємо пан/зум по лівому кліку
             var ctrl = plotView.Controller ?? plotView.ActualController;
             ctrl.UnbindMouseDown(
                 OxyPlot.OxyMouseButton.Left,
@@ -1060,17 +980,14 @@ namespace diplom
             );
             plotView.Controller = ctrl;
 
-            // 13) Підписи “Загальний час” і “Статистика за …”
             this.label9 = CreateMainLabel("label9", "label9", 545, 550, new Size(530, 50));
             double totalSeconds = parsed.Sum(iv => (iv.Stop - iv.Start).TotalSeconds);
             label9.Text = $"Загальний час: {statistic.HumanizeSeconds(totalSeconds)}";
             label10.Text = $"Статистика за {selectedDate:dd.MM.yyyy}";
 
-            // 14) Додаємо PlotView на форму
             plotView.Model = plotModel;
             this.Controls.Add(plotView);
 
-            // 15) Підключаємо тултіп-обробники
             _showDateInTooltip = false;
             plotView.MouseDown += PlotView_MouseDown;
             plotView.MouseUp += PlotView_MouseUp;
@@ -1081,15 +998,15 @@ namespace diplom
             var plotView = this.Controls.OfType<PlotView>().FirstOrDefault();
             if (plotView != null)
             {
-                this.Controls.Remove(plotView); // Видалення PlotView з форми
-                plotView.Dispose(); // Звільнення ресурсів
+                this.Controls.Remove(plotView); 
+                plotView.Dispose(); 
             }
 
             if (this.label9 != null)
             {
                 this.Controls.Remove(this.label9);
                 this.label9.Dispose();
-                this.label9 = null; // Звільнення ресурсів
+                this.label9 = null; 
             }
         }
 
@@ -1179,19 +1096,6 @@ namespace diplom
             this.button13 = CreateButton("button13", "Продивитися дані", new Point(647, 100), new Size(150, 30), this.button13_Click);
             this.label10 = CreateMainLabel("label10", "label10", 545, 30, new Size(530, 50));
 
-            /*if (CheckBox2Active == true)
-            {
-                this.label10.ForeColor = Color.FromArgb(82, 82, 82);
-                this.label10.BackColor = Color.FromArgb(212, 220, 225);
-            }
-
-
-            if (CheckBox1Active == true)
-            {
-                this.label10.ForeColor = Color.FromArgb(186, 192, 196);
-                this.label10.BackColor = Color.FromArgb(2, 14, 25);
-            }*/
-
             this.ResumeLayout(false);
             this.PerformLayout();
         }
@@ -1228,7 +1132,6 @@ namespace diplom
 
         private System.Windows.Forms.Label CreateMainLabel(string name, string text, int centerX, int y, Size size)
         {
-            // Обчислюємо X так, щоб центр мітки збігався з centerX
             int labelX = centerX - size.Width / 2;
             bool isDarkTheme = Form1.settings.ColorTheme == "dark";
 
@@ -1749,13 +1652,7 @@ namespace diplom
                             fore);
                         break;
                 }
-            };
-
-            /* CreateRichTextLabel(new Point(250, 400), "label15",
-                 "Виникли додаткові запитання чи труднощі? Пишіть лист на пошту - 7411641@stud.kai.edu.ua ",
-                 new Size(600, 100));*/
-
-            
+            };            
 
             this.label13 = CreateMainLabel("label15", "Виникли додаткові запитання чи труднощі? Пишіть лист на пошту - 7411641@stud.kai.edu.ua ", 550, 500, new Size(700, 100));
             label13.Font = new Font("Segoe UI", 12, FontStyle.Bold);
@@ -1791,10 +1688,8 @@ namespace diplom
 
         private void InitBrowserInfo()
         {
-            // 1) Завантажуємо один раз
             allUrls = JsonProcessing.LoadUrlData();
 
-            // 2) Формуємо список унікальних дат
             availableDates = allUrls
                 .Select(u => u.Timestamp.Date)
                 .Distinct()
@@ -1802,16 +1697,13 @@ namespace diplom
                 .ToList();
 
             if (availableDates.Count == 0)
-                return; // нічого не показувати
+                return; 
 
-            // 3) За замовчуванням – остання дата
             currentIndex = availableDates.Count - 1;
 
-            // 4) Прив’язуємо обробники
             button11.Click += ButtonPrevDate_Click;
             button12.Click += ButtonNextDate_Click;
 
-            // 5) Першочергове наповнення
             UpdateDateView();
         }
 
@@ -1821,16 +1713,13 @@ namespace diplom
 
             label10.Text = "Робочі вебсторінки за " + date.ToString("dd.MM.yyyy");
 
-            // Кнопки «‹» та «›» видно лише коли є відповідна дата
             button11.Visible = (currentIndex > 0);
             button12.Visible = (currentIndex < availableDates.Count - 1);
 
-            // Очищаємо і наповнюємо панель
             panel2.Controls.Clear();
             selectedRows.Clear();
             button3.Visible = false;
 
-            // Фільтруємо записи саме за поточною датою
             var todaysUrls = allUrls
                 .Where(u => u.Timestamp.Date == date)
                 .ToList();

@@ -13,11 +13,11 @@ namespace diplom
 {
     public static class JsonProcessing
     {
-        private static string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\timerAmounts.json"; // Шлях до JSON-файлу з результатами таймеру
-        static string fileSecondPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json"; // Шлях до JSON-файлу з проектами
-        private static string fileThirdPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\settings.json"; // Шлях до JSON-файлу з настройками
+        private static string filePath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\timerAmounts.json"; //Шлях до JSON-файлу з результатами роботи таймеру
+        static string fileSecondPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\projects.json"; //Шлях до JSON-файлу з проєктами
+        private static string fileThirdPath = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\MainInfo\settings.json"; //Шлях до JSON-файлу з налаштуванням програми
         public static string filePath2 = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\BrowserActivity\browserUrls.json"; //Шлях до JSON-файлу з веб-сторінками
-        public static string filePath3 = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\unmatchedUrls.json";
+        public static string filePath3 = @"E:\4 KURS\Диплом\DiplomaRepo\Diploma\data\unmatchedUrls.json"; //Шлях до JSON-файлу з неробочими сторінками
 
         private static readonly ConcurrentQueue<List<TimerData>> saveQueue = new ConcurrentQueue<List<TimerData>>();
         private static bool isSaving = false;
@@ -81,21 +81,14 @@ namespace diplom
                 {
                     try
                     {
-                        Console.WriteLine($"Шукаємо на диску: {drive.Name}");
                         var files = Directory.EnumerateFiles(drive.RootDirectory.FullName, fileName, SearchOption.AllDirectories);
                         foreach (var file in files)
                         {
-                            Console.WriteLine($"Знайдено файл: {file}");
                             result.Add(file);
                         }
                     }
                     catch (UnauthorizedAccessException)
                     {
-                        Console.WriteLine($"Доступ заборонено до диску: {drive.Name}");
-                    }
-                    catch (IOException ex)
-                    {
-                        Console.WriteLine($"Помилка при доступі до диску {drive.Name}: {ex.Message}");
                     }
                 }
             });
@@ -142,44 +135,10 @@ namespace diplom
             return projects;
         }
 
-        // Запис проектів у файл
         public static void SaveProjects(List<Project> projects)
         {
             var json = JsonConvert.SerializeObject(projects, Formatting.Indented);
             File.WriteAllText(fileSecondPath, json);
-        }
-
-        // Метод для додавання нового проекту через файловий провідник
-        public static void AddProjectThroughFileDialog()
-        {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                // Фільтр файлів для пошуку проектів
-                openFileDialog.Filter = "Microsoft Visual Studio Files (*.sln;*.csproj)|*.sln;*.csproj|Photoshop Files (*.psd)|*.psd|All Files (*.*)|*.*";
-                openFileDialog.Title = "Виберіть проект для додавання";
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string fileName = openFileDialog.FileName;
-                    string projectName = Path.GetFileNameWithoutExtension(fileName);
-
-                    // Зчитуємо існуючі проекти
-                    var projects = LoadProjects();
-
-                    // Додаємо новий проект, якщо його ще немає
-                    if (!projects.Exists(p => p.Path == fileName))
-                    {
-                        projects.Add(new Project { Name = projectName, Path = fileName });
-                        SaveProjects(projects);
-
-                        MessageBox.Show("Проект успішно додано!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Цей проект вже доданий.", "Попередження", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
-            }
         }
 
         public static List<TimerData> LoadTimerData()
@@ -234,7 +193,6 @@ namespace diplom
             File.WriteAllText(filePath2, JsonConvert.SerializeObject(urlList, Formatting.Indented));
         }
 
-
         public static void SaveCurrentDayTime(TimeSpan elapsed)
         {
             var data = LoadTimerData();
@@ -283,32 +241,25 @@ namespace diplom
 
         public static void SaveSessionStop()
         {
-            Console.WriteLine($"[DEBUG] > SaveSessionStop() почато o {DateTime.Now:HH:mm:ss}");
             var data = LoadTimerData();
             string today = DateTime.Now.ToString("dd.MM.yyyy");
             var todayData = data.Find(d => d.Date == today);
             if (todayData == null)
             {
-                Console.WriteLine($"[DEBUG] > Для {today} запису немає, вихід");
                 return;
             }
 
             var lastSession = todayData.Sessions.LastOrDefault(s => s.Stop == null);
             if (lastSession == null)
             {
-                Console.WriteLine($"[DEBUG] > Немає відкритої сесії, вихід");
                 return;
             }
 
             lastSession.Stop = DateTime.Now.ToString("HH:mm:ss");
-            Console.WriteLine($"[DEBUG] > Встановлено Stop = \"{lastSession.Stop}\" для Start = \"{lastSession.Start}\"");
 
             SaveData(data);
 
-            Console.WriteLine("[DEBUG] > Сесія записана в JSON (Stop синхронно збережено)");
         }
-
-
 
         public static void AddProject(string filePath)
         {
@@ -415,18 +366,12 @@ namespace diplom
         public static bool IfWasModifiedToday()
         {
             var urlDataList = JsonProcessing.LoadUrlData();
-            foreach (var url in urlDataList)
-            {
-                Console.WriteLine($"URL: {url.Url} | Timestamp (UTC): {url.Timestamp} | Timestamp (Local): {url.Timestamp.ToLocalTime()} | Date (Local): {url.Timestamp.ToLocalTime().Date}");
-            }
 
             DateTime today = DateTime.Today;
 
             todayUrls = urlDataList
                 .Where(url => url.Timestamp.Date == today)
                 .ToList();
-
-            Console.WriteLine($"URL-дані на сьогодні ({today:yyyy-MM-dd}): {todayUrls.Count} записів");
 
             var projectsList = JsonProcessing.LoadProjects();
             todayProjects = projectsList
@@ -435,36 +380,20 @@ namespace diplom
                     File.GetLastWriteTime(project.Path).Date == today)
                 .ToList();
 
-            Console.WriteLine($"Проєкти на сьогодні ({today:yyyy-MM-dd}): {todayProjects.Count} записів");
-
             bool result = todayUrls.Any() && todayProjects.Any();
-            Console.WriteLine($"Результат перевірки умов виконання: {result}");
-
             return result;
         }
 
-        public static void FilterUrlsBySimilarity(
-      string comparisonResultsPath,
-      List<UrlData> allUrls,
-      string matchedUrlsPath,
-      string unmatchedUrlsPath
-  )
+        public static void FilterUrlsBySimilarity(string comparisonResultsPath, List<UrlData> allUrls, string matchedUrlsPath, string unmatchedUrlsPath)
         {
-            Console.WriteLine($"Зчитування файлу: {comparisonResultsPath}");
-
             var fileContent = File.ReadAllText(comparisonResultsPath);
-            Console.WriteLine("Зміст файлу:");
-            Console.WriteLine(fileContent);
 
             var results = JsonConvert.DeserializeObject<List<SimilarityResult>>(fileContent);
 
             if (results == null)
             {
-                Console.WriteLine("Не вдалося десеріалізувати results — null.");
                 return;
             }
-
-            Console.WriteLine($"Усього записів у results: {results.Count}");
 
             var matchedUrlsSet = results
                 .Where(r => r.Similarity != null && r.Similarity.Contains("Схожість виявлено"))
@@ -472,39 +401,19 @@ namespace diplom
                 .Distinct()
                 .ToHashSet();
 
-            Console.WriteLine("URL-и з \"Схожість виявлено\":");
-            foreach (var url in matchedUrlsSet)
-            {
-                Console.WriteLine($"  ✅ {url}");
-            }
-
-            Console.WriteLine($"Усього вхідних URL-ів (allUrls): {allUrls.Count}");
-
             var matchedUrls = allUrls.Where(u => matchedUrlsSet.Contains(u.Url)).ToList();
             var unmatchedUrls = allUrls.Where(u => !matchedUrlsSet.Contains(u.Url)).ToList();
 
-            Console.WriteLine($"URL-ів з подібністю знайдено: {matchedUrls.Count}");
-            Console.WriteLine($"URL-ів без подібності: {unmatchedUrls.Count}");
-
-            Console.WriteLine("Збереження matchedUrls у файл:");
-            Console.WriteLine(matchedUrlsPath);
             File.WriteAllText(matchedUrlsPath, JsonConvert.SerializeObject(matchedUrls, Formatting.Indented));
-
-            Console.WriteLine("Збереження unmatchedUrls у файл:");
-            Console.WriteLine(unmatchedUrlsPath);
             File.WriteAllText(unmatchedUrlsPath, JsonConvert.SerializeObject(unmatchedUrls, Formatting.Indented));
-
-            Console.WriteLine("Завершено.");
         }
-
-
 
         public static void LoadSettings()
         {
             if (File.Exists(fileThirdPath))
             {
-                string json = File.ReadAllText(fileThirdPath); // Читаємо файл в рядок
-                                                                // Десеріалізуємо JSON в об'єкт типу DataSettings
+                string json = File.ReadAllText(fileThirdPath); 
+                                                                
                 Form1.settings = JsonConvert.DeserializeObject<DataSettings>(json) ?? new DataSettings();
 
                 if(Form1.settings.InactivityAmount == 5)

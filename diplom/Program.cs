@@ -13,7 +13,6 @@ namespace diplom
             JsonProcessing.LoadSettings();
             Task.Run(() => SaveUrlController.StartHttpServerAsync());
 
-            // Запуск форми в окремому потоці
             Thread formThread = new Thread(() =>
             {
                 Application.EnableVisualStyles();
@@ -26,12 +25,7 @@ namespace diplom
             formThread.Start();
 
             //CohereClient.CanSendRequest();
-           // JsonProcessing.IfWasModifiedToday();
-            //CohereClient.RunDailyTask();
 
-            //JsonProcessing.FilterUrlsBySimilarity(CohereClient.outputJsonPath, JsonProcessing.todayUrls, JsonProcessing.filePath2, JsonProcessing.filePath3);
-
-            // Асинхронний запуск основного циклу
             Task.Run(ActivityMonitoring.MainLoopAsync).Wait();
         }
     }

@@ -5,11 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 
 namespace diplom
 {
-    // Клас для моніторингу миші
     public class ActivityMonitoring
     {
         private static TimeSpan lastElapsedTime = TimeSpan.Zero;
@@ -36,14 +34,13 @@ namespace diplom
         [DllImport("user32.dll")]
         static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
 
-
         public static uint GetIdleTime()
         {
             LASTINPUTINFO info = new LASTINPUTINFO();
             info.cbSize = (uint)Marshal.SizeOf(info);
             if (GetLastInputInfo(ref info))
             {
-                return ((uint)Environment.TickCount - info.dwTime) / 60000; // Idle time в хв
+                return ((uint)Environment.TickCount - info.dwTime) / 60000; //Idle time в хв
             }
             return 0;
         }
@@ -129,7 +126,6 @@ namespace diplom
                         {
                             timer.SetElapsedTime(TimeSpan.Zero);
                         }
-                        Console.WriteLine($"Запуск таймера для проєкту: {activeProject.Name}, продовження з часу: {lastElapsedTime}");
                         JsonProcessing.SaveSessionStart();
                         timer.Start();
                         Notifications.Show("Таймер запущено!");
@@ -148,12 +144,10 @@ namespace diplom
                 if (timer.IsRunning)
                 {
                     lastElapsedTime = timer.GetAccumulatedTime();
-                    Console.WriteLine($"Зупинка таймера для проєкту: {currentActiveProject}, збережено час: {lastElapsedTime}");
                     JsonProcessing.SaveSessionStop();
                     timer.Pause();
                     currentActiveProject = null;
                 }
-                Console.WriteLine("Активне вікно не відповідає жодному з проєктів.");
             }
         }
         public static async Task MainLoopAsync()
@@ -216,7 +210,7 @@ namespace diplom
                     Console.WriteLine($"Помилка в MainLoopAsync: {ex}");
                 }
 
-                await Task.Delay(1000); // пауза 1 секунда
+                await Task.Delay(1000); 
             }
         }
     }
